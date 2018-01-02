@@ -1,0 +1,17 @@
+LogID,  dbLong
+CrewNo,  dbText
+AssessDate,  dbDate
+DayNo,  dbLong
+Assessor,  dbText
+Score_1,  dbLong
+Score_2,  dbLong
+Score_3,  dbLong
+Score_4,  dbLong
+Comments_1,  dbMemo
+Comments_2,  dbMemo
+Comments_3,  dbMemo
+Comments_4,  dbMemo
+OverallGrade,  dbSingle
+DevPlanNo,  dbLong
+Deleted,  dbText
+Comments_Misc,  dbMemo

@@ -1,0 +1,10 @@
+CrewNo,  dbText
+DPNo,  dbLong
+LocalDPNo,  dbDouble
+DPDate,  dbDate
+Issuer,  dbText
+Status,  dbText
+OutcomeIfNotMet,  dbMemo
+Deleted,  dbDate
+ReviewDate,  dbDate
+FollowOnDP,  dbLong

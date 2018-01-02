@@ -1,0 +1,9 @@
+EmailNo,  dbLong
+CrewNo,  dbText
+MailTo,  dbText
+MailFrom,  dbText
+Subject,  dbText
+Body,  dbText
+TimeSent,  dbDate
+Attachments,  dbText
+Deleted,  dbDate

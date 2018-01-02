@@ -1,0 +1,8 @@
+ID,  dbLong
+Name,  dbText
+CrewNo,  dbText
+CourseNo,  dbText
+Status,  dbText
+StationNo,  dbText
+Division,  dbText
+Deleted,  dbText

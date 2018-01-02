@@ -1,0 +1,7 @@
+AssessmentNo,  dbLong
+CrewNo,  dbText
+DayNo,  dbLong
+Score,  dbLong
+Attempt,  dbLong
+AssessType,  dbText
+Deleted,  dbDate
