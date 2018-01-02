@@ -16,8 +16,9 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
 ' v0,1 - Added Validation to BtnUpdate
+' v0,2 - Checked for "" before updating scores
 '---------------------------------------------------------------
-' Date - 20 Dec 16
+' Date - 10 Jan 17
 '===============================================================
 Option Explicit
 
@@ -80,34 +81,67 @@ Private Sub BtnUpdate_Click()
     
     On Error GoTo ErrorHandler
     
+    ' V0,2 changes************************************************
     If ValidateScores Then
         If Not Try1 Is Nothing Then
-            Try1.Score = TxtTry1.Value
+        
+            If TxtTry1.Value = "" Then
+                Try1.Score = 0
+            Else
+                Try1.Score = TxtTry1.Value
+            End If
+            
             Try1.UpdateDB
         End If
         
         If Not Try2 Is Nothing Then
-            Try2.Score = TxtTry2.Value
+            
+            If TxtTry2.Value = "" Then
+                Try2.Score = 0
+            Else
+                Try2.Score = TxtTry2.Value
+            End If
+                
             Try2.UpdateDB
+        
         End If
         
         If Not Try3 Is Nothing Then
-            Try3.Score = TxtTry3.Value
+            
+            If TxtTry3.Value = "" Then
+                Try3.Score = 0
+            Else
+                Try3.Score = TxtTry3.Value
+            End If
+        
             Try3.UpdateDB
         End If
         
         If Not Try4 Is Nothing Then
-            Try4.Score = TxtTry4.Value
+            
+            If TxtTry4.Value = "" Then
+                Try4.Score = 0
+            Else
+                Try4.Score = TxtTry4.Value
+            End If
+        
             Try4.UpdateDB
         End If
         
         If Not Try5 Is Nothing Then
-            Try5.Score = TxtTry5.Value
+            
+            If TxtTry5.Value = "" Then
+                Try5.Score = 0
+            Else
+                Try5.Score = TxtTry5.Value
+            End If
+        
             Try5.UpdateDB
         End If
-        
+                
         If Not ShtAssess.PopulateSheet Then Err.Raise HANDLED_ERROR
     End If
+    '**************************************************************
 Exit Sub
 
 ErrorExit:
