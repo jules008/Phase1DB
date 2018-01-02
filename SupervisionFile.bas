@@ -1,6 +1,4 @@
 Attribute VB_Name = "SupervisionFile"
-Private Const StrMODULE As String = "SupervisionFile"
-
 Option Explicit
 
 ' ===============================================================
@@ -32,6 +30,7 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
     
 
     Set Module = New ClsModule
+    Set Candidate = New ClsCandidate
     Set Course = New ClsCourse
     Set DailyLog = New ClsDailyLog
     Set FSO = New FileSystemObject
@@ -60,7 +59,7 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         
         'get crew no of candidate for supervision File
 '        CrewNo = Me.GetCrewNo
-'        StrCrewNo = "'" & crewno & "'"
+        StrCrewNo = "'" & crewno & "'"
         'update candidate details on summary sheet
 '        Set Candidate = Candidate.GetCandidateClass(CrewNo)
         ShtSummary.FillOutSummaryCandidate Candidate
@@ -73,17 +72,26 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         End If
         
         FSO.CreateFolder FilePath
-        
-        'fill out front sheet
-        ShtCover.PopulateFrontSheet Candidate
-        
-        'fill out assessment sheet
-        ShtAssessment.PopulateAssessmentSummary Candidate
-
+         
         'get Daily Log objects
         For i = 1 To 32
             
-            Set DailyLog = Candidate.Dailylogs.FindItem(i)
+            'lookup module no for each day
+            With RstModule
+                .MoveFirst
+                .FindFirst "[dayno] = " & i
+                ModuleNo = !ModuleNo
+            End With
+            
+'            Set Module = Module.GetModuleClass(ModuleNo)
+            Set Course = Course.GetCourseClass(Candidate.CourseNo)
+            Set DailyLog = DailyLog.GetDailyLogClass(crewno, ModuleNo)
+               
+            'fill out front sheet
+            ShtCover.PopulateFrontSheet Candidate, Course
+            
+            'fill out assessment sheet
+            ShtAssessment.PopulateAssessmentSummary Candidate
 
             If Not DailyLog Is Nothing Then
             
@@ -91,13 +99,13 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
                 ShtSummary.FillOutSummary DailyLog
                    
                 'fill out daily log template
-                ShtDailyLog.FillOutForm DailyLog
+                ShtDailyLog.FillOutForm DailyLog, Module, Candidate, Course
                 
                 'print Daily log
                 With ShtDailyLog
                     .Visible = xlSheetVisible
                     If Globals.ENABLE_PRINT = True Then
-                        Library.PrintPDF ShtDailyLog, FilePath & "/" & "5 - Daily Log " & Format(DailyLog.Module.DayNo, "00")
+                        Library.PrintPDF ShtDailyLog, FilePath & "/" & "5 - Daily Log " & Format(i, "00")
                     End If
                    .Visible = xlSheetHidden
                 End With
@@ -107,7 +115,7 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         Next
         
         'process Development Plans
-'        Set DevelopmentPlans = DevelopmentPlans.AddDevelopmentPlans(Candidate.crewno)
+        Set DevelopmentPlans = DevelopmentPlans.AddDevelopmentPlans(Candidate.crewno)
         
         If Not DevelopmentPlans Is Nothing Then
         
@@ -116,7 +124,7 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
     
             For i = 1 To NoDPs
                 
-'                Set WshtDP = ShtDPTemplate.FillOutDP(DevelopmentPlans.GetDP(i), Candidate)
+                Set WshtDP = ShtDPTemplate.FillOutDP(DevelopmentPlans.GetDP(i), Candidate)
                 
                 'Print DP Sheet
                 With WshtDP

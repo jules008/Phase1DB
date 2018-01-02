@@ -2,7 +2,7 @@ Attribute VB_Name = "Globals"
 Option Explicit
 Private Const StrMODULE As String = "Globals"
 
-Public Const DEBUG_MODE As Boolean = True   ' TRUE / FALSE
+Public Const DEBUG_MODE As Boolean = False   ' TRUE / FALSE
 Public Const OUTPUT_MODE As String = "Debug"  ' "Log" / "Debug"
 Public Const ENABLE_PRINT = True           ' TRUE / FALSE
 Public Const APP_NAME As String = "Phase 1 Database"
