@@ -19,7 +19,7 @@ Public Sub FillOutSummary(DailyLog As Object)
     Dim RngIndex As Range
     
     Set RngModules = Me.Range("B6:AG6")
-    Set RngIndex = RngModules.Find(DailyLog.ModuleNo)
+    Set RngIndex = RngModules.Find(DailyLog.Module.ModuleNo)
     Set RngArea = Range("A8")
     
     ColNo = RngIndex.Column
@@ -40,8 +40,8 @@ End Sub
 Public Sub FillOutSummaryCandidate(Candidate As Object)
 'Public Sub FillOutSummaryCandidate(Candidate As ClsCandidate)
     With Candidate
-        Me.Range("Sup_CourseNo") = .CourseNo
-        Me.Range("sup_Crewno") = .CrewNo
+        Me.Range("Sup_CourseNo") = .Parent.CourseNo
+        Me.Range("sup_Crewno") = .crewno
         Me.Range("sup_division") = .Division
         Me.Range("Sup_name") = .Name
         Me.Range("sup_station") = .StationNo

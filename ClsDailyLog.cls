@@ -326,7 +326,7 @@ End Sub
 'Method GetParentFromPtr
 ' Private routine to copy memory address of parent class
 '---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsDailyLog
+Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsCandidate
     Dim tmp As ClsDailyLog
     
     CopyMemory tmp, Ptr, 4

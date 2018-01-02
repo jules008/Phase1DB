@@ -9,7 +9,7 @@ Public Function CourseAccessCheck(CourseNo As String) As Boolean
     Dim StrCourseNo As String
     Dim RstUserList As Recordset
     
-    StrUsername = "'" & Application.Username & "'"
+    StrUsername = Application.Username
     StrCourseNo = "'" & CourseNo & "'"
     
     Set RstUserList = database.SQLQuery("SELECT * FROM useraccess WHERE " & _
@@ -114,11 +114,11 @@ Public Function IsAdmin() As Boolean
         If Not Initialise Then Err.Raise HANDLED_ERROR
     End If
     
-    StrUsername = "'" & Application.Username & "'"
+    StrUsername = Application.Username
     
     Set RstUserList = database.SQLQuery("SELECT * FROM userlist WHERE " & _
                             " username = " & StrUsername _
-                            & "AND admin = TRUE")
+                            & " AND admin = TRUE")
     
     With RstUserList
         If .RecordCount > 0 Then

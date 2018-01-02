@@ -1,7 +1,17 @@
 Attribute VB_Name = "SupervisionFile"
+Private Const StrMODULE As String = "SupervisionFile"
+
 Option Explicit
 
-Public Sub BtnSupervisionFile(Candidate As ClsCandidate)
+' ===============================================================
+' BtnSupervisionFile
+' Runs supervision file
+' ---------------------------------------------------------------
+Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
+    Const StrPROCEDURE As String = "BtnSupervisionFile()"
+
+    On Error GoTo ErrorHandler
+
     Dim DlgOpen As FileDialog
     Dim DailyLog As ClsDailyLog
     Dim DevelopmentPlan As ClsDevelopmentPlan
@@ -16,13 +26,12 @@ Public Sub BtnSupervisionFile(Candidate As ClsCandidate)
     Dim FilePath As String
     Dim NoDPs As Integer
     Dim Course As ClsCourse
-    Dim CrewNo As String
+    Dim crewno As String
     Dim Response As Integer
     Dim i As Integer
     
 
     Set Module = New ClsModule
-    Set Candidate = New ClsCandidate
     Set Course = New ClsCourse
     Set DailyLog = New ClsDailyLog
     Set FSO = New FileSystemObject
@@ -51,39 +60,30 @@ Public Sub BtnSupervisionFile(Candidate As ClsCandidate)
         
         'get crew no of candidate for supervision File
 '        CrewNo = Me.GetCrewNo
-        StrCrewNo = "'" & CrewNo & "'"
+'        StrCrewNo = "'" & crewno & "'"
         'update candidate details on summary sheet
 '        Set Candidate = Candidate.GetCandidateClass(CrewNo)
         ShtSummary.FillOutSummaryCandidate Candidate
         
         'add new folder for candidate
-        FilePath = FilePath & "/" & Candidate.CrewNo & " " & Candidate.Name
+        FilePath = FilePath & "/" & Candidate.crewno & " " & Candidate.Name
         
         If FSO.FolderExists(FilePath) Then
             FSO.DeleteFolder (FilePath)
         End If
         
         FSO.CreateFolder FilePath
-         
+        
+        'fill out front sheet
+        ShtCover.PopulateFrontSheet Candidate
+        
+        'fill out assessment sheet
+        ShtAssessment.PopulateAssessmentSummary Candidate
+
         'get Daily Log objects
         For i = 1 To 32
             
-            'lookup module no for each day
-            With RstModule
-                .MoveFirst
-                .FindFirst "[dayno] = " & i
-                ModuleNo = !ModuleNo
-            End With
-            
-'            Set Module = Module.GetModuleClass(ModuleNo)
-            Set Course = Course.GetCourseClass(Candidate.CourseNo)
-            Set DailyLog = DailyLog.GetDailyLogClass(CrewNo, ModuleNo)
-               
-            'fill out front sheet
-            ShtCover.PopulateFrontSheet Candidate, Course
-            
-            'fill out assessment sheet
-            ShtAssessment.PopulateAssessmentSummary Candidate
+            Set DailyLog = Candidate.Dailylogs.FindItem(i)
 
             If Not DailyLog Is Nothing Then
             
@@ -91,13 +91,13 @@ Public Sub BtnSupervisionFile(Candidate As ClsCandidate)
                 ShtSummary.FillOutSummary DailyLog
                    
                 'fill out daily log template
-                ShtDailyLog.FillOutForm DailyLog, Module, Candidate, Course
+                ShtDailyLog.FillOutForm DailyLog
                 
                 'print Daily log
                 With ShtDailyLog
                     .Visible = xlSheetVisible
                     If Globals.ENABLE_PRINT = True Then
-                        Library.PrintPDF ShtDailyLog, FilePath & "/" & "5 - Daily Log " & Format(i, "00")
+                        Library.PrintPDF ShtDailyLog, FilePath & "/" & "5 - Daily Log " & Format(DailyLog.Module.DayNo, "00")
                     End If
                    .Visible = xlSheetHidden
                 End With
@@ -107,7 +107,7 @@ Public Sub BtnSupervisionFile(Candidate As ClsCandidate)
         Next
         
         'process Development Plans
-        Set DevelopmentPlans = DevelopmentPlans.AddDevelopmentPlans(Candidate.CrewNo)
+'        Set DevelopmentPlans = DevelopmentPlans.AddDevelopmentPlans(Candidate.crewno)
         
         If Not DevelopmentPlans Is Nothing Then
         
@@ -116,7 +116,7 @@ Public Sub BtnSupervisionFile(Candidate As ClsCandidate)
     
             For i = 1 To NoDPs
                 
-                Set WshtDP = ShtDPTemplate.FillOutDP(DevelopmentPlans.GetDP(i), Candidate)
+'                Set WshtDP = ShtDPTemplate.FillOutDP(DevelopmentPlans.GetDP(i), Candidate)
                 
                 'Print DP Sheet
                 With WshtDP
@@ -193,7 +193,31 @@ Public Sub BtnSupervisionFile(Candidate As ClsCandidate)
         Set FSO = Nothing
         Set DevelopmentPlan = Nothing
     End If
-End Sub
-    
+
+    BtnSupervisionFile = True
+
+Exit Function
+
+ErrorExit:
+
+    Set Module = Nothing
+    Set Candidate = Nothing
+    Set Course = Nothing
+    Set DailyLog = Nothing
+    Set RstModule = Nothing
+    Set DlgOpen = Nothing
+    Set FSO = Nothing
+    Set DevelopmentPlan = Nothing
+    BtnSupervisionFile = False
+
+Exit Function
+
+ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
 
 

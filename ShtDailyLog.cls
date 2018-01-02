@@ -10,14 +10,14 @@ Attribute VB_Exposed = True
 Option Explicit
 
 
-Public Sub FillOutForm(DailyLog As Object, Module As Object, Candidate As Object, Course As Object)
-'Public Sub FillOutForm(DailyLog As ClsDailyLog, Module As ClsModule, Candidate As ClsCandidate, Course As ClsCourse)
+Public Sub FillOutForm(DailyLog As Object)
+'Public Sub FillOutForm(DailyLog As ClsDailyLog)
     Dim RngComments As Range
     Dim i As Integer
     
     With DailyLog
-        Range("DL_CrewNo") = .CrewNo
-        Range("DL_Module") = .ModuleNo
+        Range("DL_CrewNo") = .Parent.crewno
+        Range("DL_Module") = .Module.ModuleNo
         Range("DL_Assessor") = .Assessor
         Range("DL_OverallScore") = .OverallGrade
         Range("DL_Comments1") = .Comments1
@@ -36,19 +36,19 @@ Public Sub FillOutForm(DailyLog As Object, Module As Object, Candidate As Object
         Range("DL_Date") = .DLDate
     End With
     
-    With Course
+    With DailyLog.Parent.Parent
         Range("DL_CourseNo") = .CourseNo
         Range("DL_StartDate") = .StartDate
     End With
         
-    With Candidate
+    With DailyLog.Parent
         Range("DL_Name") = .Name
         Range("DL_Station") = .StationNo
         Range("DL_Division") = .Division
     End With
     
-    With Module
-        Range("DL_Module") = .ModuleNo & " - " & .ModuleDesc
+    With DailyLog.Module
+        Range("DL_Module") = .ModuleNo & " - " & .Module
         Range("DL_DayNo") = .DayNo
     End With
     

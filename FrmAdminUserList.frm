@@ -132,11 +132,11 @@ Private Sub BtnUpdate_Click()
     With User
         .AccessLvl = 2
         .Admin = ChkAdmin
-        .CrewNo = TxtCrewNo
-        .Forename = TxtForeName
-        .Rank = TxtRank
+        .crewno = Trim(TxtCrewNo)
+        .Forename = Trim(TxtForeName)
+        .Rank = Trim(TxtRank)
         .Role = ""
-        .Surname = TxtSurname
+        .Surname = Trim(TxtSurname)
 
     End With
     

@@ -658,3 +658,46 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
+
+' ===============================================================
+' RunSupervisionFile
+' Generates Supervision file for selected candidate
+' ---------------------------------------------------------------
+Public Sub RunSupervisionFile()
+    Dim Candidate As ClsCandidate
+    Dim crewno As String
+    
+    Const StrPROCEDURE As String = "RunSupervisionFile()"
+
+    On Error GoTo ErrorHandler
+
+    crewno = GetCrewNo
+    
+    If Course Is Nothing Then
+        If Not Initialise Then Err.Raise HANDLED_ERROR
+        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
+    End If
+    
+    If crewno <> "" Then Set Candidate = Course.Candidates.FindItem(crewno)
+
+    If Not SupervisionFile.BtnSupervisionFile(Candidate) Then Err.Raise HANDLED_ERROR
+    
+    Set Candidate = Nothing
+
+Exit Sub
+
+ErrorExit:
+    
+    Set Candidate = Nothing
+
+'    ***CleanUpCode***
+
+Exit Sub
+
+ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Sub
