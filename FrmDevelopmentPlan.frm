@@ -234,6 +234,7 @@ End Sub
 Private Sub BtnPrint_Click()
     
     DevelopmentPlan.PrintForm
+    Hide
 End Sub
 
 Private Sub BtnUpdate_Click()

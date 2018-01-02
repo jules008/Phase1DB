@@ -27,7 +27,7 @@ Private Candidate As ClsCandidate
 Private DailyLog As ClsDailyLog
 Private ActiveSession As ClsXTrainingSession
 
-Public Function ShowForm(Optional ExistDailyLog As ClsDailyLog, Optional ShowAll As Boolean) As Boolean
+Public Function ShowForm(Optional ExistDailyLog As ClsDailyLog) As Boolean
     
    Const StrPROCEDURE As String = "ShowForm()"
    
@@ -238,7 +238,7 @@ Private Sub UserForm_Terminate()
     FormTerminate
 End Sub
 
-Private Function PopulateForm(ShowAll As Boolean) As Boolean
+Private Function PopulateForm() As Boolean
     Const StrPROCEDURE As String = "PopulateForm()"
     
     Dim i As Integer
@@ -271,6 +271,39 @@ Private Function PopulateForm(ShowAll As Boolean) As Boolean
         .List(0, 3) = "Training Taken"
     End With
     
+    'list contents
+    With LstTrainingList
+        ListIndex = .ListIndex
+            
+        .Clear
+        If DailyLog.XtrainingSessions.Count = 0 Then
+        
+            DisableEntryForm
+        Else
+            
+            For i = 1 To DailyLog.XtrainingSessions.Count
+                            
+                Set TrainingSession = DailyLog.XtrainingSessions.FindItem(i)
+                
+                If TrainingSession.TrainingTaken = True Then
+                    TrainingTaken = "Yes"
+                    TrainingDate = Format(TrainingSession.TrainingDate, "dd/mm/yy")
+                Else
+                    TrainingTaken = "No"
+                    TrainingDate = ""
+                End If
+                
+                .AddItem
+                .List(i - 1, 0) = TrainingSession.ExtraTrainingNo
+                .List(i - 1, 1) = i
+                .List(i - 1, 2) = TrainingDate
+                .List(i - 1, 3) = TrainingTaken
+            Next
+            
+
+        End If
+        If ListIndex <> -1 Then .Selected(ListIndex) = True
+    End With
     Set TrainingSession = Nothing
     PopulateForm = True
 
@@ -458,41 +491,3 @@ Public Sub EnableFormEntry()
     BtnUpdate.Enabled = True
 
 End Sub
-
-Public Function PopulateList(ShowAll As Boolean) As Boolean
-
-    'list contents
-    With LstTrainingList
-        ListIndex = .ListIndex
-            
-        .Clear
-        If DailyLog.XtrainingSessions.Count = 0 Then
-        
-            DisableEntryForm
-        Else
-            
-            For i = 1 To DailyLog.XtrainingSessions.Count
-                            
-                Set TrainingSession = DailyLog.XtrainingSessions.FindItem(i)
-                
-                If TrainingSession.TrainingTaken = True Then
-                    TrainingTaken = "Yes"
-                    TrainingDate = Format(TrainingSession.TrainingDate, "dd/mm/yy")
-                Else
-                    TrainingTaken = "No"
-                    TrainingDate = ""
-                End If
-                
-                .AddItem
-                .List(i - 1, 0) = TrainingSession.ExtraTrainingNo
-                .List(i - 1, 1) = i
-                .List(i - 1, 2) = TrainingDate
-                .List(i - 1, 3) = TrainingTaken
-            Next
-            
-
-        End If
-        If ListIndex <> -1 Then .Selected(ListIndex) = True
-    End With
-
-End Function

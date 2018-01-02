@@ -15,8 +15,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - Added Validation to BtnUpdate
 '---------------------------------------------------------------
-' Date - 07 Nov 16
+' Date - 20 Dec 16
 '===============================================================
 Option Explicit
 
@@ -78,34 +79,35 @@ Private Sub BtnUpdate_Click()
     Const StrPROCEDURE As String = "BtnUpdate_Click()"
     
     On Error GoTo ErrorHandler
-
-    If Not Try1 Is Nothing Then
-        Try1.Score = TxtTry1.Value
-        Try1.UpdateDB
-    End If
     
-    If Not Try2 Is Nothing Then
-        Try2.Score = TxtTry2.Value
-        Try2.UpdateDB
+    If ValidateScores Then
+        If Not Try1 Is Nothing Then
+            Try1.Score = TxtTry1.Value
+            Try1.UpdateDB
+        End If
+        
+        If Not Try2 Is Nothing Then
+            Try2.Score = TxtTry2.Value
+            Try2.UpdateDB
+        End If
+        
+        If Not Try3 Is Nothing Then
+            Try3.Score = TxtTry3.Value
+            Try3.UpdateDB
+        End If
+        
+        If Not Try4 Is Nothing Then
+            Try4.Score = TxtTry4.Value
+            Try4.UpdateDB
+        End If
+        
+        If Not Try5 Is Nothing Then
+            Try5.Score = TxtTry5.Value
+            Try5.UpdateDB
+        End If
+        
+        If Not ShtAssess.PopulateSheet Then Err.Raise HANDLED_ERROR
     End If
-    
-    If Not Try3 Is Nothing Then
-        Try3.Score = TxtTry3.Value
-        Try3.UpdateDB
-    End If
-    
-    If Not Try4 Is Nothing Then
-        Try4.Score = TxtTry4.Value
-        Try4.UpdateDB
-    End If
-    
-    If Not Try5 Is Nothing Then
-        Try5.Score = TxtTry5.Value
-        Try5.UpdateDB
-    End If
-    
-    If Not ShtAssess.PopulateSheet Then Err.Raise HANDLED_ERROR
-
 Exit Sub
 
 ErrorExit:

@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - Bug Fix - Check if DP worksheet is already open
 '---------------------------------------------------------------
-' Date - 27 Sep 16
+' Date - 09/01/17
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -321,20 +322,21 @@ Public Sub PrintForm()
     Const StrPROCEDURE As String = "PrintForm()"
 
     Dim LocDevArea As ClsDevelopmentArea
+    Dim DPWorkbook As Workbook
     Dim i As Integer
     Dim NoCopies As Integer
     
     On Error GoTo ErrorHandler
 
-    Application.DisplayAlerts = False
+    
+    'V0.1 - changes ***************************************
     
     Application.Workbooks.Add (xlWBATWorksheet)
-    ActiveWorkbook.SaveAs ("DP")
-    
-    Application.DisplayAlerts = True
-    
+    Set DPWorkbook = ActiveWorkbook
+    '******************************************************
+   
     ShtDPTemplate.Visible = xlSheetVisible
-    ShtDPTemplate.Copy after:=Workbooks("DP.xlsx").Sheets(1)
+    ShtDPTemplate.Copy after:=ActiveWorkbook.Sheets(1)
     Set pDevPlanSheet = ActiveSheet
     ShtDPTemplate.Visible = xlSheetHidden
     

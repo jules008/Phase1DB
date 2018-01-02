@@ -4,7 +4,7 @@ Private Const StrMODULE As String = "Globals"
 
 Public Const DEBUG_MODE As Boolean = True   ' TRUE / FALSE
 Public Const OUTPUT_MODE As String = "Debug"  ' "Log" / "Debug"
-Public Const ENABLE_PRINT = True           ' TRUE / FALSE
+Public Const ENABLE_PRINT = False           ' TRUE / FALSE
 Public Const APP_NAME As String = "Phase 1 Database"
 Public Const HANDLED_ERROR As Long = 9999
 Public Const USER_CANCEL As Long = 18

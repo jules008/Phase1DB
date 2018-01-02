@@ -112,32 +112,6 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
-
-Private Sub BtnETView_Click()
-    Const StrPROCEDURE As String = "BtnETView_Click()"
-
-    On Error GoTo ErrorHandler
-
-    If Not FrmExtraTraining.ShowForm Then Err.Raise HANDLED_ERROR
-    
-Exit Sub
-
-ErrorExit:
-    
-    FormTerminate
-    Terminate
-
-Exit Sub
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Sub
-
 Private Sub BtnNew_Click()
     
     Const StrPROCEDURE As String = "BtnNew_Click()"
@@ -381,31 +355,6 @@ ErrorHandler:
     End If
 
 End Sub
-
-Private Sub BtnViewDPs_Click()
-    Const StrPROCEDURE As String = "BtnViewDPs_Click()"
-    
-    On Error GoTo ErrorHandler
-    
-    If Not FrmDevelopmentPlanList.ShowForm(Candidate) Then Err.Raise HANDLED_ERROR
-    Exit Sub
-
-ErrorExit:
-    FormTerminate
-    Terminate
-
-
-Exit Sub
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Sub
-
 
 Private Sub TxtCourseNo_AfterUpdate()
     
