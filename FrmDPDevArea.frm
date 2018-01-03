@@ -15,8 +15,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - Date Picker removal
 '---------------------------------------------------------------
-' Date - 26 Sep 16
+' Date - 03 Jan 18
 '===============================================================
 Option Explicit
 Private Const StrMODULE As String = "FrmDPDevArea"
@@ -328,6 +329,12 @@ Private Function ValidateData() As Boolean
         Exit Function
     End If
 
+    If Not IsDate(Me.TxtReviewDate) Then
+        MsgBox "Please enter a valid date"
+        ValidateData = False
+        Exit Function
+    End If
+    
     If Me.TxtRef = "" Then
         MsgBox "Please enter a reference.  If this is not applicable, enter 'None'"
         ValidateData = False

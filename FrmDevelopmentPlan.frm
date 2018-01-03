@@ -421,6 +421,12 @@ Private Function ValidateData() As Boolean
         Exit Function
     End If
 
+    If Not IsDate(Me.TxtReviewDate) Then
+        MsgBox "Please enter a valid date"
+        ValidateData = False
+        Exit Function
+    End If
+    
     If Me.CmoIssuer = "" Then
         MsgBox "Please select the issuer's name"
         ValidateData = False
@@ -430,14 +436,6 @@ Private Function ValidateData() As Boolean
     ValidateData = True
 End Function
 
-Private Sub BtnDatePicker_Click()
-    On Error Resume Next
-    
-    FrmDatePicker.Show
-    
-    Me.TxtReviewDate = FrmDatePicker.Tag
-
-End Sub
 
 Private Sub BtnDeleteDev_Click()
 
