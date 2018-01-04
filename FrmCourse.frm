@@ -258,12 +258,6 @@ Private Function ValidateData() As Boolean
         ValidateData = False
         Exit Function
     End If
-
-    If Me.TxtStrtDate = "" Then
-        MsgBox "Please enter a start date"
-        ValidateData = False
-        Exit Function
-    End If
         
     If Me.TxtPassOutDate = "" Then
         MsgBox "Please enter a pass out date"
@@ -271,6 +265,18 @@ Private Function ValidateData() As Boolean
         Exit Function
     End If
         
+    If Not IsDate(Me.TxtStrtDate) Then
+        MsgBox "Please enter a valid Start Date"
+        ValidateData = False
+        Exit Function
+    End If
+    
+    If Not IsDate(Me.TxtPassOutDate) Then
+        MsgBox "Please enter a valid Pass Out Date"
+        ValidateData = False
+        Exit Function
+    End If
+    
     If Me.CmoCourseDirector = "" Then
         MsgBox "Please enter a course director"
         ValidateData = False

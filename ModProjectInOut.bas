@@ -12,7 +12,7 @@ Public Sub ExportModules()
     SourceBookName = ActiveWorkbook.Name
     Set SourceBook = Application.Workbooks(SourceBookName)
     
-    If Left(ActiveWorkbook.Path, 5) = "https" Then
+    If Left(ActiveWorkbook.Path, 5) = "https" Or Left(ActiveWorkbook.Path, 3) = "C:\" Then
         ExportFilePath = "C:\Users\Julian\OneDrive\Dev Area\Dev Library\"
     Else
         ExportFilePath = ExportFilePath & "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Stores IT Project\Library\Dev\"
@@ -52,7 +52,7 @@ Public Sub ExportModules()
     
     Terminate
     
-    ThisWorkbook.SaveAs ExportFilePath & "\Phase 1 Candidate Database v2", 51
+    ThisWorkbook.SaveAs ExportFilePath & "Phase 1 Candidate Database v2", 51
     
     Set DlgOpen = Nothing
 
