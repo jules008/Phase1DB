@@ -72,15 +72,6 @@ Private Sub BtnClose_Click()
     Me.Hide
 End Sub
 
-Private Sub BtnDatePicker_Click()
-    On Error Resume Next
-    
-    FrmDatePicker.Show
-    
-    Me.TxtTrainingDate = FrmDatePicker.Tag
-
-End Sub
-
 Private Sub BtnDelete_Click()
     Const StrPROCEDURE As String = "BtnDelete_Click()"
     
@@ -377,6 +368,12 @@ Private Function ValidateData() As Boolean
         Exit Function
     End If
     
+    If TxtTrainingDate <> "" And Not IsDate(Me.TxtTrainingDate) Then
+        MsgBox "Please enter a valid date"
+        ValidateData = False
+        Exit Function
+    End If
+        
     ValidateData = True
 End Function
 

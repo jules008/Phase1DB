@@ -121,6 +121,7 @@ End Function
 
 
 Public Sub PrintDP()
+    Dim x As Integer
     FrmPrintCopies.Show
     
     For x = 1 To FrmPrintCopies.CmoNoCopies

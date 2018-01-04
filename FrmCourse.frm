@@ -120,26 +120,6 @@ Private Sub BtnClose_Click()
     Me.Hide
 End Sub
 
-Private Sub BtnDatePicker1_Click()
-    
-    On Error Resume Next
-    
-    FrmDatePicker.Show
-    
-    Me.TxtStrtDate = FrmDatePicker.Tag
-    
-End Sub
-
-Private Sub BtnDatePicker2_Click()
-    
-    On Error Resume Next
-    
-    FrmDatePicker.Show
-    
-    Me.TxtPassOutDate = FrmDatePicker.Tag
-
-End Sub
-
 Private Sub BtnDelete_Click()
     
     Const StrPROCEDURE As String = "BtnDelete_Click()"

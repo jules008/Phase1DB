@@ -76,7 +76,7 @@ Public Function WorksheetActivate() As Boolean
        
     On Error GoTo ErrorHandler
     
-    Me.Activate
+'    Me.Activate
     If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
     If Not PopulateSheet Then Err.Raise HANDLED_ERROR
         

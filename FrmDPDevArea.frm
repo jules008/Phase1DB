@@ -76,13 +76,7 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
-Private Sub BtnDatePicker_Click()
-    On Error Resume Next
-    
-    FrmDatePicker.Show
-    Me.TxtReviewDate = FrmDatePicker.Tag
 
-End Sub
 
 Private Sub BtnUpdate_Click()
     Const StrPROCEDURE As String = "BtnUpdate_Click()"
