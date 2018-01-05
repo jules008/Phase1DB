@@ -68,7 +68,7 @@ Public Sub ImportModules()
     Dim ImportFileName As String
     Dim VBModules As VBIDE.VBComponents
 
-    ImportFilePath = ThisWorkbook.Path
+    ImportFilePath = "E:\Phase1DB\"
     
     ''' NOTE: This workbook must be open in Excel.
     TargetBookName = ActiveWorkbook.Name
