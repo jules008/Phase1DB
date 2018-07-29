@@ -24,7 +24,7 @@ Private Sub BtnConnectDB_Click()
     
     On Error GoTo ErrorHandler
     
-    If Not ModDatabase.SelectDB Then Err.Raise HANDLED_ERROR
+    If Not Database.SelectDB Then Err.Raise HANDLED_ERROR
     
 Exit Sub
 
@@ -90,7 +90,7 @@ Private Sub CmoCourseNo_Change()
                         With MailSystem
                             .MailItem.To = "Julian Turner"
                             .MailItem.Subject = "Access Request - " & APP_NAME
-                            .MailItem.Body = Application.UserName & " has requested access to " & APP_NAME
+                            .MailItem.Body = Application.Username & " has requested access to " & APP_NAME
                             .SendEmail
                         End With
 
@@ -206,7 +206,7 @@ Public Function PopulateSheet() As Boolean
         With Course.Candidates
             For i = 1 To .Count
                 Set Candidate = .FindItem(i)
-                TargetRange.Offset(i - 1, 0) = Candidate.CrewNo
+                TargetRange.Offset(i - 1, 0) = Candidate.crewno
                 TargetRange.Offset(i - 1, 1) = Candidate.Name
                 
                 With Candidate.Dailylogs
@@ -382,20 +382,20 @@ Public Sub ShowCandidateFrm()
     Const StrPROCEDURE As String = "ShowCandidateFrm()"
     
     Dim Candidate As ClsCandidate
-    Dim CrewNo As String
+    Dim crewno As String
     
     On Error GoTo ErrorHandler
     
     Set Candidate = New ClsCandidate
     
-    CrewNo = GetCrewNo
+    crewno = GetCrewNo
     
     If Course Is Nothing Then
         If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
     End If
     
-    If CrewNo <> "" Then
-        Set Candidate = Course.Candidates.FindItem(CrewNo)
+    If crewno <> "" Then
+        Set Candidate = Course.Candidates.FindItem(crewno)
         If Not FrmCandidate.ShowForm(Candidate) Then Err.Raise HANDLED_ERROR
     Else
         If Not FrmCandidate.ShowForm Then Err.Raise HANDLED_ERROR
@@ -426,14 +426,14 @@ Public Sub ShowDailyLogFrm()
     
     Const StrPROCEDURE As String = "ShowDailyLogFrm()"
     
-    Dim CrewNo As String
+    Dim crewno As String
     Dim DayNo As String
     Dim Candidate As ClsCandidate
     Dim DailyLog As ClsDailyLog
     
     On Error GoTo ErrorHandler
     
-    CrewNo = GetCrewNo
+    crewno = GetCrewNo
     DayNo = GetDayNo
     
     If Course Is Nothing Then
@@ -441,8 +441,8 @@ Public Sub ShowDailyLogFrm()
         If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
     End If
     
-    If CrewNo <> "" And DayNo <> "" Then
-        Set Candidate = Course.Candidates.FindItem(CrewNo)
+    If crewno <> "" And DayNo <> "" Then
+        Set Candidate = Course.Candidates.FindItem(crewno)
         
         Set DailyLog = Candidate.Dailylogs.FindItem(DayNo)
         
@@ -482,21 +482,21 @@ Public Sub ShowDevelopmentPlanFrm()
 
     Const StrPROCEDURE As String = "ShowDevelopmentPlanFrm()"
     
-    Dim CrewNo As String
+    Dim crewno As String
     Dim Candidate As ClsCandidate
     Dim DevelopmentPlan As ClsDevelopmentPlan
     
     On Error GoTo ErrorHandler
     
-    CrewNo = CStr(Format(GetCrewNo, "0000"))
+    crewno = CStr(Format(GetCrewNo, "0000"))
     
     If Course Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
         If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
     End If
     
-    If CrewNo <> "" Then
-        Set Candidate = Course.Candidates.FindItem(CrewNo)
+    If crewno <> "" Then
+        Set Candidate = Course.Candidates.FindItem(crewno)
     
         If Not FrmDevelopmentPlanList.ShowForm(Candidate) Then Err.Raise HANDLED_ERROR
     End If
@@ -521,13 +521,13 @@ ErrorHandler:
 End Sub
 
 Public Function GetCrewNo() As String
-    Dim CrewNo As String
+    Dim crewno As String
     
     On Error Resume Next
     
-    CrewNo = Cells(ActiveCell.Row, 2).Value
-    If CrewNo <> "" Then
-        GetCrewNo = Format(CrewNo, "0000")
+    crewno = Cells(ActiveCell.Row, 2).Value
+    If crewno <> "" Then
+        GetCrewNo = Format(crewno, "0000")
     End If
 End Function
 
@@ -665,20 +665,20 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub RunSupervisionFile()
     Dim Candidate As ClsCandidate
-    Dim CrewNo As String
+    Dim crewno As String
     
     Const StrPROCEDURE As String = "RunSupervisionFile()"
 
     On Error GoTo ErrorHandler
 
-    CrewNo = GetCrewNo
+    crewno = GetCrewNo
     
     If Course Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
         If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
     End If
     
-    If CrewNo <> "" Then Set Candidate = Course.Candidates.FindItem(CrewNo)
+    If crewno <> "" Then Set Candidate = Course.Candidates.FindItem(crewno)
 
     If Not SupervisionFile.BtnSupervisionFile(Candidate) Then Err.Raise HANDLED_ERROR
     
