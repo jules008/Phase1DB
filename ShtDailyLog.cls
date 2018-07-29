@@ -16,7 +16,7 @@ Public Sub FillOutForm(DailyLog As Object)
     Dim i As Integer
     
     With DailyLog
-        Range("DL_CrewNo") = .Parent.crewno
+        Range("DL_CrewNo") = .Parent.CrewNo
         Range("DL_Module") = .Module.ModuleNo
         Range("DL_Assessor") = .Assessor
         Range("DL_OverallScore") = .OverallGrade

@@ -21,7 +21,7 @@ Public Sub PopulateAssessmentSummary(Candidate As Object)
     StrCrewNo = "'" & Candidate.CrewNo & "'"
     
     Set RngAssessIndex = Me.Range("A7")
-    Set RstAssessment = database.SQLQuery("SELECT * FROM Assessment WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
+    Set RstAssessment = ModDatabase.SQLQuery("SELECT * FROM Assessment WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
     
     With RstAssessment
         Do While Not .EOF

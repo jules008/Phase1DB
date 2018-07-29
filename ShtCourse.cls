@@ -24,7 +24,7 @@ Private Sub BtnConnectDB_Click()
     
     On Error GoTo ErrorHandler
     
-    If Not database.SelectDB Then Err.Raise HANDLED_ERROR
+    If Not ModDatabase.SelectDB Then Err.Raise HANDLED_ERROR
     
 Exit Sub
 
@@ -90,7 +90,7 @@ Private Sub CmoCourseNo_Change()
                         With MailSystem
                             .MailItem.To = "Julian Turner"
                             .MailItem.Subject = "Access Request - " & APP_NAME
-                            .MailItem.Body = Application.Username & " has requested access to " & APP_NAME
+                            .MailItem.Body = Application.UserName & " has requested access to " & APP_NAME
                             .SendEmail
                         End With
 
@@ -665,20 +665,20 @@ End Sub
 ' ---------------------------------------------------------------
 Public Sub RunSupervisionFile()
     Dim Candidate As ClsCandidate
-    Dim crewno As String
+    Dim CrewNo As String
     
     Const StrPROCEDURE As String = "RunSupervisionFile()"
 
     On Error GoTo ErrorHandler
 
-    crewno = GetCrewNo
+    CrewNo = GetCrewNo
     
     If Course Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
         If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
     End If
     
-    If crewno <> "" Then Set Candidate = Course.Candidates.FindItem(crewno)
+    If CrewNo <> "" Then Set Candidate = Course.Candidates.FindItem(CrewNo)
 
     If Not SupervisionFile.BtnSupervisionFile(Candidate) Then Err.Raise HANDLED_ERROR
     

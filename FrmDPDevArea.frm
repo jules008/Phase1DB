@@ -186,7 +186,7 @@ Private Function PopulateForm() As Boolean
     On Error GoTo ErrorHandler
     
     With DevelopmentPlan
-        TxtLocalDPNo = .LocalDPNo
+        TxtLocalDpNo = .LocalDPNo
         
     End With
     

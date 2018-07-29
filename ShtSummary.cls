@@ -41,7 +41,7 @@ Public Sub FillOutSummaryCandidate(Candidate As Object)
 'Public Sub FillOutSummaryCandidate(Candidate As ClsCandidate)
     With Candidate
         Me.Range("Sup_CourseNo") = .Parent.CourseNo
-        Me.Range("sup_Crewno") = .crewno
+        Me.Range("sup_Crewno") = .CrewNo
         Me.Range("sup_division") = .Division
         Me.Range("Sup_name") = .Name
         Me.Range("sup_station") = .StationNo
