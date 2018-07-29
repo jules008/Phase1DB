@@ -150,7 +150,7 @@ Public Sub GetCollection()
     
     StrCrewNo = "'" & Parent.CrewNo & "'"
     
-    Set RstDevelopmentPlans = database.SQLQuery("SELECT * FROM Developmentplan WHERE crewno = " & StrCrewNo & _
+    Set RstDevelopmentPlans = ModDatabase.SQLQuery("SELECT * FROM Developmentplan WHERE crewno = " & StrCrewNo & _
                                             " AND deleted IS NULL")
     
     With RstDevelopmentPlans

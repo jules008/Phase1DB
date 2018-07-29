@@ -206,7 +206,7 @@ Public Sub LoadDB()
     StrCrewNo = "'" & Parent.CrewNo & "'"
     DayNo = pModule.DayNo
     
-    Set RstDailyLog = database.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
+    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
 
     With RstDailyLog
         If .RecordCount > 0 Then
@@ -245,7 +245,7 @@ Public Sub NewDB()
     StrCrewNo = "'" & Parent.CrewNo & "'"
     DayNo = pModule.DayNo
     
-    Set RstDailyLog = database.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
+    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
         
     With RstDailyLog
         If .RecordCount <> 0 Then
@@ -273,7 +273,7 @@ Public Function UpdateDB() As Boolean
     StrCrewNo = "'" & Parent.CrewNo & "'"
     DayNo = pModule.DayNo
     
-    Set RstDailyLog = database.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
+    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
 
     With RstDailyLog
         If .RecordCount = 0 Then
@@ -309,7 +309,7 @@ End Function
 Public Sub DeleteDB()
     Dim RstDailyLog As Recordset
     
-    Set RstDailyLog = database.SQLQuery("SELECT * FROM dailylog WHERE LogID = " & pLogID & " AND deleted IS NULL")
+    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM dailylog WHERE LogID = " & pLogID & " AND deleted IS NULL")
 
     With RstDailyLog
         If .RecordCount <> 0 Then

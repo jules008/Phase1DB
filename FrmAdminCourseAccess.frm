@@ -14,6 +14,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
 '===============================================================
 ' v0,0 - Initial version
 '---------------------------------------------------------------
@@ -57,12 +58,12 @@ End Function
 Private Sub BtnAdd_Click()
     Const StrPROCEDURE As String = "BtnAdd_Click()"
 
-    Dim Username As String
+    Dim UserName As String
     Dim User As Supervisor
     
     On Error GoTo ErrorHandler
 
-    User.Username = CmoUsers
+    User.UserName = CmoUsers
     
     If ValidateData Then
         If Not Security.AddUpdateUser(User, CmoCourseNo) Then Err.Raise HANDLED_ERROR
@@ -101,7 +102,7 @@ Private Sub BtnRemove_Click()
     Const StrPROCEDURE As String = "BtnRemove_Click()"
     
     Dim Response As Integer
-    Dim Username As String
+    Dim UserName As String
     Dim SelUser As Integer
     
     On Error GoTo ErrorHandler
@@ -111,14 +112,14 @@ Private Sub BtnRemove_Click()
         SelUser = LstAccessList.ListIndex
         If SelUser <> -1 Then
             
-            Username = LstAccessList.List(SelUser, 0)
+            UserName = LstAccessList.List(SelUser, 0)
         
             Response = MsgBox("Are you sure you want to remove access for " _
-                        & Username & " from Course " & CmoCourseNo & "?", 36)
+                        & UserName & " from Course " & CmoCourseNo & "?", 36)
         
             If Response = 6 Then
             
-                If Not Security.RemoveUser(Username, CmoCourseNo) Then Err.Raise HANDLED_ERROR
+                If Not Security.RemoveUser(UserName, CmoCourseNo) Then Err.Raise HANDLED_ERROR
             
             End If
             
@@ -215,7 +216,7 @@ Public Function RefreshUserList() As Boolean
         With RstUserList
             Do
                 LstAccessList.AddItem
-                LstAccessList.List(i, 0) = RstUserList!Username
+                LstAccessList.List(i, 0) = RstUserList!UserName
                 .MoveNext
                 i = i + 1
              Loop While Not .EOF
@@ -256,7 +257,7 @@ Public Function RefreshUserDropDown() As Boolean
     If Not RstUserList Is Nothing Then
         With RstUserList
             Do
-                CmoUsers.AddItem RstUserList!Username
+                CmoUsers.AddItem RstUserList!UserName
                 .MoveNext
              Loop While Not .EOF
         End With

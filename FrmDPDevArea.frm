@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '===============================================================
 ' v0,0 - Initial version
 ' v0,1 - Date Picker removal
@@ -93,7 +94,7 @@ Private Sub BtnUpdate_Click()
             .CurrPerfLvl = TxtCurrLvl
             .DevArea = CmoArea
             .ImproveLvl = TxtImprovReqd
-            .Module = Globals.Modules.FindItem(AStrModule(0))
+            .Module = ModGlobals.Modules.FindItem(AStrModule(0))
             .Reference = TxtRef
             .RevComments = TxtComments
             If TxtReviewDate <> "" Then .RevDate = TxtReviewDate
@@ -137,7 +138,7 @@ Private Sub BtnSpellChk_Click()
     For i = 0 To Me.Controls.Count - 1
         Cntrls.Add Controls(i)
     Next
-    Library.SpellCheck Cntrls
+    ModLibrary.SpellCheck Cntrls
     Set Cntrls = Nothing
 End Sub
 
@@ -364,12 +365,12 @@ Public Sub FormInitialise()
     
     With RstUsers
         Do
-        Me.CmoAssesor.AddItem !Username
+        Me.CmoAssesor.AddItem !UserName
         .MoveNext
         Loop While Not .EOF
     End With
     
-    For i = 1 To Globals.Modules.Count
+    For i = 1 To ModGlobals.Modules.Count
         Set Module = Modules.FindItem(i)
         Me.CmoModule.AddItem Module.ModuleNo & " - " & Module.Module
     Next

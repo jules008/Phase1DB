@@ -181,7 +181,7 @@ End Function
 Public Sub LoadDB()
     Dim RstDevelopmentPlan As Recordset
     
-    Set RstDevelopmentPlan = database.SQLQuery("SELECT * FROM DevelopmentPlan WHERE dpno = " & pDPNo & _
+    Set RstDevelopmentPlan = ModDatabase.SQLQuery("SELECT * FROM DevelopmentPlan WHERE dpno = " & pDPNo & _
                                         " AND deleted IS NULL")
     
     With RstDevelopmentPlan
@@ -207,7 +207,7 @@ End Sub
 Public Function NewDB() As Integer
     Dim RstDevelopmentPlan As Recordset
     
-    Set RstDevelopmentPlan = database.SQLQuery("DevelopmentPlan")
+    Set RstDevelopmentPlan = ModDatabase.SQLQuery("DevelopmentPlan")
         
     With RstDevelopmentPlan
         .AddNew
@@ -233,7 +233,7 @@ End Function
 Public Function UpdateDB() As Boolean
     Dim RstDevelopmentPlan As Recordset
     
-    Set RstDevelopmentPlan = database.SQLQuery("SELECT * FROM DevelopmentPlan WHERE dpno = " & pDPNo & _
+    Set RstDevelopmentPlan = ModDatabase.SQLQuery("SELECT * FROM DevelopmentPlan WHERE dpno = " & pDPNo & _
                                         " AND deleted IS NULL")
     
     With RstDevelopmentPlan
@@ -263,7 +263,7 @@ End Function
 Public Sub DeleteDB()
     Dim RstDevelopmentPlan As Recordset
     
-    Set RstDevelopmentPlan = database.SQLQuery("SELECT * FROM DevelopmentPlan WHERE Dpno = " & pDPNo & _
+    Set RstDevelopmentPlan = ModDatabase.SQLQuery("SELECT * FROM DevelopmentPlan WHERE Dpno = " & pDPNo & _
                                         " AND deleted IS NULL")
         
     With RstDevelopmentPlan

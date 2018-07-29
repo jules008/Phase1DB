@@ -1,48 +1,52 @@
 Attribute VB_Name = "ModProjectInOut"
-Dim ExportFilePath As String
+'===============================================================
+' Module ModProjectInOut
+'===============================================================
+' v1.0.0 - Initial Version
+'---------------------------------------------------------------
+' Date - 19 Apr 18
+'===============================================================
 
+Option Explicit
+
+' ===============================================================
+' ExportModules
+' Exports all VBA Modules to dev library
+' ---------------------------------------------------------------
 Public Sub ExportModules()
     Dim ExportYN As Boolean
     Dim SourceBook As Excel.Workbook
     Dim SourceBookName As String
-    Dim EmportFileName As String
+    Dim ExportFileName As String
     Dim VBModule As VBIDE.VBComponent
    
-    ''' NOTE: This workbook must be open in Excel.
+    On Error Resume Next
+   
     SourceBookName = ActiveWorkbook.Name
     Set SourceBook = Application.Workbooks(SourceBookName)
     
-    If Left(ActiveWorkbook.Path, 5) = "https" Or Left(ActiveWorkbook.Path, 3) = "C:\" Then
-        ExportFilePath = "C:\Users\Julian\OneDrive\Dev Area\Dev Library\"
-    Else
-        ExportFilePath = ExportFilePath & "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Stores IT Project\Library\Dev\"
+    If Not Dir(EXPORT_FILE_PATH & "*.*") = "" Then
+        Kill EXPORT_FILE_PATH & "*.*"
     End If
-    
-    Kill ExportFilePath & "*.*"
     
     For Each VBModule In SourceBook.VBProject.VBComponents
         
         ExportYN = True
-        EmportFileName = VBModule.Name
+        ExportFileName = VBModule.Name
 
-        ''' Concatenate the correct filename for export.
         Select Case VBModule.Type
             Case vbext_ct_ClassModule
-                EmportFileName = EmportFileName & ".cls"
+                ExportFileName = ExportFileName & ".cls"
             Case vbext_ct_MSForm
-                EmportFileName = EmportFileName & ".frm"
+                ExportFileName = ExportFileName & ".frm"
             Case vbext_ct_StdModule
-                EmportFileName = EmportFileName & ".bas"
+                ExportFileName = ExportFileName & ".bas"
             Case vbext_ct_Document
-                EmportFileName = EmportFileName & ".cls"
-                ''' This is a worksheet or workbook object.
-                ''' Don't try to export.
-'                ExportYN = False
+                ExportFileName = ExportFileName & ".cls"
         End Select
         
         If ExportYN Then
-            ''' Export the component to a text file.
-            VBModule.Export ExportFilePath & EmportFileName
+            VBModule.Export EXPORT_FILE_PATH & ExportFileName
             
         End If
    
@@ -50,97 +54,105 @@ Public Sub ExportModules()
     
     ExportDBTables
     
-    Terminate
+    Application.DisplayAlerts = False
+    ThisWorkbook.SaveAs EXPORT_FILE_PATH & "\" & PROJECT_FILE_NAME, 51
+    Application.DisplayAlerts = True
     
-    ThisWorkbook.SaveAs ExportFilePath & "Phase 1 Candidate Database v2", 51
-    
-    Set DlgOpen = Nothing
-
     MsgBox "Export is ready", vbInformation, APP_NAME
+    Set SourceBook = Nothing
 End Sub
 
+' ===============================================================
+' ImportModules
+' Imports all VBA Modules from dev library
+' ---------------------------------------------------------------
 Public Sub ImportModules()
     Dim TargetBook As Excel.Workbook
     Dim FSO As Scripting.FileSystemObject
     Dim FileObj As Scripting.File
     Dim TargetBookName As String
-    Dim ImportFilePath As String
     Dim ImportFileName As String
     Dim VBModules As VBIDE.VBComponents
-
-    ImportFilePath = "E:\Phase1DB\"
     
-    ''' NOTE: This workbook must be open in Excel.
-    TargetBookName = ActiveWorkbook.Name
-    Set TargetBook = Application.Workbooks(TargetBookName)
-            
+    On Error Resume Next
+    
     Set FSO = New Scripting.FileSystemObject
-    If FSO.GetFolder(ImportFilePath).Files.Count = 0 Then
-       MsgBox "There are no files to import", vbInformation, APP_NAME
+    If FSO.GetFolder(ThisWorkbook.Path).Files.Count = 0 Then
+       MsgBox "There are no files to import", vbInformation
        Exit Sub
     End If
 
-    Set VBModules = TargetBook.VBProject.VBComponents
+    Set VBModules = ThisWorkbook.VBProject.VBComponents
     
-    ''' Import all the code modules in the specified path
-    ''' to the ActiveWorkbook.
-    For Each FileObj In FSO.GetFolder(ImportFilePath).Files
-    
+    For Each FileObj In FSO.GetFolder(ThisWorkbook.Path).Files
+        Debug.Print FileObj.Name
+        
         If (FSO.GetExtensionName(FileObj.Name) = "cls") Or _
             (FSO.GetExtensionName(FileObj.Name) = "frm") Or _
-            (FSO.GetExtensionName(FileObj.Name) = "bas") Then
+            (FSO.GetExtensionName(FileObj.Name) = "bas") And _
+            FileObj.Name <> "ModProjectInOut.bas" Then
             VBModules.Import FileObj.Path
         End If
         
     Next FileObj
-    
-    
-    MsgBox "Import is ready", vbInformation, APP_NAME
+    Debug.Print "End of import"
+    Set FSO = Nothing
+    Set VBModules = Nothing
 End Sub
  
+' ===============================================================
+' RemoveAllModules
+' Removes all VBA Modules from project
+' ---------------------------------------------------------------
 Public Sub RemoveAllModules()
     Dim ExportYN As Boolean
     Dim DlgOpen As FileDialog
     Dim SourceBook As Excel.Workbook
     Dim SourceBookName As String
-    Dim ExportFilePath As String
+    Dim EXPORTFILEPATH As String
     Dim ImportFileName As String
     Dim VBModule As VBIDE.VBComponent
-   
-    ''' NOTE: This workbook must be open in Excel.
+    
+    On Error Resume Next
+    
     SourceBookName = ActiveWorkbook.Name
     Set SourceBook = Application.Workbooks(SourceBookName)
         
     For Each VBModule In SourceBook.VBProject.VBComponents
         
-        ''' remove it from the project if you want
         If VBModule.Type <> vbext_ct_Document Then SourceBook.VBProject.VBComponents.Remove VBModule
            
     Next VBModule
     
     Set DlgOpen = Nothing
-
+    Set SourceBook = Nothing
 End Sub
 
+' ===============================================================
+' ExportDBTables
+' Exports DB tables from database
+' ---------------------------------------------------------------
 Public Sub ExportDBTables()
     Dim iFile As Integer
     Dim Fld As Field
     Dim FieldType As String
     Dim TableExport As TableDef
     Dim ExportFldr As String
-        
-    DBConnect
+    
+    On Error Resume Next
+    
+    If DB Is Nothing Then Initialise
     
     For Each TableExport In DB.TableDefs
         If Not (TableExport.Name Like "MSys*" Or TableExport.Name Like "~*") Then
             
-            'debug.print TableExport.Name
+            Debug.Print TableExport.Name
             
-            PrintFilePath = ExportFilePath & TableExport.Name & ".txt"
+            ExportFldr = EXPORT_FILE_PATH & TableExport.Name & ".txt"
         
             iFile = FreeFile()
             
-            Open PrintFilePath For Append As #iFile
+            Open ExportFldr For Append As #iFile
             
             For Each Fld In TableExport.Fields
                 Select Case Fld.Type
@@ -215,6 +227,10 @@ Public Sub ExportDBTables()
     Next
 End Sub
 
+' ===============================================================
+' SetReferenceLibs
+' Sets all project reference libraries
+' ---------------------------------------------------------------
 Public Sub SetReferenceLibs()
     Dim Reference As Object
     
@@ -286,6 +302,10 @@ Public Sub SetReferenceLibs()
     End If
 End Sub
 
+' ===============================================================
+' ReferenceExists
+' Checks to see if reference already exists
+' ---------------------------------------------------------------
 Public Function ReferenceExists(Ref As String) As Boolean
     Dim i As Integer
     
@@ -300,60 +320,97 @@ Public Function ReferenceExists(Ref As String) As Boolean
     End With
 End Function
 
+' ===============================================================
+' BuildProject
+' main program for building project
+' ---------------------------------------------------------------
 Public Sub BuildProject()
     SetReferenceLibs
     ImportModules
     CopyShtCodeModule
 End Sub
+
+' ===============================================================
+' CopyShtCodeModule
+' Copies sheet modules and this workbook classes
+' ---------------------------------------------------------------
 Public Sub CopyShtCodeModule()
     Dim SourceMod As VBIDE.VBComponent
     Dim DestMod As VBIDE.VBComponent
     Dim VBModule As VBIDE.VBComponent
     Dim VBCodeMod As VBIDE.CodeModule
     Dim i As Integer
+
+    If ModuleExists("ThisWorkbook1") Then
+        Set SourceMod = ThisWorkbook.VBProject.VBComponents("Thisworkbook1")
+        Set DestMod = ThisWorkbook.VBProject.VBComponents("Thisworkbook")
     
-    Set SourceMod = ThisWorkbook.VBProject.VBComponents("Thisworkbook1")
-    Set DestMod = ThisWorkbook.VBProject.VBComponents("Thisworkbook")
-
-    DestMod.CodeModule.DeleteLines 1, DestMod.CodeModule.CountOfLines
-    DestMod.CodeModule.AddFromString SourceMod.CodeModule.Lines(1, SourceMod.CodeModule.CountOfLines)
-
-    For Each VBModule In ThisWorkbook.VBProject.VBComponents
+        If DestMod.CodeModule.CountOfLines > 0 Then
+            DestMod.CodeModule.DeleteLines 1, DestMod.CodeModule.CountOfLines
+        End If
         
+        If SourceMod.CodeModule.CountOfLines > 0 Then
+            DestMod.CodeModule.AddFromString SourceMod.CodeModule.Lines(1, SourceMod.CodeModule.CountOfLines)
+        End If
+    End If
+    
+    For Each VBModule In ThisWorkbook.VBProject.VBComponents
         With VBModule
-            
-'            Debug.Print VBModule.Name
+
+            Debug.Print VBModule.Name
             If Left(.Name, 3) = "Sht" And .Type <> vbext_ct_Document Then
                 Set SourceMod = VBModule
-'                Debug.Print "Source: " & SourceMod.Name
-                
+                Debug.Print "Source: " & SourceMod.Name
+
                 For Each DestMod In ThisWorkbook.VBProject.VBComponents
-'                    Debug.Print DestMod.Name
+                    Debug.Print DestMod.Name
                     If Left(SourceMod.Name, Len(SourceMod.Name) - 1) = DestMod.Name Then
-'                        Debug.Print "Source: " & SourceMod.Name
-'                        Debug.Print " Dest: " & DestMod.Name
-                        
-                        DestMod.CodeModule.DeleteLines 1, DestMod.CodeModule.CountOfLines
-                        
-                        DestMod.CodeModule.AddFromString SourceMod.CodeModule.Lines(1, SourceMod.CodeModule.CountOfLines)
-                             
+                        Debug.Print "Source: " & SourceMod.Name
+                        Debug.Print " Dest: " & DestMod.Name
+
+                        If SourceMod.CodeModule.CountOfLines > 0 Then
+                            DestMod.CodeModule.DeleteLines 1, DestMod.CodeModule.CountOfLines
+    
+                            DestMod.CodeModule.AddFromString SourceMod.CodeModule.Lines(1, SourceMod.CodeModule.CountOfLines)
+                        End If
                     End If
                 Next
             End If
         End With
     Next
-        
+
     For Each VBModule In ThisWorkbook.VBProject.VBComponents
-        If Right(VBModule.Name, 1) = "1" Then
+        If Right(VBModule.Name, 1) = "1" And VBModule.Name <> "Sheet1" Then
             ThisWorkbook.VBProject.VBComponents.Remove VBModule
         End If
     Next VBModule
-    
-    
-    
+
+
+
     Set SourceMod = Nothing
     Set DestMod = Nothing
     Set VBModule = Nothing
     Set VBCodeMod = Nothing
 End Sub
+
+' ===============================================================
+' ModuleExists
+' checks to see if module exists in project
+' ---------------------------------------------------------------
+Public Function ModuleExists(ModuleName As String) As Boolean
+    Dim CodeModule As VBIDE.VBComponent
+ 
+    For Each CodeModule In ThisWorkbook.VBProject.VBComponents
+        If CodeModule.Name = ModuleName Then ModuleExists = True
+    Next
+End Function
+
+' ===============================================================
+' ImportModule
+' Imports a sinlge VBA Modules from dev library
+' ---------------------------------------------------------------
+Public Sub ImportModule(ModuleName As String)
+    ThisWorkbook.VBProject.VBComponents.Import LIBRARY_FILE_PATH & ModuleName
+End Sub
+
 

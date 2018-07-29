@@ -101,7 +101,7 @@ End Function
 Public Sub LoadDB()
     Dim RstTrgSession As Recordset
     
-    Set RstTrgSession = database.SQLQuery("SELECT * FROM ExtraTraining WHERE Extratrainingno = " & pExtraTrainingNo & _
+    Set RstTrgSession = ModDatabase.SQLQuery("SELECT * FROM ExtraTraining WHERE Extratrainingno = " & pExtraTrainingNo & _
                                         " AND deleted IS NULL")
                                         
     With RstTrgSession
@@ -123,7 +123,7 @@ End Sub
 Public Function NewDB() As Integer
     Dim RstTrgSession As Recordset
     
-    Set RstTrgSession = database.SQLQuery("ExtraTraining")
+    Set RstTrgSession = ModDatabase.SQLQuery("ExtraTraining")
         
     With RstTrgSession
         .AddNew
@@ -141,7 +141,7 @@ End Function
 Public Function UpdateDB() As Boolean
     Dim RstTrgSession As Recordset
 
-    Set RstTrgSession = database.SQLQuery("SELECT * FROM ExtraTraining WHERE extratrainingno = " & pExtraTrainingNo & _
+    Set RstTrgSession = ModDatabase.SQLQuery("SELECT * FROM ExtraTraining WHERE extratrainingno = " & pExtraTrainingNo & _
                                         " AND deleted IS NULL")
     
     With RstTrgSession
@@ -171,7 +171,7 @@ End Function
 Public Sub DeleteDB()
     Dim RstTrgSession As Recordset
     
-    Set RstTrgSession = database.SQLQuery("SELECT * FROM ExtraTraining WHERE ExtraTrainingNo = " & pExtraTrainingNo & " AND deleted IS NULL")
+    Set RstTrgSession = ModDatabase.SQLQuery("SELECT * FROM ExtraTraining WHERE ExtraTrainingNo = " & pExtraTrainingNo & " AND deleted IS NULL")
         
     With RstTrgSession
         If .RecordCount <> 0 Then

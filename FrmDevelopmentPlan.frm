@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '===============================================================
 ' v0,0 - Initial version
 '---------------------------------------------------------------
@@ -185,9 +186,9 @@ Private Sub BtnPrintOLD()
             Set WshtDP = ShtDPTemplate.FillOutDP(LocDevArea, Candidate)
             
             With WshtDP
-                If Globals.ENABLE_PRINT = True Then
+                If ModGlobals.ENABLE_PRINT = True Then
                     .PageSetup.Orientation = xlLandscape
-'                    Library.PrintPDF WshtDP, FilePath & "/" & "6 - Development Plan " & i
+'                    ModLibrary.PrintPDF WshtDP, FilePath & "/" & "6 - Development Plan " & i
                 End If
                 Application.DisplayAlerts = False
                 WshtDP.Delete
@@ -298,7 +299,7 @@ Private Sub BtnSpellChk_Click()
     For i = 0 To Me.Controls.Count - 1
         Cntrls.Add Controls(i)
     Next
-    Library.SpellCheck Cntrls
+    ModLibrary.SpellCheck Cntrls
     Set Cntrls = Nothing
 End Sub
 
@@ -495,7 +496,7 @@ Public Sub FormActivate()
     
     With RstUsers
         Do
-        Me.CmoIssuer.AddItem !Username
+        Me.CmoIssuer.AddItem !UserName
         .MoveNext
         Loop While Not .EOF
     End With

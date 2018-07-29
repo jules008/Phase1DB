@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '===============================================================
 ' v0,0 - Initial version
 '---------------------------------------------------------------
@@ -438,7 +439,7 @@ Public Function FormActivate() As Boolean
         Next
     End With
     
-    With Globals.Modules
+    With ModGlobals.Modules
         For i = 1 To .Count
             Set Module = .FindItem(i)
             

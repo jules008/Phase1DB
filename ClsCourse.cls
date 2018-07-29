@@ -25,7 +25,7 @@ Private pCourseNo As String
 Private pStartDate As Date
 Private pPassOutDate As Date
 Private pCourseDirector As String
-Private pCandidates As clsCandidates
+Private pCandidates As ClsCandidates
 Private pStatus As String
 
 '---------------------------------------------------------------
@@ -65,11 +65,11 @@ Public Property Let CourseDirector(ByVal vNewValue As String)
 End Property
 
 '-----------------------------------------------------------------
-Public Property Get Candidates() As clsCandidates
+Public Property Get Candidates() As ClsCandidates
     Set Candidates = pCandidates
 End Property
 
-Public Property Let Candidates(ByVal vNewValue As clsCandidates)
+Public Property Let Candidates(ByVal vNewValue As ClsCandidates)
     Set pCandidates = vNewValue
 End Property
 
@@ -92,7 +92,7 @@ Public Sub LoadDB()
     
     StrCourseNo = "'" & pCourseNo & "'"
     
-    Set RstCourse = database.SQLQuery("SELECT * FROM course WHERE courseno = " & StrCourseNo & " AND deleted IS NULL")
+    Set RstCourse = ModDatabase.SQLQuery("SELECT * FROM course WHERE courseno = " & StrCourseNo & " AND deleted IS NULL")
     
     With RstCourse
         If .RecordCount > 0 Then
@@ -118,7 +118,7 @@ Public Sub NewDB()
     
     StrCourseNo = "'" & pCourseNo & "'"
     
-    Set RstCourse = database.SQLQuery("SELECT * FROM course WHERE courseno = " & StrCourseNo & " AND deleted IS NULL")
+    Set RstCourse = ModDatabase.SQLQuery("SELECT * FROM course WHERE courseno = " & StrCourseNo & " AND deleted IS NULL")
         
     With RstCourse
         If .RecordCount <> 0 Then
@@ -142,7 +142,7 @@ Public Function UpdateDB() As Boolean
     
     StrCourseNo = "'" & pCourseNo & "'"
     
-    Set RstCourse = database.SQLQuery("SELECT * FROM course WHERE courseno = " & StrCourseNo & _
+    Set RstCourse = ModDatabase.SQLQuery("SELECT * FROM course WHERE courseno = " & StrCourseNo & _
                                     " AND deleted IS NULL")
     
     With RstCourse
@@ -172,7 +172,7 @@ Public Sub DeleteDB()
     
     StrCourseNo = "'" & pCourseNo & "'"
     
-    Set RstCourse = database.SQLQuery("SELECT * FROM course WHERE courseno = " & StrCourseNo & " AND deleted IS NULL")
+    Set RstCourse = ModDatabase.SQLQuery("SELECT * FROM course WHERE courseno = " & StrCourseNo & " AND deleted IS NULL")
     
     With RstCourse
         If .RecordCount <> 0 Then
@@ -186,7 +186,7 @@ End Sub
 
 '=========================================================================
 Private Sub Class_Initialize()
-    Set pCandidates = New clsCandidates
+    Set pCandidates = New ClsCandidates
     
     pCandidates.SetParent ObjPtr(Me)
 End Sub

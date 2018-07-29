@@ -194,7 +194,7 @@ Public Sub LoadDB()
     DPNo = Parent.DPNo
     StrDevArea = "'" & pDevArea & "'"
     
-    Set RstDevArea = database.SQLQuery("SELECT * FROM DPDevItems WHERE  DPNo = " & DPNo & _
+    Set RstDevArea = ModDatabase.SQLQuery("SELECT * FROM DPDevItems WHERE  DPNo = " & DPNo & _
                                         " AND DevArea = " & StrDevArea & _
                                         " AND deleted IS NULL")
 
@@ -230,7 +230,7 @@ Public Sub NewDB()
     DPNo = Parent.DPNo
     StrDevArea = "'" & pDevArea & "'"
     
-    Set RstStrDevArea = database.SQLQuery("SELECT * FROM DPDevItems WHERE  DPNo = " & DPNo & _
+    Set RstStrDevArea = ModDatabase.SQLQuery("SELECT * FROM DPDevItems WHERE  DPNo = " & DPNo & _
                                         " AND DevArea = " & StrDevArea & _
                                         " AND deleted IS NULL")
         
@@ -260,7 +260,7 @@ Public Function UpdateDB() As Boolean
     DPNo = Parent.DPNo
     StrDevArea = "'" & pDevArea & "'"
     
-    Set RstDevArea = database.SQLQuery("SELECT * FROM DPDevItems WHERE  DPNo = " & DPNo & _
+    Set RstDevArea = ModDatabase.SQLQuery("SELECT * FROM DPDevItems WHERE  DPNo = " & DPNo & _
                                         " AND DevArea = " & StrDevArea & _
                                         " AND deleted IS NULL")
         
@@ -302,7 +302,7 @@ Public Sub DeleteDB()
     DPNo = Parent.DPNo
     StrDevArea = "'" & pDevArea & "'"
     
-    Set RstDevArea = database.SQLQuery("SELECT * FROM DPDevItems WHERE  DPNo = " & DPNo & _
+    Set RstDevArea = ModDatabase.SQLQuery("SELECT * FROM DPDevItems WHERE  DPNo = " & DPNo & _
                                         " AND DevArea = " & StrDevArea & _
                                         " AND deleted IS NULL")
 

@@ -117,7 +117,7 @@ Public Sub GetCollection()
     StrCrewNo = "'" & Parent.Parent.CrewNo & "'"
     DayNo = Parent.Module.DayNo
     
-    Set RstTrgSession = database.SQLQuery("SELECT ExtraTrainingNo FROM ExtraTraining WHERE CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
+    Set RstTrgSession = ModDatabase.SQLQuery("SELECT ExtraTrainingNo FROM ExtraTraining WHERE CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
     
     With RstTrgSession
         If .RecordCount > 0 Then

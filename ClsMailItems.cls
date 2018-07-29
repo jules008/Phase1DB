@@ -85,7 +85,7 @@ Public Sub GetCollection()
 
     StrCrewNo = "'" & Parent.Parent.CrewNo & "'"
 
-    Set RstMailItems = database.SQLQuery("SELECT MailItemNo FROM MailItem WHERE CrewNo = " & StrCrewNo & _
+    Set RstMailItems = ModDatabase.SQLQuery("SELECT MailItemNo FROM MailItem WHERE CrewNo = " & StrCrewNo & _
                                         " AND deleted IS NULL")
 
     With RstMailItems

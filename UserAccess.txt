@@ -1,3 +1,0 @@
-Index,  dbLong
-UserName,  dbText
-CourseNo,  dbText

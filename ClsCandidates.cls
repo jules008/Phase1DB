@@ -90,7 +90,7 @@ Public Sub GetCollection()
     
     StrCourseNo = "'" & Parent.CourseNo & "'"
     
-    Set RstCandidates = database.SQLQuery("SELECT CrewNo FROM candidate WHERE courseno = " & StrCourseNo & _
+    Set RstCandidates = ModDatabase.SQLQuery("SELECT CrewNo FROM candidate WHERE courseno = " & StrCourseNo & _
                                         " AND deleted IS NULL")
     
     With RstCandidates
@@ -137,7 +137,7 @@ Public Sub CleanUp()
     Dim RstCandidate As Recordset
     Dim i As Integer
     
-    Set RstCandidate = database.SQLQuery("Candidate")
+    Set RstCandidate = ModDatabase.SQLQuery("Candidate")
     
     With RstCandidate
         If .RecordCount > 0 Then

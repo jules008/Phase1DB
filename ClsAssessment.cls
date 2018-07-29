@@ -91,7 +91,7 @@ End Function
 Public Sub LoadDB()
     Dim RstAssessment As Recordset
     
-    Set RstAssessment = database.SQLQuery("SELECT * FROM Assessment WHERE AssessmentNo = " & pAssessmentNo & _
+    Set RstAssessment = ModDatabase.SQLQuery("SELECT * FROM Assessment WHERE AssessmentNo = " & pAssessmentNo & _
                                         " AND deleted IS NULL")
                                         
     With RstAssessment
@@ -114,7 +114,7 @@ End Sub
 Public Sub NewDB()
     Dim RstAssessment As Recordset
     
-    Set RstAssessment = database.SQLQuery("Assessment")
+    Set RstAssessment = ModDatabase.SQLQuery("Assessment")
         
     With RstAssessment
         .AddNew
@@ -132,7 +132,7 @@ End Sub
 Public Function UpdateDB() As Boolean
     Dim RstAssessment As Recordset
 
-    Set RstAssessment = database.SQLQuery("SELECT * FROM Assessment WHERE AssessmentNo = " & pAssessmentNo & _
+    Set RstAssessment = ModDatabase.SQLQuery("SELECT * FROM Assessment WHERE AssessmentNo = " & pAssessmentNo & _
                                         " AND deleted IS NULL")
     
     With RstAssessment
@@ -161,7 +161,7 @@ End Function
 Public Sub DeleteDB()
     Dim RstAssessment As Recordset
     
-    Set RstAssessment = database.SQLQuery("SELECT * FROM Assessment WHERE AssessmentNo = " & pAssessmentNo & " AND deleted IS NULL")
+    Set RstAssessment = ModDatabase.SQLQuery("SELECT * FROM Assessment WHERE AssessmentNo = " & pAssessmentNo & " AND deleted IS NULL")
         
     With RstAssessment
         If .RecordCount <> 0 Then

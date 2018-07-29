@@ -70,7 +70,7 @@ Public Property Get WCS() As Supervisor
     Set RngTarget = RngLookUp.Find(pStationNo)
     
     With pWCS
-        .Username = RngTarget.Offset(0, 1)
+        .UserName = RngTarget.Offset(0, 1)
         .Role = "WCS"
     End With
     
@@ -87,7 +87,7 @@ Public Property Get DC() As Supervisor
     Set RngTarget = RngLookUp.Find(pDivision)
     
     With pDC
-        .Username = RngTarget.Offset(0, 1)
+        .UserName = RngTarget.Offset(0, 1)
         .Role = "DC"
     End With
     
@@ -104,7 +104,7 @@ Public Property Get DDC1() As Supervisor
     Set RngTarget = RngLookUp.Find(pDivision)
     
     With pDDC1
-        .Username = RngTarget.Offset(0, 2)
+        .UserName = RngTarget.Offset(0, 2)
         .Role = "DDC1"
     End With
     
@@ -121,7 +121,7 @@ Public Property Get DDC2() As Supervisor
     Set RngTarget = RngLookUp.Find(pDivision)
     
     With pDDC2
-        .Username = RngTarget.Offset(0, 3)
+        .UserName = RngTarget.Offset(0, 3)
         .Role = "DDC2"
     End With
     
@@ -194,7 +194,7 @@ Public Sub LoadDB()
         
     StrCrewNo = "'" & pCrewNo & "'"
     
-    Set RstCandidate = database.SQLQuery("SELECT * FROM candidate WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
+    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
     
     With RstCandidate
         If .RecordCount <> 0 Then
@@ -222,11 +222,11 @@ Public Sub NewDB()
     
     StrCrewNo = "'" & pCrewNo & "'"
     
-    Set RstTrgSession = database.SQLQuery("SELECT * FROM Candidate WHERE CrewNo = " & StrCrewNo)
+    Set RstTrgSession = ModDatabase.SQLQuery("SELECT * FROM Candidate WHERE CrewNo = " & StrCrewNo)
         
     With RstTrgSession
         If .RecordCount <> 0 Then
-            MsgBox "Candidate already has a record in the database.  This may need undeleting or removing from the database before a new record can be created"
+            MsgBox "Candidate already has a record in the Database.  This may need undeleting or removing from the database before a new record can be created"
         Else
             .AddNew
             !CrewNo = pCrewNo
@@ -246,7 +246,7 @@ Public Function UpdateDB() As Boolean
     
     StrCrewNo = "'" & pCrewNo & "'"
         
-    Set RstCandidate = database.SQLQuery("SELECT * FROM candidate WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
+    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
 
     With RstCandidate
         If .RecordCount = 0 Then
@@ -277,7 +277,7 @@ Public Sub DeleteDB()
     
     StrCrewNo = "'" & pCrewNo & "'"
     
-    Set RstCandidate = database.SQLQuery("SELECT * FROM candidate WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
+    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
 
     With RstCandidate
         If .RecordCount <> 0 Then

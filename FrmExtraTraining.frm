@@ -14,6 +14,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
 '===============================================================
 ' v0,0 - Initial version
 '---------------------------------------------------------------
@@ -152,7 +153,7 @@ Private Sub BtnSpellChk_Click()
     For i = 0 To Me.Controls.Count - 1
         Cntrls.Add Controls(i)
     Next
-    Library.SpellCheck Cntrls
+    ModLibrary.SpellCheck Cntrls
     Set Cntrls = Nothing
 End Sub
 Private Sub BtnUpdate_Click()

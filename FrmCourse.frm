@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '===============================================================
 ' v0,0 - Initial version
 '---------------------------------------------------------------
@@ -179,7 +180,7 @@ Private Sub BtnUpdate_Click()
             If Not .UpdateDB Then
                 .NewDB
                 .UpdateDB
-                Globals.Courses.AddItem Course
+                ModGlobals.Courses.AddItem Course
                 ShtCourse.CmoCourseNo = TxtCourseNo
             End If
             FormTerminate
@@ -288,7 +289,7 @@ Public Sub FormInitialise()
     
     With RstUsers
         Do
-        Me.CmoCourseDirector.AddItem !Username
+        Me.CmoCourseDirector.AddItem !UserName
         .MoveNext
         Loop While Not .EOF
     End With

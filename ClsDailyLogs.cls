@@ -126,7 +126,7 @@ Public Sub GetCollection()
 
     StrCrewNo = "'" & Parent.CrewNo & "'"
     
-    Set RstDailyLog = database.SQLQuery("SELECT * FROM DailyLog WHERE CrewNo = " & StrCrewNo & _
+    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM DailyLog WHERE CrewNo = " & StrCrewNo & _
                                         " AND deleted IS NULL")
     
     With RstDailyLog

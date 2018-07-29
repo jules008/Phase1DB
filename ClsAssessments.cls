@@ -109,7 +109,7 @@ Public Sub GetCollection()
     
     StrCrewNo = "'" & Parent.CrewNo & "'"
     
-    Set RstAssessment = database.SQLQuery("SELECT AssessmentNo FROM assessment WHERE " & _
+    Set RstAssessment = ModDatabase.SQLQuery("SELECT AssessmentNo FROM assessment WHERE " & _
                                             " CrewNo = " & StrCrewNo & _
                                             " AND deleted IS NULL")
     
@@ -159,7 +159,7 @@ Public Sub CleanUp()
     
     StrCrewNo = "'" & Parent.CrewNo & "'"
     
-    Set RstAssessment = database.SQLQuery("Assessment")
+    Set RstAssessment = ModDatabase.SQLQuery("Assessment")
     
     With RstAssessment
         If .RecordCount > 0 Then

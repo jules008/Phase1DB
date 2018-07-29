@@ -26,7 +26,7 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
     Dim FilePath As String
     Dim NoDPs As Integer
     Dim Course As ClsCourse
-    Dim crewno As String
+    Dim CrewNo As String
     Dim Response As Integer
     Dim i As Integer
     
@@ -56,7 +56,7 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         ShtSummary.ClearSummary
         
         'get module recordset for lookup
-        Set RstModule = database.SQLQuery("module")
+        Set RstModule = ModDatabase.SQLQuery("module")
         
         'get crew no of candidate for supervision File
 '        CrewNo = Me.GetCrewNo
@@ -66,7 +66,7 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         ShtSummary.FillOutSummaryCandidate Candidate
         
         'add new folder for candidate
-        FilePath = FilePath & "/" & Candidate.crewno & " " & Candidate.Name
+        FilePath = FilePath & "/" & Candidate.CrewNo & " " & Candidate.Name
         
         If FSO.FolderExists(FilePath) Then
             FSO.DeleteFolder (FilePath)
@@ -96,8 +96,8 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
                 'print Daily log
                 With ShtDailyLog
                     .Visible = xlSheetVisible
-                    If Globals.ENABLE_PRINT = True Then
-                        Library.PrintPDF ShtDailyLog, FilePath & "/" & "5 - Daily Log " & Format(DailyLog.Module.DayNo, "00")
+                    If ModGlobals.ENABLE_PRINT = True Then
+                        ModLibrary.PrintPDF ShtDailyLog, FilePath & "/" & "5 - Daily Log " & Format(DailyLog.Module.DayNo, "00")
                     End If
                    .Visible = xlSheetHidden
                 End With
@@ -120,9 +120,9 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
                 
                 'Print DP Sheet
                 With WshtDP
-                    If Globals.ENABLE_PRINT = True Then
+                    If ModGlobals.ENABLE_PRINT = True Then
                         .PageSetup.Orientation = xlLandscape
-                        Library.PrintPDF WshtDP, FilePath & "/" & "6 - Development Plan " & i
+                        ModLibrary.PrintPDF WshtDP, FilePath & "/" & "6 - Development Plan " & i
                     End If
                     Application.DisplayAlerts = False
                     WshtDP.Delete
@@ -134,10 +134,10 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         'Print Summary Sheet
         With ShtSummary
             .Visible = xlSheetVisible
-            If Globals.ENABLE_PRINT = True Then
-                If Globals.ENABLE_PRINT = True Then
+            If ModGlobals.ENABLE_PRINT = True Then
+                If ModGlobals.ENABLE_PRINT = True Then
                     .PageSetup.Orientation = xlLandscape
-                    Library.PrintPDF ShtSummary, FilePath & "/" & "2 - Summary"
+                    ModLibrary.PrintPDF ShtSummary, FilePath & "/" & "2 - Summary"
                 End If
             End If
            .Visible = xlSheetHidden
@@ -146,10 +146,10 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         'Print assessment Sheet
         With ShtAssessment
             .Visible = xlSheetVisible
-            If Globals.ENABLE_PRINT = True Then
-                If Globals.ENABLE_PRINT = True Then
+            If ModGlobals.ENABLE_PRINT = True Then
+                If ModGlobals.ENABLE_PRINT = True Then
                     .PageSetup.Orientation = xlLandscape
-                    Library.PrintPDF ShtAssessment, FilePath & "/" & "4 - Assessments"
+                    ModLibrary.PrintPDF ShtAssessment, FilePath & "/" & "4 - Assessments"
                 End If
             End If
            .Visible = xlSheetHidden
@@ -158,8 +158,8 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         'Print grading Sheet
         With ShtGrading
             .Visible = xlSheetVisible
-            If Globals.ENABLE_PRINT = True Then
-                Library.PrintPDF ShtGrading, FilePath & "/" & "3 - Grading Guide"
+            If ModGlobals.ENABLE_PRINT = True Then
+                ModLibrary.PrintPDF ShtGrading, FilePath & "/" & "3 - Grading Guide"
             End If
            .Visible = xlSheetHidden
         End With
@@ -167,8 +167,8 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         'print front sheets
         With ShtCover
             .Visible = xlSheetVisible
-            If Globals.ENABLE_PRINT = True Then
-                Library.PrintPDF ShtCover, FilePath & "/" & "1 - Front Sheets"
+            If ModGlobals.ENABLE_PRINT = True Then
+                ModLibrary.PrintPDF ShtCover, FilePath & "/" & "1 - Front Sheets"
             End If
            .Visible = xlSheetHidden
         End With
@@ -176,8 +176,8 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         'print blank sheet
         With ShtBlank
             .Visible = xlSheetVisible
-            If Globals.ENABLE_PRINT = True Then
-                Library.PrintPDF ShtBlank, FilePath & "/" & "7 - Blank Sheet"
+            If ModGlobals.ENABLE_PRINT = True Then
+                ModLibrary.PrintPDF ShtBlank, FilePath & "/" & "7 - Blank Sheet"
             End If
            .Visible = xlSheetHidden
         End With

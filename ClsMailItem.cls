@@ -121,7 +121,7 @@ End Function
 Public Sub LoadDB()
     Dim RstMailItems As Recordset
     
-    Set RstMailItems = database.SQLQuery("SELECT * FROM mailitems WHERE EmailNo = " & pEmailNo & _
+    Set RstMailItems = ModDatabase.SQLQuery("SELECT * FROM mailitems WHERE EmailNo = " & pEmailNo & _
                                         " AND deleted IS NULL")
                                         
     With RstMailItems
@@ -145,7 +145,7 @@ End Sub
 Public Function NewDB() As Integer
     Dim RstMailItems As Recordset
     
-    Set RstMailItems = database.SQLQuery("mailitems")
+    Set RstMailItems = ModDatabase.SQLQuery("mailitems")
         
     With RstMailItems
         .AddNew
@@ -164,7 +164,7 @@ End Function
 Public Function UpdateDB() As Boolean
     Dim RstMailItems As Recordset
 
-    Set RstMailItems = database.SQLQuery("SELECT * FROM mailitems WHERE EmailNo = " & pEmailNo & _
+    Set RstMailItems = ModDatabase.SQLQuery("SELECT * FROM mailitems WHERE EmailNo = " & pEmailNo & _
                                         " AND deleted IS NULL")
     
     
@@ -194,7 +194,7 @@ End Function
 Public Sub DeleteDB()
     Dim RstMailItems As Recordset
     
-    Set RstMailItems = database.SQLQuery("SELECT * FROM mailitems WHERE EmailNo = " & pEmailNo & _
+    Set RstMailItems = ModDatabase.SQLQuery("SELECT * FROM mailitems WHERE EmailNo = " & pEmailNo & _
                                         " AND deleted IS NULL")
         
     With RstMailItems

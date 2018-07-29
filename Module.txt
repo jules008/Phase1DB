@@ -1,6 +1,0 @@
-ModuleID,  dbLong
-ModuleNo,  dbText
-DayNo,  dbDouble
-Module,  dbText
-Assessment,  dbBoolean
-Deleted,  dbDate

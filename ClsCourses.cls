@@ -68,7 +68,7 @@ Public Sub GetCollection()
     Dim RstCourse As Recordset
     Dim i As Integer
     
-    Set RstCourse = database.SQLQuery("SELECT * FROM Course WHERE deleted IS NULL")
+    Set RstCourse = ModDatabase.SQLQuery("SELECT * FROM Course WHERE deleted IS NULL")
     
     With RstCourse
         If .RecordCount > 0 Then

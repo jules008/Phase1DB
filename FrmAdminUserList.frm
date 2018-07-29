@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '===============================================================
 ' v0,0 - Initial version
 '---------------------------------------------------------------
@@ -84,19 +85,19 @@ Private Sub BtnDelete_Click()
     
     Dim Response As Integer
     Dim SelUser As Integer
-    Dim Username As String
+    Dim UserName As String
     
     On Error GoTo ErrorHandler
         
     SelUser = LstAccessList.ListIndex
     
     If SelUser <> -1 Then
-        Username = LstAccessList.List(SelUser, 0)
+        UserName = LstAccessList.List(SelUser, 0)
         Response = MsgBox("Are you sure you want to remove " _
-                            & Username & " from the system? ", 36)
+                            & UserName & " from the system? ", 36)
     
         If Response = 6 Then
-            If Not Security.RemoveUser(Username) Then Err.Raise HANDLED_ERROR
+            If Not Security.RemoveUser(UserName) Then Err.Raise HANDLED_ERROR
         End If
         If Not RefreshUserList Then Err.Raise HANDLED_ERROR
         If Not RefreshUserDetails Then Err.Raise HANDLED_ERROR
@@ -132,7 +133,7 @@ Private Sub BtnUpdate_Click()
     With User
         .AccessLvl = 2
         .Admin = ChkAdmin
-        .crewno = Trim(TxtCrewNo)
+        .CrewNo = Trim(TxtCrewNo)
         .Forename = Trim(TxtForeName)
         .Rank = Trim(TxtRank)
         .Role = ""
@@ -268,7 +269,7 @@ Public Function RefreshUserList() As Boolean
             Do While Not .EOF
                     
                 LstAccessList.AddItem
-                LstAccessList.List(i, 0) = RstUserList!Username
+                LstAccessList.List(i, 0) = RstUserList!UserName
                 .MoveNext
                 i = i + 1
             Loop
@@ -297,7 +298,7 @@ Public Function RefreshUserDetails() As Boolean
     Const StrPROCEDURE As String = "RefreshUserDetails()"
 
     Dim ListSelection As Integer
-    Dim Username As String
+    Dim UserName As String
     Dim RstUserDetails As Recordset
     
     On Error GoTo ErrorHandler
@@ -311,8 +312,8 @@ Public Function RefreshUserDetails() As Boolean
         TxtSurname = ""
         ChkAdmin = False
     Else
-        Username = LstAccessList.List(ListSelection, 0)
-        Set RstUserDetails = GetUserDetails(Username)
+        UserName = LstAccessList.List(ListSelection, 0)
+        Set RstUserDetails = GetUserDetails(UserName)
         
         If Not RstUserDetails Is Nothing Then
             With RstUserDetails

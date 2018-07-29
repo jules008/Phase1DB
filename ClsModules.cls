@@ -67,7 +67,7 @@ Public Sub GetCollection()
     Dim RstModule As Recordset
     Dim i As Integer
 
-    Set RstModule = database.SQLQuery("Module")
+    Set RstModule = ModDatabase.SQLQuery("Module")
     
     With RstModule
         If .RecordCount > 0 Then

@@ -1,9 +1,0 @@
-CrewNo,  dbText
-Rank,  dbText
-Admin,  dbBoolean
-ForeName,  dbText
-Surname,  dbText
-Username,  dbText
-AccessLvl,  dbLong
-Role,  dbText
-email,  dbText

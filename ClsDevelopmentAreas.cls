@@ -93,7 +93,7 @@ Public Sub GetCollection()
     
     DPNo = Parent.DPNo
     
-    Set RstDevArea = database.SQLQuery("SELECT * FROM DPDevItems WHERE dpno = " & DPNo & _
+    Set RstDevArea = ModDatabase.SQLQuery("SELECT * FROM DPDevItems WHERE dpno = " & DPNo & _
                                         " AND deleted IS NULL")
     
     With RstDevArea

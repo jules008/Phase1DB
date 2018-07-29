@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '===============================================================
 ' v0,0 - Initial version
 '---------------------------------------------------------------
@@ -407,7 +408,7 @@ Private Sub BtnSpellChk_Click()
     For i = 0 To Me.Controls.Count - 1
         Cntrls.Add Controls(i)
     Next
-    Library.SpellCheck Cntrls
+    ModLibrary.SpellCheck Cntrls
     
     Set Cntrls = Nothing
 End Sub
@@ -550,7 +551,7 @@ Public Sub FormActivate()
     
     With RstUsers
         Do
-        Me.CmoAssessors.AddItem !Username
+        Me.CmoAssessors.AddItem !UserName
         .MoveNext
         Loop While Not .EOF
     End With

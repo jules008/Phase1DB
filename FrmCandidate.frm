@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 '===============================================================
 ' v0,0 - Initial version
 '---------------------------------------------------------------
@@ -157,10 +158,10 @@ Private Function PopulateForm() As Boolean
         TxtName = .Name
         TxtStationNo = .StationNo
         TxtStatus = .Status
-        TxtWCS = .WCS.Username
-        TxtDC = .DC.Username
-        TxtDDC1 = .DDC1.Username
-        TxtDDC2 = .DDC2.Username
+        TxtWCS = .WCS.UserName
+        TxtDC = .DC.UserName
+        TxtDDC1 = .DDC1.UserName
+        TxtDDC2 = .DDC2.UserName
     End With
     
     With Candidate.DevelopmentPlans
