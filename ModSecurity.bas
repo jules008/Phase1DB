@@ -62,10 +62,9 @@ End Function
 ' RemoveUser
 ' Removes user from access list for course
 ' ---------------------------------------------------------------
-Private Function RemoveUser(UserName As String) As Boolean
+Public Function RemoveUser(Username As String, Optional CourseNo As String) As Boolean
     Dim StrUsername As String
     Dim StrCourseNo As String
-    Dim CourseNo As String
     Dim RstUserList As Recordset
     Dim RstCourseUserLst As Recordset
     
@@ -75,7 +74,7 @@ Private Function RemoveUser(UserName As String) As Boolean
 
     StrUsername = "'" & UserName & "'"
     
-    If DB Is Nothing Then
+    If ModDatabase.DB Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
     End If
     
@@ -123,7 +122,7 @@ Private Function RemoveUser(UserName As String) As Boolean
     Set RstCourseUserLst = Nothing
 
     RemoveUser = True
-
+    
 Exit Function
 
 ErrorExit:
@@ -134,7 +133,8 @@ ErrorExit:
 
 Exit Function
 
-ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Stop
         Resume
     Else

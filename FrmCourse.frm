@@ -282,7 +282,7 @@ Public Sub FormInitialise()
     
     On Error GoTo ErrorHandler
     
-    Set RstUsers = Security.GetAccessList
+    Set RstUsers = GetAccessList
 
     'get Course director list
     CmoCourseDirector.Clear
