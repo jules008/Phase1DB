@@ -38,19 +38,8 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
     Set DevelopmentPlans = New ClsDevelopmentPlans
     Set DevelopmentPlan = New ClsDevelopmentPlan
     
-    Response = MsgBox("Are you sure you want to create a Supervision File?", vbYesNo, Title:="Print Supervision File")
-    
-    If Response = 6 Then
-        
-        'get destination folder
-        Set DlgOpen = Application.FileDialog(msoFileDialogFolderPicker)
-        With DlgOpen
-            .Filters.Clear
-            .AllowMultiSelect = False
-            .Title = "Select Destination Folder"
-            .Show
-        End With
-        FilePath = DlgOpen.SelectedItems(1)
+    If Not Candidate Is Nothing Then
+        FilePath = "T:\Training\COURSES\FF Phase 1\Phase 1 DB\Supervision Files\06-17\"
         
         'clear Summary sheet
         ShtSummary.ClearSummary
@@ -182,7 +171,6 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
            .Visible = xlSheetHidden
         End With
         
-        MsgBox "Supervision File is complete"
         'Set database = Nothing
         Set Module = Nothing
         Set Candidate = Nothing
