@@ -39,7 +39,7 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
     Set DevelopmentPlan = New ClsDevelopmentPlan
     
     If Not Candidate Is Nothing Then
-        FilePath = "T:\Training\COURSES\FF Phase 1\Phase 1 DB\Supervision Files\06-17\"
+        FilePath = "T:\Training\COURSES\FF Phase 1\Phase 1 DB\Supervision Files\" & Replace(Candidate.Parent.CourseNo, "/", "-") & "\"
         
         'clear Summary sheet
         ShtSummary.ClearSummary
@@ -55,14 +55,14 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         ShtSummary.FillOutSummaryCandidate Candidate
         
         'add new folder for candidate
-        FilePath = FilePath & "/" & Candidate.CrewNo & " " & Candidate.Name
+        FilePath = FilePath & Candidate.CrewNo & " " & Candidate.Name & "/"
         
-        If FSO.FolderExists(FilePath) Then
-            FSO.DeleteFolder (FilePath)
+        Debug.Print FilePath
+        
+        If Not FSO.FolderExists(FilePath) Then
+            FSO.CreateFolder FilePath
         End If
-        
-        FSO.CreateFolder FilePath
-        
+          
         'fill out front sheet
         ShtCover.PopulateFrontSheet Candidate
         

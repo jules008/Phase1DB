@@ -311,7 +311,7 @@ Private Sub ResetForm()
     TxtCourseNo = ""
     TxtCrewNo = ""
     TxtIssuer = ""
-    TxtLocalDPNo = ""
+    TxtLocalDpNo = ""
     TxtName = ""
     TxtOutcome = ""
     TxtReviewDate = ""
@@ -331,10 +331,10 @@ Private Function PopulateForm() As Boolean
     On Error GoTo ErrorHandler
     
     With DevelopmentPlan
-        TxtLocalDPNo = .LocalDPNo
+        TxtLocalDpNo = .LocalDPNo
         If .DPDate = 0 Then TxtDPDate = Format(Now, "DD/MM/YY") Else TxtDPDate = Format(.DPDate, "dd/mm/yy")
         CmoIssuer = .Issuer
-        TxtLocalDPNo = .LocalDPNo
+        TxtLocalDpNo = .LocalDPNo
         TxtOutcome = .OutcomeIfNotMet
         If .ReviewDate <> 0 Then TxtReviewDate = .ReviewDate
         TxtStatus = .Status
@@ -604,7 +604,7 @@ Public Function UpdateClass() As Boolean
     With DevelopmentPlan
         .DPDate = TxtDPDate
         .Issuer = CmoIssuer
-        .LocalDPNo = TxtLocalDPNo
+        .LocalDPNo = TxtLocalDpNo
         .OutcomeIfNotMet = TxtOutcome
         
         If TxtReviewDate <> "" Then
