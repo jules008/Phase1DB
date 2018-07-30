@@ -21,7 +21,7 @@ Public Function Initialise() As Boolean
     On Error GoTo ErrorHandler
 
     Terminate
-
+    
     SYS_PATH = ThisWorkbook.Path & INI_FILE_PATH
 
     Application.StatusBar = "Reading INI File....."
@@ -35,10 +35,11 @@ Public Function Initialise() As Boolean
     Application.StatusBar = "Checking DB Version....."
     
     If ModDatabase.GetDBVer <> DB_VER Then Err.Raise DB_WRONG_VER
+        
+    Application.StatusBar = "Loading Courses....."
     
-    Application.StatusBar = "Finding User....."
-    'get username of current user
-    If Not ModStartUp.GetUserName Then Err.Raise HANDLED_ERROR
+    Set Modules = New ClsModules
+    Set Courses = New ClsCourses
     
     'Show any messages
     If Not MessageCheck Then Err.Raise HANDLED_ERROR
@@ -162,6 +163,12 @@ Private Function ReadINIFile() As Boolean
     ENABLE_PRINT = CBool(EnablePrint)
     DB_PATH = DBPath
     DEV_MODE = CBool(DevMode)
+    
+    Debug.Print "Debug Mode: " & DebugMode
+    Debug.Print "Send Emails: " & SendEmails
+    Debug.Print "Enable Print: " & EnablePrint
+    Debug.Print "DB Path: " & DBPath
+    Debug.Print "Dev Mode: " & DevMode
     
     If STOP_FLAG = True Then Stop
     

@@ -125,7 +125,7 @@ Public Sub PrintDP()
     FrmPrintCopies.Show
     
     For x = 1 To FrmPrintCopies.CmoNoCopies
-        If Globals.ENABLE_PRINT = True Then
+        If ENABLE_PRINT = True Then
             Worksheets("ShtDP").PrintOut
         End If
     Next

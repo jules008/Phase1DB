@@ -1,0 +1,6 @@
+CourseNo,  dbText
+StartDate,  dbDate
+PassOutDate,  dbDate
+CourseDirector,  dbText
+Status,  dbText
+Deleted,  dbText

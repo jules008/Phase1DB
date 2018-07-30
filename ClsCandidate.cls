@@ -70,7 +70,7 @@ Public Property Get WCS() As Supervisor
     Set RngTarget = RngLookUp.Find(pStationNo)
     
     With pWCS
-        .UserName = RngTarget.Offset(0, 1)
+        .Username = RngTarget.Offset(0, 1)
         .Role = "WCS"
     End With
     
@@ -87,7 +87,7 @@ Public Property Get DC() As Supervisor
     Set RngTarget = RngLookUp.Find(pDivision)
     
     With pDC
-        .UserName = RngTarget.Offset(0, 1)
+        .Username = RngTarget.Offset(0, 1)
         .Role = "DC"
     End With
     
@@ -104,7 +104,7 @@ Public Property Get DDC1() As Supervisor
     Set RngTarget = RngLookUp.Find(pDivision)
     
     With pDDC1
-        .UserName = RngTarget.Offset(0, 2)
+        .Username = RngTarget.Offset(0, 2)
         .Role = "DDC1"
     End With
     
@@ -121,7 +121,7 @@ Public Property Get DDC2() As Supervisor
     Set RngTarget = RngLookUp.Find(pDivision)
     
     With pDDC2
-        .UserName = RngTarget.Offset(0, 3)
+        .Username = RngTarget.Offset(0, 3)
         .Role = "DDC2"
     End With
     

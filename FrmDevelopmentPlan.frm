@@ -490,7 +490,7 @@ Public Sub FormActivate()
     
     On Error GoTo ErrorHandler
     
-    Set RstUsers = Security.GetAccessList
+    Set RstUsers = GetAccessList
     
     Me.CmoIssuer.Clear
     

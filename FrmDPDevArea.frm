@@ -352,7 +352,7 @@ Public Sub FormInitialise()
     Dim RstUsers As Recordset
         
     Set Module = New ClsModule
-    Set RstUsers = Security.GetAccessList
+    Set RstUsers = GetAccessList
     
     With CmoArea
         .AddItem "Attitude"

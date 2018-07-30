@@ -66,7 +66,7 @@ Private Sub BtnAdd_Click()
     User.UserName = CmoUsers
     
     If ValidateData Then
-        If Not Security.AddUpdateUser(User, CmoCourseNo) Then Err.Raise HANDLED_ERROR
+        If Not AddUpdateUser(User, CmoCourseNo) Then Err.Raise HANDLED_ERROR
         If Not RefreshUserList Then Err.Raise HANDLED_ERROR
     End If
 Exit Sub
@@ -119,7 +119,7 @@ Private Sub BtnRemove_Click()
         
             If Response = 6 Then
             
-                If Not Security.RemoveUser(UserName, CmoCourseNo) Then Err.Raise HANDLED_ERROR
+                If Not RemoveUser(Username, CmoCourseNo) Then Err.Raise HANDLED_ERROR
             
             End If
             

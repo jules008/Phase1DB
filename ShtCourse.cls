@@ -138,7 +138,7 @@ Public Function WorksheetActivate()
     If Courses.Count <> 0 Then
         If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
         
-        If Security.CourseAccessCheck(Course.CourseNo) Or IsAdmin Then
+        If CourseAccessCheck(Course.CourseNo) Or IsAdmin Then
             If Not PopulateSheet Then Err.Raise HANDLED_ERROR
         End If
     Else

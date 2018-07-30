@@ -78,7 +78,7 @@ Public Function DBConnect() As Boolean
 
     On Error GoTo ErrorHandler
 
-    Set DB = OpenDatabase(DB_PATH & DB_FILE_NAME)
+    Set DB = OpenDatabase(DB_PATH, False, False, "MS Access;pwd=W£8df34JC")
   
     DBConnect = True
 

@@ -1,0 +1,9 @@
+ExtraTrainingNo,  dbLong
+CrewNo,  dbText
+DayNo,  dbLong
+LocalNo,  dbLong
+TrainingDate,  dbDate
+TrainingDetails,  dbMemo
+TrainingTaken,  dbBoolean
+TrainingResults,  dbMemo
+Deleted,  dbDate
