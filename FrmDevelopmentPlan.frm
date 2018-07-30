@@ -496,7 +496,7 @@ Public Sub FormActivate()
     
     With RstUsers
         Do
-        Me.CmoIssuer.AddItem !Username
+        Me.CmoIssuer.AddItem !UserName
         .MoveNext
         Loop While Not .EOF
     End With

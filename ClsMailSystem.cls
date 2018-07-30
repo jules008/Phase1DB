@@ -87,7 +87,7 @@ Private Function ReturnMailItem()
         .Body = pMailItem.Body
         .Subject = pMailItem.Subject
         .timeSent = pMailItem.ReceivedTime
-        .MailFrom = Environ("Username")
+        .MailFrom = Environ("UserName")
         .EmailNo = .NewDB
         .UpdateDB
     End With
@@ -98,7 +98,7 @@ End Function
 'saves email details when it has been sent
 '---------------------------------------------------------------
 Private Sub pMailItem_Send(Cancel As Boolean)
-    Debug.Print "Item was sent by " & Environ("Username") & " at " & Now()
+    Debug.Print "Item was sent by " & Environ("UserName") & " at " & Now()
     Debug.Print MailItem.Body
     ReturnMailItem
 End Sub

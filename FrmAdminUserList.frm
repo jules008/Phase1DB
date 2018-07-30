@@ -97,7 +97,7 @@ Private Sub BtnDelete_Click()
                             & UserName & " from the system? ", 36)
     
         If Response = 6 Then
-            If Not RemoveUser(Username) Then Err.Raise HANDLED_ERROR
+            If Not RemoveUser(UserName) Then Err.Raise HANDLED_ERROR
         End If
         If Not RefreshUserList Then Err.Raise HANDLED_ERROR
         If Not RefreshUserDetails Then Err.Raise HANDLED_ERROR

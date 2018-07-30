@@ -73,7 +73,7 @@ End Function
 
 ' ===============================================================
 ' GetUserName
-' gets username from windows, or test user if in test mode
+' gets UserName from windows, or test user if in test mode
 ' ---------------------------------------------------------------
 Public Function GetUserName() As Boolean
     Dim UserName As String
@@ -83,7 +83,7 @@ Public Function GetUserName() As Boolean
 
     On Error GoTo ErrorHandler
     
-    If Not UpdateUsername Then Err.Raise HANDLED_ERROR
+    If Not UpdateUserName Then Err.Raise HANDLED_ERROR
     
     If DEV_MODE Then
 '       If ShtSettings.Range("C15") = True Then
@@ -95,7 +95,7 @@ Public Function GetUserName() As Boolean
         UserName = Application.UserName
     End If
     
-    If UserName = "" Then Err.Raise HANDLED_ERROR, , "No Username"
+    If UserName = "" Then Err.Raise HANDLED_ERROR, , "No UserName"
 
     UserName = Replace(UserName, "'", "")
     
@@ -259,11 +259,11 @@ ErrorHandler:
 End Function
 
 ' ===============================================================
-' UpdateUsername
-' Checks to see whether username needs to be changed and then updates
+' UpdateUserName
+' Checks to see whether UserName needs to be changed and then updates
 ' ---------------------------------------------------------------
-Private Function UpdateUsername() As Boolean
-    Const StrPROCEDURE As String = "UpdateUsername()"
+Private Function UpdateUserName() As Boolean
+    Const StrPROCEDURE As String = "UpdateUserName()"
 
     On Error GoTo ErrorHandler
 
@@ -273,14 +273,14 @@ Private Function UpdateUsername() As Boolean
 
     If Application.UserName = "#" Then Application.UserName = "Samuel Hayward"
     
-    UpdateUsername = True
+    UpdateUserName = True
 
 Exit Function
 
 ErrorExit:
 
 '    ***CleanUpCode***
-    UpdateUsername = False
+    UpdateUserName = False
 
 Exit Function
 

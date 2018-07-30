@@ -119,7 +119,7 @@ Private Sub BtnRemove_Click()
         
             If Response = 6 Then
             
-                If Not RemoveUser(Username, CmoCourseNo) Then Err.Raise HANDLED_ERROR
+                If Not RemoveUser(UserName, CmoCourseNo) Then Err.Raise HANDLED_ERROR
             
             End If
             
