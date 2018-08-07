@@ -41,6 +41,10 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
     If Not Candidate Is Nothing Then
         FilePath = "T:\Training\COURSES\FF Phase 1\Phase 1 DB\Supervision Files\" & Replace(Candidate.Parent.CourseNo, "/", "-") & "\"
         
+        If Not FSO.FolderExists(FilePath) Then
+            FSO.CreateFolder FilePath
+        End If
+        
         'clear Summary sheet
         ShtSummary.ClearSummary
         
@@ -55,7 +59,7 @@ Public Function BtnSupervisionFile(Candidate As ClsCandidate) As Boolean
         ShtSummary.FillOutSummaryCandidate Candidate
         
         'add new folder for candidate
-        FilePath = FilePath & Candidate.CrewNo & " " & Candidate.Name & "/"
+        FilePath = FilePath & Candidate.CrewNo & " " & Candidate.Name & "\"
         
         Debug.Print FilePath
         
