@@ -666,30 +666,40 @@ End Sub
 Public Sub RunSupervisionFile()
     Dim Candidate As ClsCandidate
     Dim CrewNo As String
+    Dim RngName As Range
     
     Const StrPROCEDURE As String = "RunSupervisionFile()"
 
     On Error GoTo ErrorHandler
 
-    CrewNo = GetCrewNo
+    Set RngName = ShtCourse.Range("C6")
     
-    If Course Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
-    End If
+    Do While RngName.Value <> ""
     
-    If CrewNo <> "" Then Set Candidate = Course.Candidates.FindItem(CrewNo)
-
-    If Not SupervisionFile.BtnSupervisionFile(Candidate) Then Err.Raise HANDLED_ERROR
+        ShtCourse.Activate
+        RngName.Activate
+                
+        CrewNo = GetCrewNo
+        
+        If Course Is Nothing Then
+            If Not Initialise Then Err.Raise HANDLED_ERROR
+            If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
+        End If
+        
+        If CrewNo <> "" Then Set Candidate = Course.Candidates.FindItem(CrewNo)
+    
+        If Not SupervisionFile.BtnSupervisionFile(Candidate) Then Err.Raise HANDLED_ERROR
+        Set RngName = RngName.Offset(1, 0)
+    Loop
     
     Set Candidate = Nothing
-
+    Set RngName = Nothing
 Exit Sub
 
 ErrorExit:
     
     Set Candidate = Nothing
-
+    Set RngName = Nothing
 '    ***CleanUpCode***
 
 Exit Sub
@@ -701,3 +711,4 @@ ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Resume ErrorExit
     End If
 End Sub
+
