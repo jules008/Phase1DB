@@ -23,6 +23,8 @@ Public Sub PopulateAssessmentSummary(Candidate As Object)
     Set RngAssessIndex = Me.Range("A7")
     Set RstAssessment = ModDatabase.SQLQuery("SELECT * FROM Assessment WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
     
+    Range("B8:R12").ClearContents
+    
     With RstAssessment
         Do While Not .EOF
             Select Case !DayNo
