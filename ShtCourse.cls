@@ -667,30 +667,44 @@ Public Sub RunSupervisionFile()
     Dim Candidate As ClsCandidate
     Dim CrewNo As String
     Dim RngName As Range
+    Dim Response As Integer
     
     Const StrPROCEDURE As String = "RunSupervisionFile()"
 
     On Error GoTo ErrorHandler
 
-    Set RngName = ShtCourse.Range("C6")
+    Response = MsgBox("Do you want to run all Supervision Files?  If No is pressed, the selected File will be processed", vbYesNo + vbQuestion, APP_NAME)
+   
+    If Course Is Nothing Then
+        If Not Initialise Then Err.Raise HANDLED_ERROR
+        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
+    End If
     
-    Do While RngName.Value <> ""
+    If Response = 6 Then
     
+        Set RngName = ShtCourse.Range("C6")
+        
+        Do While RngName.Value <> ""
+        
+            ShtCourse.Activate
+            RngName.Activate
+                    
+            CrewNo = GetCrewNo
+            
+            If CrewNo <> "" Then Set Candidate = Course.Candidates.FindItem(CrewNo)
+        
+            If Not SupervisionFile.BtnSupervisionFile(Candidate) Then Err.Raise HANDLED_ERROR
+            Set RngName = RngName.Offset(1, 0)
+        Loop
+    Else
         ShtCourse.Activate
-        RngName.Activate
-                
+               
         CrewNo = GetCrewNo
-        
-        If Course Is Nothing Then
-            If Not Initialise Then Err.Raise HANDLED_ERROR
-            If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
-        End If
-        
+               
         If CrewNo <> "" Then Set Candidate = Course.Candidates.FindItem(CrewNo)
     
         If Not SupervisionFile.BtnSupervisionFile(Candidate) Then Err.Raise HANDLED_ERROR
-        Set RngName = RngName.Offset(1, 0)
-    Loop
+    End If
     
     Set Candidate = Nothing
     Set RngName = Nothing
