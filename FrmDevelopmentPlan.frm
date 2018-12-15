@@ -14,6 +14,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 
+
 '===============================================================
 ' v0,0 - Initial version
 '---------------------------------------------------------------
@@ -311,7 +312,7 @@ Private Sub ResetForm()
     TxtCourseNo = ""
     TxtCrewNo = ""
     TxtIssuer = ""
-    TxtLocalDpNo = ""
+    TxtLocalDPNo = ""
     TxtName = ""
     TxtOutcome = ""
     TxtReviewDate = ""
@@ -331,10 +332,10 @@ Private Function PopulateForm() As Boolean
     On Error GoTo ErrorHandler
     
     With DevelopmentPlan
-        TxtLocalDpNo = .LocalDPNo
+        TxtLocalDPNo = .LocalDPNo
         If .DPDate = 0 Then TxtDPDate = Format(Now, "DD/MM/YY") Else TxtDPDate = Format(.DPDate, "dd/mm/yy")
         CmoIssuer = .Issuer
-        TxtLocalDpNo = .LocalDPNo
+        TxtLocalDPNo = .LocalDPNo
         TxtOutcome = .OutcomeIfNotMet
         If .ReviewDate <> 0 Then TxtReviewDate = .ReviewDate
         TxtStatus = .Status
@@ -604,7 +605,7 @@ Public Function UpdateClass() As Boolean
     With DevelopmentPlan
         .DPDate = TxtDPDate
         .Issuer = CmoIssuer
-        .LocalDPNo = TxtLocalDpNo
+        .LocalDPNo = TxtLocalDPNo
         .OutcomeIfNotMet = TxtOutcome
         
         If TxtReviewDate <> "" Then

@@ -9,228 +9,70 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '===============================================================
 ' v0,0 - Initial version
+' v1,0 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 10 Oct 16
+' Date - 15 Dec 18
 '===============================================================
 Option Explicit
 
 Private Const StrMODULE As String = "ShtCourse"
 
-Dim Course As ClsCourse
-
-Private Sub BtnConnectDB_Click()
-
-    Const StrPROCEDURE As String = "BtnConnectDB_Click()"
-    
-    On Error GoTo ErrorHandler
-    
-    If Not ModDatabase.SelectDB Then Err.Raise HANDLED_ERROR
-    
-Exit Sub
-
-ErrorExit:
-    Terminate
-
-Exit Sub
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Sub
-
-
-Private Sub BtnReset_Click()
-    Const StrPROCEDURE As String = "BtnReset_Click()"
-    
-    On Error GoTo ErrorHandler
-    
-    If Not Initialise Then Err.Raise HANDLED_ERROR
-    If Not WorksheetActivate Then Err.Raise HANDLED_ERROR
-
-Exit Sub
-
-ErrorExit:
-    Terminate
-Exit Sub
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Sub
-
-Private Sub CmoCourseNo_Change()
-    
-    Const StrPROCEDURE As String = "CmoCourseNo_Change()"
-    
-    Dim Response As Integer
-    
-    On Error GoTo ErrorHandler
-    
-    'first make sure there are courses, then make sure the dropdown contains a value
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
-    
-    If Courses.Count <> 0 Then
-        If CmoCourseNo <> "" Then
-            If CourseAccessCheck(CmoCourseNo.Value) Or IsAdmin Then
-                If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
-                If Not PopulateSheet Then Err.Raise HANDLED_ERROR
-            Else
-                Response = MsgBox("Sorry, access is denied to this course, would you like to request access?", 20)
-                If Response = 6 Then
-                        With MailSystem
-                            .MailItem.To = "Julian Turner"
-                            .MailItem.Subject = "Access Request - " & APP_NAME
-                            .MailItem.Body = Application.UserName & " has requested access to " & APP_NAME
-                            .SendEmail
-                        End With
-
-                End If
-                
-                If Course Is Nothing Then
-                    If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
-                End If
-                
-                CmoCourseNo = Course.CourseNo
-            End If
-        End If
-    Else
-        ClearSheet
-    End If
-    
-Exit Sub
-
-ErrorExit:
-        
-Exit Sub
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Sub
-
-Public Function WorksheetActivate()
-    Const StrPROCEDURE As String = "WorksheetActivate()"
-    
-    Dim CourseNo As String
-       
-    On Error GoTo ErrorHandler
-        
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
-    
-    If Not RefreshCourses Then Err.Raise HANDLED_ERROR
-    
-    If Courses.Count <> 0 Then
-        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
-        
-        If CourseAccessCheck(Course.CourseNo) Or IsAdmin Then
-            If Not PopulateSheet Then Err.Raise HANDLED_ERROR
-        End If
-    Else
-        
-        Me.Unprotect
-        
-        ClearSheet
-        CmoCourseNo = ""
-        Range("CourseNo") = ""
-        Set Course = Nothing
-        
-        Me.Protect
-    End If
-    
-    WorksheetActivate = True
-         
-Exit Function
-
-ErrorExit:
-    WorksheetActivate = False
-    
-Exit Function
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Function
-
+' ===============================================================
+' PopulateSheet
+' Populates Daily Log scores into sheet
+' ---------------------------------------------------------------
 Public Function PopulateSheet() As Boolean
-    Const StrPROCEDURE As String = "PopulateSheet()"
-    
     Dim TargetRange As Range
     Dim i As Integer
     Dim x As Integer
     Dim Candidate As ClsCandidate
     Dim DailyLog As ClsDailyLog
     
+    Const StrPROCEDURE As String = "PopulateSheet()"
+    
     On Error GoTo ErrorHandler
     
     Set TargetRange = Range("B6")
     
+    If Not ClearSheet Then Err.Raise HANDLED_ERROR
     
-    ClearSheet
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR, , "No Course Selected"
     
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
+    Application.ScreenUpdating = False
     
-    If Course Is Nothing Then
-        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
-    End If
-    
-    If Courses.Count <> 0 Then
-        With Course
-            Me.Unprotect
-            [CourseDirector] = "Course Director - " & Course.CourseDirector
-            [CourseStat] = "Status - " & Course.Status
-            [CourseNo] = .CourseNo
-        End With
-        
-        With Course.Candidates
-            For i = 1 To .Count
-                Set Candidate = .FindItem(i)
-                TargetRange.Offset(i - 1, 0) = Candidate.CrewNo
-                TargetRange.Offset(i - 1, 1) = Candidate.Name
-                
-                With Candidate.Dailylogs
-                    For x = 1 To .Count
-                        Set DailyLog = .FindItem(x)
-                        TargetRange.Offset(i - 1, DailyLog.Module.DayNo + 1) = DailyLog.OverallGrade
-                    Next
-                End With
-                
-            Next
-        End With
-        Me.Protect
-        Set Candidate = Nothing
-        Set DailyLog = Nothing
-    End If
+    With Course.Candidates
+        For i = 1 To .Count
+            Set Candidate = .FindItem(i)
+            TargetRange.Offset(i - 1, 0) = Candidate.CrewNo
+            TargetRange.Offset(i - 1, 1) = Candidate.Name
+            
+            With Candidate.Dailylogs
+                For x = 1 To .Count
+                    Set DailyLog = .FindItem(x)
+                    TargetRange.Offset(i - 1, DailyLog.Module.DayNo + 1) = DailyLog.OverallGrade
+                Next
+            End With
+            
+        Next
+    End With
+     
+    Application.ScreenUpdating = True
+   
+    Me.Protect
+    Set Candidate = Nothing
+    Set DailyLog = Nothing
 
     PopulateSheet = True
 
 Exit Function
 
 ErrorExit:
+    
+    Application.ScreenUpdating = True
     Me.Protect
     Set Candidate = Nothing
     Set DailyLog = Nothing
+    
     PopulateSheet = False
 
 Exit Function
@@ -243,59 +85,6 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
-
-Private Sub CmoCourseNo_GotFocus()
-    Const StrPROCEDURE As String = "CmoCourseNo_GotFocus()"
-    
-    On Error GoTo ErrorHandler
-    
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
-    
-    If CmoCourseNo.ListCount = 0 Then
-        If Not RefreshCourses Then Err.Raise HANDLED_ERROR
-    End If
-Exit Sub
-
-ErrorExit:
-
-Exit Sub
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Sub
-
-Private Sub Worksheet_Activate()
-    Const StrPROCEDURE As String = "Worksheet_Activate()"
-    
-    On Error GoTo ErrorHandler
-    
-    If Not WorksheetActivate Then Err.Raise HANDLED_ERROR
-    
-Exit Sub
-
-ErrorExit:
-
-Exit Sub
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Sub
-Private Sub Worksheet_Deactivate()
-    On Error Resume Next
-    Set Course = Nothing
-End Sub
 
 Public Function RefreshCourses() As Boolean
     Const StrPROCEDURE As String = "RefreshCourses()"
@@ -339,28 +128,56 @@ ErrorHandler:
     End If
 End Function
 
-Public Sub ClearSheet()
-    
-    On Error Resume Next
-    
-    Range("B6:AI32").ClearContents
-End Sub
 
-Public Sub ShowCourseFrm()
-    
-    Const StrPROCEDURE As String = "ShowCourseFrm()"
-    
+' ===============================================================
+' ClearSheet
+' Clears all Daily Log scores from sheet
+' ---------------------------------------------------------------
+Private Function ClearSheet() As Boolean
+    Const StrPROCEDURE As String = "ClearSheet()"
+
     On Error GoTo ErrorHandler
-    
-    If Course Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
+
+    [DL_Clear_Area].ClearContents
+
+    ClearSheet = True
+
+
+Exit Function
+
+ErrorExit:
+
+    ClearSheet = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
     End If
-    
-    If Not FrmCourse.ShowForm(Course) Then Err.Raise HANDLED_ERROR
-    If Not RefreshCourses Then Err.Raise HANDLED_ERROR
-    If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
-    If Not PopulateSheet Then Err.Raise HANDLED_ERROR
+End Function
+
+' ===============================================================
+' ShowCourseFrm
+' Shows the dialog box for inputting coruse details
+' ---------------------------------------------------------------
+Private Sub ShowCourseFrm()
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "ShowCourseFrm()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+       
+    If Not FrmCourse.ShowForm Then Err.Raise HANDLED_ERROR
+
+GracefulExit:
 
 Exit Sub
 
@@ -369,6 +186,11 @@ ErrorExit:
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -544,55 +366,6 @@ Public Function GetDayNo() As String
     End If
 End Function
 
-Public Function SetActiveCourse() As Boolean
-    
-    Const StrPROCEDURE As String = "SetActiveCourse()"
-    
-    On Error GoTo ErrorHandler
-
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
-
-    If Courses.Count <> 0 Then
-        If CmoCourseNo <> "" Then
-            Set Course = Courses.FindItem(CmoCourseNo.Value)
-        Else
-            Set Course = Courses.FindItem([CourseNo])
-        End If
-        
-        If Course Is Nothing Then
-            Set Course = Courses.FindItem(1)
-        End If
-        
-        CmoCourseNo = Course.CourseNo
-        Me.Unprotect
-        [CourseNo] = CmoCourseNo
-        Me.Protect
-    Else
-        Set Course = Nothing
-        ClearSheet
-    
-    End If
-
-    SetActiveCourse = True
-
-Exit Function
-
-ErrorExit:
-    SetActiveCourse = False
-
-Exit Function
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Function
-
 Public Sub SendSupportMail()
     
     Const StrPROCEDURE As String = "SendSupportMail()"
@@ -719,6 +492,49 @@ ErrorExit:
 Exit Sub
 
 ErrorHandler:   If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Sub
+
+' ===============================================================
+' RunModule
+'
+' ---------------------------------------------------------------
+Private Sub RunModule()
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "RunModule()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+
+    If Not ShtCourse.PopulateSheet Then Err.Raise HANDLED_ERROR
+
+GracefulExit:
+
+
+Exit Sub
+
+ErrorExit:
+
+    '***CleanUpCode***
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
     Else

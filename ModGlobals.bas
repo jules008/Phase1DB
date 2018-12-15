@@ -4,7 +4,9 @@ Attribute VB_Name = "ModGlobals"
 '===============================================================
 ' v1.0.0 - Initial Version
 '---------------------------------------------------------------
-' Date - 23 Apr 18
+' v1,0 - WT2018 Version
+'---------------------------------------------------------------
+' Date - 15 Dec 18
 '===============================================================
 Private Const StrMODULE As String = "ModGlobals"
 
@@ -20,6 +22,7 @@ Public Const LIBRARY_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\fold
 Public Const DB_FILE_NAME As String = "Phase 1 Live DB v1,34"
 Public Const INI_FILE_PATH As String = "\System Files\"
 Public Const INI_FILE_NAME As String = "System.ini"
+Public Const COURSE_NO As String = "WT2018"
 Public Const STOP_FLAG As Boolean = False
 Public Const MAINT_MSG As String = ""
 Public Const SEND_ERR_MSG As Boolean = False
@@ -62,7 +65,7 @@ Public SYS_PATH As String
 ' Global Class Declarations
 ' ---------------------------------------------------------------
 Public Modules As ClsModules
-Public Courses As ClsCourses
+Public Course As ClsCourse
 Public MailSystem As ClsMailSystem
 
 ' ---------------------------------------------------------------
@@ -72,13 +75,13 @@ Public MailSystem As ClsMailSystem
 ' ===============================================================
 ' Colours
 ' ---------------------------------------------------------------
-Public Const MedGreen As Long = 12379352
-Public Const LightGreen As Long = 14610923
-Public Const DarkGreen As Long = 2646607
-Public Const DarkAmber As Long = 26012
-Public Const LightAmber As Long = 10284031
-Public Const DarkRed As Long = 393372
-Public Const LightRed As Long = 13551615
+Public Const Colour_1 = 16761994
+Public Const Colour_2 = 12235622
+Public Const Colour_3 = 16777215
+Public Const Colour_5 = 9305182
+Public Const Colour_6 = 11047061
+Public Const Colour_7 = 8188159
+Public Const Colour_8 = 9617978
 
 ' ===============================================================
 ' Enum Declarations

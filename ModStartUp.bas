@@ -3,8 +3,9 @@ Attribute VB_Name = "ModStartUp"
 ' Module ModStartUp
 '===============================================================
 ' v1.0.0 - Initial Version
+' v2.0.0 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 19 Apr 18
+' Date - 15 Dec 18
 '===============================================================
 
 Option Explicit
@@ -39,13 +40,14 @@ Public Function Initialise() As Boolean
     Application.StatusBar = "Loading Courses....."
     
     Set Modules = New ClsModules
-    Set Courses = New ClsCourses
+    Set Course = New ClsCourse
+    
+    Course.CourseNo = COURSE_NO
+    Course.LoadDB
     
     'Show any messages
     If Not MessageCheck Then Err.Raise HANDLED_ERROR
     
-
-
     Initialise = True
 
 Exit Function
