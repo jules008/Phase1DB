@@ -5,7 +5,7 @@ Attribute VB_Name = "ModStartUp"
 ' v1.0.0 - Initial Version
 ' v2.0.0 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 15 Dec 18
+' Date - 19 Dec 18
 '===============================================================
 
 Option Explicit
@@ -41,6 +41,8 @@ Public Function Initialise() As Boolean
     
     Set Modules = New ClsModules
     Set Course = New ClsCourse
+    
+    If Not ShtCourse.GetModules Then Err.Raise HANDLED_ERROR
     
     Course.CourseNo = COURSE_NO
     Course.LoadDB

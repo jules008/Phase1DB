@@ -1,6 +1,7 @@
-ModuleID,  dbLong
-ModuleNo,  dbText
+ID,  dbLong
+ModuleNo,  dbDouble
+ModuleID,  dbText
 DayNo,  dbDouble
 Module,  dbText
 Assessment,  dbBoolean
-Deleted,  dbDate
+Deleted,  dbText

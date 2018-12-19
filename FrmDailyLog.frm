@@ -381,7 +381,7 @@ ErrorHandler:
 End Sub
 
 Private Sub BtnGuidanced1_Click()
-    FrmGuidance1.Show
+'    FrmGuidance1.Show
 End Sub
 
 Private Sub BtnGuidanced2_Click()

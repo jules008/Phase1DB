@@ -170,14 +170,14 @@ Public Function RefreshCourses() As Boolean
         
         .Clear
         
-        For i = 1 To Courses.Count
+'        For i = 1 To Courses.Count
         
-            Set LocCourse = Courses.FindItem(i)
+'            Set LocCourse = Courses.FindItem(i)
             .AddItem LocCourse.CourseNo
             
             Debug.Print LocCourse.CourseNo & " - " & [CourseNo]
             
-        Next
+'        Next
     End With
 
     RefreshCourses = True

@@ -8,20 +8,23 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
+' Class ClsModule
 ' v0,0 - Initial version
+' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 04 Nov 16
+' Date - 19 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
 ' LoadDB - Get module from database
 '===============================================================
 Option Explicit
-Private pModuleID As Integer
+Private pModuleID As String
 Private pDayNo As Integer
-Private pModuleNo As String
+Private pModuleNo As Integer
 Private pModule As String
 Private pAssessment As Boolean
+Private pParent As Long
 
 '---------------------------------------------------------------
 Public Property Get ModuleID() As Integer
@@ -68,14 +71,37 @@ Public Property Let Assessment(ByVal vNewValue As Boolean)
     pAssessment = vNewValue
 End Property
 
+'---------------------------------------------------------------
+Public Property Get Parent() As ClsModules
+    If pParent <> 0 Then
+        Set Parent = GetParentFromPtr(pParent)
+    End If
+End Property
+
+Friend Function SetParent(ByVal Ptr As Long) As Boolean
+    pParent = Ptr
+End Function
+
+' ===============================================================
+' Method GetParentFromPtr
+' Private routine to copy memory address of parent class
+' ---------------------------------------------------------------
+Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsModules
+    Dim tmp As ClsModules
+
+    CopyMemory tmp, Ptr, 4
+    Set GetParentFromPtr = tmp
+    CopyMemory tmp, 0&, 4
+End Function
+
 '===============================================================
-'Method LoadDB
+'Method DBGet
 'Find Module Index no
 '---------------------------------------------------------------
-Public Sub LoadDB()
+Public Sub DBGet()
     Dim RstModule As Recordset
     
-    Set RstModule = ModDatabase.SQLQuery("SELECT * FROM module WHERE dayno = " & pDayNo & " AND deleted IS NULL")
+    Set RstModule = ModDatabase.SQLQuery("SELECT * FROM module WHERE dayno = " & pModuleNo)
     
     With RstModule
         If .RecordCount > 0 Then
@@ -88,4 +114,5 @@ Public Sub LoadDB()
     End With
     Set RstModule = Nothing
 End Sub
+
 

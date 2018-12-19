@@ -11,7 +11,7 @@ Attribute VB_Exposed = True
 ' v0,0 - Initial version
 ' v1,0 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 15 Dec 18
+' Date - 19 Dec 18
 '===============================================================
 Option Explicit
 
@@ -86,47 +86,6 @@ ErrorHandler:
     End If
 End Function
 
-Public Function RefreshCourses() As Boolean
-    Const StrPROCEDURE As String = "RefreshCourses()"
-    
-    Dim i As Integer
-    Dim LocCourse As ClsCourse
-    
-    On Error GoTo ErrorHandler
-    
-    With CmoCourseNo
-        
-        .Clear
-        
-        For i = 1 To Courses.Count
-        
-            Set LocCourse = Courses.FindItem(i)
-            .AddItem LocCourse.CourseNo
-            
-            Debug.Print LocCourse.CourseNo & " - " & [CourseNo]
-            
-        Next
-            
-    End With
-
-    RefreshCourses = True
-
-Exit Function
-
-ErrorExit:
-    Set LocCourse = Nothing
-    RefreshCourses = False
-
-Exit Function
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Function
 
 
 ' ===============================================================
@@ -199,22 +158,26 @@ ErrorHandler:
     End If
 End Sub
 
-Public Sub ShowCandidateFrm()
-    
-    Const StrPROCEDURE As String = "ShowCandidateFrm()"
-    
+' ===============================================================
+' ShowCandidateFrm
+' Shows Candidate form when button is pressed
+' ---------------------------------------------------------------
+Private Sub ShowCandidateFrm()
     Dim Candidate As ClsCandidate
     Dim CrewNo As String
-    
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "ShowCandidateFrm()"
+
     On Error GoTo ErrorHandler
-    
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+
     Set Candidate = New ClsCandidate
     
     CrewNo = GetCrewNo
-    
-    If Course Is Nothing Then
-        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
-    End If
     
     If CrewNo <> "" Then
         Set Candidate = Course.Candidates.FindItem(CrewNo)
@@ -227,14 +190,22 @@ Public Sub ShowCandidateFrm()
     
     Set Candidate = Nothing
 
+GracefulExit:
+
 Exit Sub
-    
+
 ErrorExit:
     Set Candidate = Nothing
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -260,7 +231,7 @@ Public Sub ShowDailyLogFrm()
     
     If Course Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
-        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
+'        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
     End If
     
     If CrewNo <> "" And DayNo <> "" Then
@@ -271,7 +242,7 @@ Public Sub ShowDailyLogFrm()
         If DailyLog Is Nothing Then
             Set DailyLog = New ClsDailyLog
             DailyLog.Module.DayNo = DayNo
-            DailyLog.Module.LoadDB
+            DailyLog.Module.DBGet
             Candidate.Dailylogs.AddItem DailyLog
         End If
         
@@ -314,7 +285,7 @@ Public Sub ShowDevelopmentPlanFrm()
     
     If Course Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
-        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
+'        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
     End If
     
     If CrewNo <> "" Then
@@ -450,7 +421,7 @@ Public Sub RunSupervisionFile()
    
     If Course Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
-        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
+'        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
     End If
     
     If Response = 6 Then
@@ -542,3 +513,54 @@ ErrorHandler:
     End If
 End Sub
 
+' ===============================================================
+' GetModules
+' Displays module headings on the page
+' ---------------------------------------------------------------
+Public Function GetModules() As Boolean
+    Dim i As Integer
+    Dim Module As ClsModule
+    Dim RngModules As Range
+    Dim AryModules() As String
+    
+    Const StrPROCEDURE As String = "GetModules()"
+
+    On Error GoTo ErrorHandler
+
+    ReDim AryModules(1 To Modules.Count)
+    Set Module = New ClsModule
+    
+    For Each Module In Modules
+        With Module
+            AryModules(.ModuleNo) = .Module
+        End With
+    Next
+    
+    Set RngModules = Range("C6")
+    Set RngModules = RngModules.Resize(1, Modules.Count)
+    Unprotect
+    RngModules = AryModules
+    Protect
+
+    GetModules = True
+    Set Module = Nothing
+    Set RngModules = Nothing
+Exit Function
+
+ErrorExit:
+
+    '***CleanUpCode***
+    Set Module = Nothing
+    Set RngModules = Nothing
+    GetModules = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function

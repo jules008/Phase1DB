@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 11 Oct 16
+' Date - 19 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -136,7 +137,7 @@ Public Sub GetCollection()
             For i = 1 To .RecordCount
                 Set DailyLog = New ClsDailyLog
                 DailyLog.Module.DayNo = !DayNo
-                DailyLog.Module.LoadDB
+                DailyLog.Module.DBGet
                 DailyLog.LogID = !LogID
                 AddItem DailyLog
                 DailyLog.LoadDB

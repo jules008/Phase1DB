@@ -23,9 +23,9 @@ Private Sub BtnAddAssess_Click()
 
     On Error GoTo ErrorHandler
     
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
+'    If Courses Is Nothing Then
+'        If Not Initialise Then Err.Raise HANDLED_ERROR
+'    End If
     
     If Course Is Nothing Then
         If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
@@ -104,19 +104,19 @@ Public Function SetActiveCourse() As Boolean
     
     On Error GoTo ErrorHandler
     
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
+'    If Courses Is Nothing Then
+'        If Not Initialise Then Err.Raise HANDLED_ERROR
+'    End If
     
-    If Courses.Count <> 0 Then
-        If [CourseNo] <> "" Then
-            Set Course = Courses.FindItem(CStr([CourseNo]))
-        Else
-            Set Course = Courses.FindItem(1)
-        End If
-    Else
-        ClearSheet
-    End If
+'    If Courses.Count <> 0 Then
+'        If [CourseNo] <> "" Then
+'            Set Course = Courses.FindItem(CStr([CourseNo]))
+'        Else
+'            Set Course = Courses.FindItem(1)
+'        End If
+'    Else
+'        ClearSheet
+'    End If
 
     SetActiveCourse = True
 
@@ -154,15 +154,15 @@ Public Function PopulateSheet() As Boolean
     
     ClearSheet
     
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
+'    If Courses Is Nothing Then
+'        If Not Initialise Then Err.Raise HANDLED_ERROR
+'    End If
     
     If Course Is Nothing Then
         If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
     End If
     
-    If Courses.Count <> 0 Then
+'    If Courses.Count <> 0 Then
             
         'populate candidates
         With Course.Candidates
@@ -195,7 +195,7 @@ Public Function PopulateSheet() As Boolean
             .Sort key1:=.Range("Cj9"), order1:=xlDescending
             Me.Protect
         End With
-    End If
+'    End If
     
     Application.ScreenUpdating = True
     Set Candidate = Nothing
@@ -240,9 +240,9 @@ Private Sub BtnEditAssess_Click()
 
     On Error GoTo ErrorHandler
 
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
+'    If Courses Is Nothing Then
+'        If Not Initialise Then Err.Raise HANDLED_ERROR
+'    End If
     
     If Course Is Nothing Then
         If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
@@ -341,3 +341,4 @@ End Function
 Private Sub Worksheet_Deactivate()
     Set Course = Nothing
 End Sub
+

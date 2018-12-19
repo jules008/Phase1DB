@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 16 Sep 16
+' Date - 19 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -212,7 +213,7 @@ Public Sub LoadDB()
             If Not IsNull(!RevComments) Then pRevComments = !RevComments
             
             pModule.DayNo = !DayNo
-            pModule.LoadDB
+            pModule.DBGet
         End If
         Set RstDevArea = Nothing
     End With
