@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 29 Sep 16
+' Date - 19 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -84,14 +85,9 @@ End Function
 Public Sub GetCollection()
     Dim Candidate As ClsCandidate
     Dim RstCandidates As Recordset
-    Dim StrCrewNo As String
-    Dim StrCourseNo As String
     Dim i As Integer
     
-    StrCourseNo = "'" & Parent.CourseNo & "'"
-    
-    Set RstCandidates = ModDatabase.SQLQuery("SELECT CrewNo FROM candidate WHERE courseno = " & StrCourseNo & _
-                                        " AND deleted IS NULL")
+    Set RstCandidates = ModDatabase.SQLQuery("SELECT CrewNo FROM candidate WHERE courseno = 'WT2018'")
     
     With RstCandidates
         If .RecordCount > 0 Then

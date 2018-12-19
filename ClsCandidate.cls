@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 24 Aug 16
+' Date - 19 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -242,26 +243,24 @@ End Sub
 '---------------------------------------------------------------
 Public Function UpdateDB() As Boolean
     Dim RstCandidate As Recordset
-    Dim StrCrewNo As String
     
-    StrCrewNo = "'" & pCrewNo & "'"
-        
-    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
+    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = '" & pCrewNo & "'")
 
     With RstCandidate
         If .RecordCount = 0 Then
-            UpdateDB = False
+            .AddNew
         Else
             .Edit
-            !CrewNo = pCrewNo
-            !CourseNo = Parent.CourseNo
-            !Division = pDivision
-            !Name = pName
-            !StationNo = pStationNo
-            !Status = pStatus
-            .Update
-            UpdateDB = True
         End If
+        
+        !CrewNo = pCrewNo
+        !CourseNo = COURSE_NO
+        !Division = pDivision
+        !Name = pName
+        !StationNo = pStationNo
+        !Status = pStatus
+        .Update
+        UpdateDB = True
     End With
     
     Set RstCandidate = Nothing

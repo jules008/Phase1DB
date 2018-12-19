@@ -32,7 +32,7 @@ Public Function PopulateSheet() As Boolean
     
     On Error GoTo ErrorHandler
     
-    Set TargetRange = Range("B6")
+    Set TargetRange = Range("A7")
     
     If Not ClearSheet Then Err.Raise HANDLED_ERROR
     
@@ -40,6 +40,7 @@ Public Function PopulateSheet() As Boolean
     
     Application.ScreenUpdating = False
     
+    Unprotect
     With Course.Candidates
         For i = 1 To .Count
             Set Candidate = .FindItem(i)
@@ -564,3 +565,4 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+

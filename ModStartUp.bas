@@ -23,6 +23,8 @@ Public Function Initialise() As Boolean
 
     Terminate
     
+    Application.DisplayFullScreen = True
+
     SYS_PATH = ThisWorkbook.Path & INI_FILE_PATH
 
     Application.StatusBar = "Reading INI File....."
