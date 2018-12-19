@@ -92,7 +92,8 @@ Restart:
     End If
     
     Course.Candidates.CleanUp
-    Hide
+    
+    Unload Me
 
 GracefulExit:
 
@@ -416,7 +417,7 @@ Restart:
     
     If Course Is Nothing Then Err.Raise HANDLED_ERROR
 
-    Response = MsgBox("Are you sure you want to mark the candidate as deleted?", vbYesNo)
+    Response = MsgBox("Are you sure you want to delete the candidate?", vbYesNo)
     
     If Response = 6 Then
         Candidate.Parent.Candidates.RemoveItem (Candidate.CrewNo)
@@ -513,4 +514,6 @@ End Function
 Public Sub FormTerminate()
     On Error Resume Next
     Set Candidate = Nothing
+    Unload Me
+    
 End Sub

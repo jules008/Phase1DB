@@ -49,6 +49,8 @@ Public Function Initialise() As Boolean
     Course.CourseNo = COURSE_NO
     Course.LoadDB
     
+    ShtCourse.PopulateSheet
+    
     'Show any messages
     If Not MessageCheck Then Err.Raise HANDLED_ERROR
     

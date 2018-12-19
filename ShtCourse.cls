@@ -34,11 +34,11 @@ Public Function PopulateSheet() As Boolean
     
     Set TargetRange = Range("A7")
     
+    Application.ScreenUpdating = False
+    
     If Not ClearSheet Then Err.Raise HANDLED_ERROR
     
     If Course Is Nothing Then Err.Raise HANDLED_ERROR, , "No Course Selected"
-    
-    Application.ScreenUpdating = False
     
     Unprotect
     With Course.Candidates
@@ -215,34 +215,34 @@ ErrorHandler:
     End If
 End Sub
 
-
-Public Sub ShowDailyLogFrm()
-    
-    Const StrPROCEDURE As String = "ShowDailyLogFrm()"
-    
+' ===============================================================
+' ShowDailyLogFrm
+' Event for Daily Log Button to show form
+' ---------------------------------------------------------------
+Private Sub ShowDailyLogFrm()
     Dim CrewNo As String
     Dim DayNo As String
     Dim Candidate As ClsCandidate
     Dim DailyLog As ClsDailyLog
-    
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "ShowDailyLogFrm()"
     On Error GoTo ErrorHandler
+
+Restart:
     
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+
     CrewNo = GetCrewNo
     DayNo = GetDayNo
-    
-    If Course Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-'        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
-    End If
-    
+       
     If CrewNo <> "" And DayNo <> "" Then
         Set Candidate = Course.Candidates.FindItem(CrewNo)
-        
         Set DailyLog = Candidate.Dailylogs.FindItem(DayNo)
         
         If DailyLog Is Nothing Then
             Set DailyLog = New ClsDailyLog
-            DailyLog.Module.DayNo = DayNo
+            DailyLog.Module.ModuleNo = DayNo
             DailyLog.Module.DBGet
             Candidate.Dailylogs.AddItem DailyLog
         End If
@@ -250,20 +250,29 @@ Public Sub ShowDailyLogFrm()
         If Not FrmDailyLog.ShowForm(LocalDailyLog:=DailyLog) Then Err.Raise HANDLED_ERROR
         
         If Not PopulateSheet Then Err.Raise HANDLED_ERROR
+    End If
+    
+GracefulExit:
         
         Set Candidate = Nothing
         Set DailyLog = Nothing
-    End If
 
 Exit Sub
 
 ErrorExit:
-    Set Candidate = Nothing
-    Set DailyLog = Nothing
+
+        Set Candidate = Nothing
+        Set DailyLog = Nothing
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -314,23 +323,31 @@ ErrorHandler:
     End If
 End Sub
 
+' ===============================================================
+' GetCrewNo
+' returns the crew no of the selected cell
+' ---------------------------------------------------------------
 Public Function GetCrewNo() As String
     Dim CrewNo As String
     
     On Error Resume Next
     
-    CrewNo = Cells(ActiveCell.Row, 2).Value
+    CrewNo = Cells(ActiveCell.Row, 1).Value
     If CrewNo <> "" Then
         GetCrewNo = Format(CrewNo, "0000")
     End If
 End Function
 
+' ===============================================================
+' GetDayNo
+' Returns the course day no for the selected cell
+' ---------------------------------------------------------------
 Public Function GetDayNo() As String
     Dim DayNo As String
     
     On Error Resume Next
         
-    DayNo = Cells(3, ActiveCell.Column).Value
+    DayNo = Cells(4, ActiveCell.Column).Value
     If DayNo <> "" Then
         GetDayNo = DayNo
     Else
@@ -565,4 +582,5 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
 

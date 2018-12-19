@@ -272,11 +272,8 @@ End Function
 '---------------------------------------------------------------
 Public Sub DeleteDB()
     Dim RstCandidate As Recordset
-    Dim StrCrewNo As String
     
-    StrCrewNo = "'" & pCrewNo & "'"
-    
-    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
+    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = '" & pCrewNo & "'")
 
     With RstCandidate
         If .RecordCount <> 0 Then
