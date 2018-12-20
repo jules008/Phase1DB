@@ -6,7 +6,7 @@ Attribute VB_Name = "ModGlobals"
 '---------------------------------------------------------------
 ' v1,0 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 15 Dec 18
+' Date - 20 Dec 18
 '===============================================================
 Private Const StrMODULE As String = "ModGlobals"
 
@@ -90,6 +90,12 @@ Enum Role
     Admin = 1
     Trainer = 2
     WCS
+End Enum
+
+Enum EnumFormValidation
+    FormOK = 2
+    ValidationError = 1
+    FunctionalError = 0
 End Enum
 
 ' ===============================================================

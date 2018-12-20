@@ -16,8 +16,9 @@ Attribute VB_Exposed = False
 
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 17 Aug 16
+' Date - 20 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -40,22 +41,23 @@ Private Candidate As ClsCandidate
 Private DailyLog As ClsDailyLog
 Private FormChanged As Boolean
 
-' Routines =====================================================
-'---------------------------------------------------------------
+' ===============================================================
+' ShowForm
+' Shows Daily Log Form for selected person and day
+' ---------------------------------------------------------------
 Public Function ShowForm(Optional LocalDailyLog As ClsDailyLog, Optional LocalCandidate) As Boolean
 
     Const StrPROCEDURE As String = "ShowForm()"
-    
+
     On Error GoTo ErrorHandler
-    
-    ResetForm
-    
+
     If LocalDailyLog Is Nothing Then
-        
         Set DailyLog = New ClsDailyLog
+        
         If Not LocalCandidate Is Nothing Then
             Set Candidate = LocalCandidate
         End If
+        
         Candidate.Dailylogs.AddItem DailyLog
     Else
         Set DailyLog = LocalDailyLog
@@ -67,13 +69,12 @@ Public Function ShowForm(Optional LocalDailyLog As ClsDailyLog, Optional LocalCa
     FormChanged = False
     Show
     ShowForm = True
-    
+
 Exit Function
 
 ErrorExit:
     ShowForm = False
-    FormTerminate
-    Terminate
+
 Exit Function
 
 ErrorHandler:
@@ -84,12 +85,16 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
+' ===============================================================
+' PopulateForm
+' Populates Daily Log form
+' ---------------------------------------------------------------
 Private Function PopulateForm() As Boolean
-    
     Const StrPROCEDURE As String = "PopulateForm()"
-    
+
     On Error GoTo ErrorHandler
-    
+
     With DailyLog
         If .DLDate = #12:00:00 AM# Then TxtAssessDate = VBA.Format(Now, "dd/mm/yy") Else TxtAssessDate = .DLDate
         TxtComments1 = .Comments1
@@ -119,8 +124,7 @@ Private Function PopulateForm() As Boolean
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
+
     PopulateForm = False
 
 Exit Function
@@ -134,48 +138,75 @@ ErrorHandler:
     End If
 End Function
 
-Private Function ValidateData() As Boolean
-    
-    On Error Resume Next
-    
+' ===============================================================
+' ValidateData
+' Validates input data before saving
+' ---------------------------------------------------------------
+Private Function ValidateData() As EnumFormValidation
+    Const StrPROCEDURE As String = "ValidateData()"
+
+    On Error GoTo ErrorHandler
+
     If Me.CmoAssessors = "" Then
         MsgBox "Please enter an assessor name"
-        ValidateData = False
+        ValidateData = ValidationError
         Exit Function
     End If
     
     If Me.Cmo1 = "0" Then
         MsgBox "Please enter a score for Attitude"
-        ValidateData = False
+        ValidateData = ValidationError
         Exit Function
     End If
 
     If Me.Cmo2 = "0" Then
         MsgBox "Please enter a score for Practical Ability"
-        ValidateData = False
+        ValidateData = ValidationError
         Exit Function
     End If
 
     If Me.Cmo3 = "0" Then
         MsgBox "Please enter a score for Knowledge"
-        ValidateData = False
+        ValidateData = ValidationError
         Exit Function
     End If
 
     If Me.Cmo4 = "0" Then
         MsgBox "Please enter a score for Safety"
-        ValidateData = False
+        ValidateData = ValidationError
         Exit Function
     End If
 
-    ValidateData = True
+    ValidateData = FormOK
+
+Exit Function
+
+ErrorExit:
+
+    ValidateData = FunctionalError
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
 End Function
 
-Private Sub ResetForm()
-    
-    On Error Resume Next
-    
+' ===============================================================
+' ResetForm
+' Resets form
+' ---------------------------------------------------------------
+Private Function ResetForm() As Boolean
+    Const StrPROCEDURE As String = "ResetForm()"
+
+    On Error GoTo ErrorHandler
+
     FormChanged = False
+    
     Me.TxtAssessDate = ""
     Me.TxtComments1 = ""
     Me.TxtComments2 = ""
@@ -197,8 +228,30 @@ Private Sub ResetForm()
     Me.Cmo3 = ""
     Me.Cmo4 = ""
     Me.CmoAssessors = ""
-End Sub
 
+    ResetForm = True
+
+Exit Function
+
+ErrorExit:
+
+    ResetForm = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' CalcGrade
+' calculates score based on input value.  returns 99 on error
+' ---------------------------------------------------------------
 Private Function CalcGrade(Score_1 As Integer, Score_2 As Integer, Score_3 As Integer, Score_4 As Integer) As Single
     
     Const StrPROCEDURE As String = "CalcGrade()"
@@ -237,48 +290,8 @@ Private Function CalcGrade(Score_1 As Integer, Score_2 As Integer, Score_3 As In
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
-    CalcGrade = 0
-
-Exit Function
-
-ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
-        Stop
-        Resume
-    Else
-        Resume ErrorExit
-    End If
-End Function
-Private Function UpdateClass() As Boolean
-   Const StrPROCEDURE As String = "UpdateClass()"
-
-   On Error GoTo ErrorHandler
-
-    With DailyLog
-        .DLDate = TxtAssessDate
-        .Assessor = CmoAssessors
-        .Score1 = Me.Cmo1
-        .Score2 = Me.Cmo2
-        .Score3 = Me.Cmo3
-        .Score4 = Me.Cmo4
-        .Comments1 = Me.TxtComments1
-        .Comments2 = Me.TxtComments2
-        .Comments3 = Me.TxtComments3
-        .Comments4 = Me.TxtComments4
-        .CommentsMisc = Me.TxtMiscComments
-        .OverallGrade = TxtOverallGrade
-    End With
-
-    UpdateClass = True
-
-Exit Function
-
-ErrorExit:
-    FormTerminate
-    Terminate
-    UpdateClass = False
+    
+    CalcGrade = 99
 
 Exit Function
 
@@ -291,37 +304,52 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' BtnDelete_Click
+' Event process for delete button
+' ---------------------------------------------------------------
 Private Sub BtnDelete_Click()
-    
-   Const StrPROCEDURE As String = "BtnDelete_Click()"
-    
-   On Error GoTo ErrorHandler
-    
+    Dim ErrNo As Integer
     Dim Response As Integer
+
+    Const StrPROCEDURE As String = "BtnDelete_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR
     
     Response = MsgBox("Are you sure you want to delete the Daily Log?", vbYesNo)
     
     If Response = 6 Then
         DailyLog.DeleteDB
         Candidate.Dailylogs.RemoveItem CStr(DailyLog.Module.DayNo)
-        ResetForm
-        
         Set DailyLog = Nothing
         
+        If Not ResetForm Then Err.Raise HANDLED_ERROR
+        
         MsgBox "Daily Log has been deleted"
-        Hide
+        
+        Unload Me
+        
     End If
+    
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
-    Set DailyLog = Nothing
-
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -330,48 +358,67 @@ ErrorHandler:
     End If
 End Sub
 
-' Events =====================================================
-'-------------------------------------------------------------
+' ===============================================================
+' BtnUpdate_Click
+' Event process for Update button
+' ---------------------------------------------------------------
 Private Sub BtnUpdate_Click()
-   
-   Const StrPROCEDURE As String = "BtnUpdate_Click()"
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "BtnUpdate_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR
     
-    Dim Success As Boolean
-            
-   On Error GoTo ErrorHandler
-            
-    If ValidateData Then
+    If ValidateData = FunctionalError Then Err.Raise HANDLED_ERROR
+    
+    If ValidateData = FormOK Then
         
-        'calculate grade
         TxtOverallGrade = CalcGrade(Cmo1, Cmo2, Cmo3, Cmo4)
-        If TxtOverallGrade = 0 Then Err.Raise HANDLED_ERROR
         
-        If Not UpdateClass Then Err.Raise HANDLED_ERROR
+        If TxtOverallGrade = 99 Then Err.Raise HANDLED_ERROR
         
         With DailyLog
-            Success = .UpdateDB
-            
-            If Success = False Then
-                .NewDB
-                .UpdateDB
-            End If
+            .DLDate = TxtAssessDate
+            .Assessor = CmoAssessors
+            .Score1 = Me.Cmo1
+            .Score2 = Me.Cmo2
+            .Score3 = Me.Cmo3
+            .Score4 = Me.Cmo4
+            .Comments1 = Me.TxtComments1
+            .Comments2 = Me.TxtComments2
+            .Comments3 = Me.TxtComments3
+            .Comments4 = Me.TxtComments4
+            .CommentsMisc = Me.TxtMiscComments
+            .OverallGrade = TxtOverallGrade
+            .UpdateDB
         End With
+        
         Selection = CInt(TxtOverallGrade)
-        Me.Hide
+        
+        Hide
         
         If Not FrmGrade.ShowForm(DailyLog) Then Err.Raise HANDLED_ERROR
-        FormTerminate
         
     End If
 
+GracefulExit:
+
 Exit Sub
 ErrorExit:
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -381,7 +428,7 @@ ErrorHandler:
 End Sub
 
 Private Sub BtnGuidanced1_Click()
-'    FrmGuidance1.Show
+    FrmGuidance1.Show
 End Sub
 
 Private Sub BtnGuidanced2_Click()
@@ -396,6 +443,10 @@ Private Sub BtnGuidanced4_Click()
   FrmGuidance4.Show
 End Sub
 
+' ===============================================================
+' BtnSpellChk_Click
+' Spell checks form
+' ---------------------------------------------------------------
 Private Sub BtnSpellChk_Click()
     On Error Resume Next
     
@@ -413,23 +464,38 @@ Private Sub BtnSpellChk_Click()
     Set Cntrls = Nothing
 End Sub
 
+' ===============================================================
+' BtnXtraTrng_Click
+' Event process to show extra training form
+' ---------------------------------------------------------------
 Private Sub BtnXtraTrng_Click()
-    
+    Dim ErrNo As Integer
+
     Const StrPROCEDURE As String = "BtnXtraTrng_Click()"
 
     On Error GoTo ErrorHandler
-    
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR
+
     If Not FrmExtraTraining.ShowForm(DailyLog) Then Err.Raise HANDLED_ERROR
+
+GracefulExit:
 
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -437,12 +503,22 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
+
+' ===============================================================
+' CmdClose_Click
+' Event process for Close Button
+' ---------------------------------------------------------------
 Private Sub CmdClose_Click()
-   
-   Const StrPROCEDURE As String = "CmdClose_Click()"
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "CmdClose_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
     
-   On Error GoTo ErrorHandler
-    
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR
+
     Dim Response As Integer
     
     If FormChanged = True Then
@@ -451,71 +527,31 @@ Private Sub CmdClose_Click()
         If Response = 6 Then BtnUpdate_Click
         FormChanged = False
     End If
-    Candidate.Dailylogs.CleanUp
-    FormTerminate
-
-    Me.Hide
     
+    Candidate.Dailylogs.CleanUp
+
+    Unload Me
+
+GracefulExit:
+
 Exit Sub
 ErrorExit:
-    FormTerminate
-    Terminate
-    FormChanged = False
-    Me.Hide
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
     Else
         Resume ErrorExit
     End If
-End Sub
-
-Private Sub Cmo1_Change()
-    FormChanged = True
-End Sub
-
-Private Sub Cmo2_Change()
-    FormChanged = True
-End Sub
-
-Private Sub Cmo3_Change()
-    FormChanged = True
-End Sub
-
-Private Sub Cmo4_Change()
-    FormChanged = True
-End Sub
-
-Private Sub CmoAssessors_Change()
-    FormChanged = True
-End Sub
-
-Private Sub LblName_Click()
-
-End Sub
-
-Private Sub TxtAssessDate_Click()
-    FormChanged = True
-End Sub
-
-Private Sub TxtComments1_Change()
-    FormChanged = True
-End Sub
-
-Private Sub TxtComments2_Change()
-    FormChanged = True
-End Sub
-
-Private Sub TxtComments3_Change()
-    FormChanged = True
-End Sub
-
-Private Sub TxtComments4_Change()
-    FormChanged = True
 End Sub
 
 Private Sub UserForm_Activate()
@@ -532,24 +568,29 @@ Private Sub UserForm_Terminate()
     FormTerminate
 End Sub
 
-Public Sub FormActivate()
-   
-   Const StrPROCEDURE As String = "FormActivate()"
-    
+' ===============================================================
+' FormActivate
+' Event process for form activation
+' ---------------------------------------------------------------
+Private Sub FormActivate()
+    Dim ErrNo As Integer
     Dim RstUsers As Recordset
     
+    Const StrPROCEDURE As String = "FormActivate()"
+
     On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR
     
     Set RstUsers = GetAccessList
     
-    Select Case DailyLog.Module.DayNo
-        
-        Case 3, 11, 17, 20, 9, 27, 28, 29
-            LblAssess = "Assessment"
-        
-        Case Else
-            LblAssess = "Daily Log"
-    End Select
+    If DailyLog.Module.Assessment Then
+        LblAssess = "Assessment"
+    Else
+        LblAssess = "Daily Log"
+    End If
 
     Me.CmoAssessors.Clear
     
@@ -559,17 +600,24 @@ Public Sub FormActivate()
         .MoveNext
         Loop While Not .EOF
     End With
+
+GracefulExit:
+    
     Set RstUsers = Nothing
 Exit Sub
 
 ErrorExit:
     Set RstUsers = Nothing
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -578,15 +626,20 @@ ErrorHandler:
     End If
 End Sub
 
+' ===============================================================
+' FormInitialise
+' Event process for form initialise
+' ---------------------------------------------------------------
+Private Sub FormInitialise()
+    Dim ErrNo As Integer
 
-Public Sub FormInitialise()
-    
     Const StrPROCEDURE As String = "FormInitialise()"
-    
-    Dim cell As Range
-    Dim screenheight As Integer
-    
+
     On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR
     
     Set Candidate = New ClsCandidate
     Set DailyLog = New ClsDailyLog
@@ -621,23 +674,23 @@ Public Sub FormInitialise()
     Cmo3.AddItem "5"
     Cmo4.AddItem "5"
    
-    'set form height dependant on screen size
-    screenheight = GetScreenHeight
-      
-    If screenheight < 900 Then
-        Me.Height = screenheight - 300
-        Me.ScrollHeight = 605
-    End If
-    
+Exit Sub
+
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -646,7 +699,10 @@ ErrorHandler:
     End If
 End Sub
 
-
+' ===============================================================
+' FormTerminate
+' Event process for form terminate
+' ---------------------------------------------------------------
 Public Sub FormTerminate()
     On Error Resume Next
     
