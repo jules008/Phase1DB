@@ -17,8 +17,9 @@ Attribute VB_Exposed = False
 
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 14 Sep 16
+' Date - 20 Dec 18
 '===============================================================
 Option Explicit
 
@@ -28,13 +29,18 @@ Private Candidate As ClsCandidate
 Private DailyLog As ClsDailyLog
 Private ActiveSession As ClsXTrainingSession
 
-Public Function ShowForm(Optional ExistDailyLog As ClsDailyLog) As Boolean
+' ===============================================================
+' ShowForm
+' Shows Extra Training Form
+' ---------------------------------------------------------------
+Private Function ShowForm(Optional ExistDailyLog As ClsDailyLog) As Boolean
     
-   Const StrPROCEDURE As String = "ShowForm()"
-   
-   On Error GoTo ErrorHandler
-   
-    ResetForm
+    Const StrPROCEDURE As String = "ShowForm()"
+
+    On Error GoTo ErrorHandler
+
+    If Not ResetForm Then Err.Raise HANDLED_ERROR
+    
     If ExistDailyLog Is Nothing Then
         Set DailyLog = New ClsDailyLog
         Show
@@ -51,8 +57,7 @@ Public Function ShowForm(Optional ExistDailyLog As ClsDailyLog) As Boolean
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
+
     ShowForm = False
 
 Exit Function
@@ -68,16 +73,24 @@ End Function
 
 Private Sub BtnClose_Click()
     On Error Resume Next
-    
-    FormTerminate
-    Me.Hide
+    Unload Me
 End Sub
 
+' ===============================================================
+' BtnDelete_Click
+' Event process for the Delete button
+' ---------------------------------------------------------------
 Private Sub BtnDelete_Click()
+    Dim ErrNo As Integer
+
     Const StrPROCEDURE As String = "BtnDelete_Click()"
-    
+
     On Error GoTo ErrorHandler
-    
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR
+
     If Not SetActiveSession Then Err.Raise HANDLED_ERROR
     
     DailyLog.XtrainingSessions.RemoveItem (CStr(ActiveSession.ExtraTrainingNo))
@@ -85,16 +98,22 @@ Private Sub BtnDelete_Click()
     LstTrainingList.ListIndex = -1
     
     If Not PopulateForm Then Err.Raise HANDLED_ERROR
-    
+
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -103,14 +122,22 @@ ErrorHandler:
     End If
 End Sub
 
-
+' ===============================================================
+' BtnNew_Click
+' Event process for New Button
+' ---------------------------------------------------------------
 Private Sub BtnNew_Click()
-    Const StrPROCEDURE As String = "BtnNew_Click()"
-    
-    On Error GoTo ErrorHandler
-    
     Dim NewSession As ClsXTrainingSession
     Dim ExtraTrainingNo As Integer
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "BtnNew_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR
     
     Set NewSession = New ClsXTrainingSession
     
@@ -122,17 +149,24 @@ Private Sub BtnNew_Click()
     With LstTrainingList
         .Selected(.ListCount - 1) = True
     End With
+
+GracefulExit:
+    
     Set NewSession = Nothing
 Exit Sub
 
 ErrorExit:
     Set NewSession = Nothing
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -140,22 +174,60 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
+
+' ===============================================================
+' BtnSpellChk_Click
+' Event process for spell checker
+' ---------------------------------------------------------------
 Private Sub BtnSpellChk_Click()
-    On Error Resume Next
-    
-    'to be added to selection button
     Dim Cntrls As Collection
     Dim i As Integer
     Dim Cntrl As Control
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "BtnSpellChk_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR
     
     Set Cntrls = New Collection
     
     For i = 0 To Me.Controls.Count - 1
         Cntrls.Add Controls(i)
     Next
+    
     ModLibrary.SpellCheck Cntrls
+    
     Set Cntrls = Nothing
+
+GracefulExit:
+
+Exit Sub
+
+ErrorExit:
+
+    Set Cntrls = Nothing
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
 End Sub
+
 Private Sub BtnUpdate_Click()
     Const StrPROCEDURE As String = "BtnUpdate_Click()"
 

@@ -5,7 +5,7 @@ Attribute VB_Name = "ModLibrary"
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Added ColourConvert
 '---------------------------------------------------------------
-' Date - 08 Feb 17
+' Date - 20 Dec 18
 '===============================================================
 
 Option Explicit
@@ -70,18 +70,17 @@ End Sub
 ' checks spelling on forms
 ' ---------------------------------------------------------------
 Public Sub SpellCheck(ByRef Cntrls As Collection)
-    On Error Resume Next
-    
     Dim RngSpell As Range
     Dim Cntrl As Control
+    
+    On Error Resume Next
     
     Set RngSpell = Worksheets(1).Range("A1")
     
     For Each Cntrl In Cntrls
-        
+        Debug.Print Cntrl.Name
         If Left(Cntrl.Name, 3) = "Txt" Then
-            Debug.Print Cntrl.Name
-            RngSpell = Cntrl
+            RngSpell.Value = Cntrl
             RngSpell.CheckSpelling
             Cntrl = RngSpell
         End If
@@ -161,7 +160,7 @@ End Sub
 
 Public Sub ColourConvert()
      Dim Colour1 As Long
-     Colour1 = RGB(237, 12, 63)
+     Colour1 = RGB(247, 150, 70)
      
      Debug.Print Colour1
 

@@ -3,7 +3,6 @@ Attribute VB_Name = "ModGlobals"
 ' Module ModGlobals
 '===============================================================
 ' v1.0.0 - Initial Version
-'---------------------------------------------------------------
 ' v1,0 - WT2018 Version
 '---------------------------------------------------------------
 ' Date - 20 Dec 18
@@ -78,10 +77,12 @@ Public MailSystem As ClsMailSystem
 Public Const Colour_1 = 16761994
 Public Const Colour_2 = 12235622
 Public Const Colour_3 = 16777215
+Public Const COLOUR_4 = 10596591
 Public Const Colour_5 = 9305182
 Public Const Colour_6 = 11047061
 Public Const Colour_7 = 8188159
 Public Const Colour_8 = 9617978
+Public Const COLOUR_9 = 4626167
 
 ' ===============================================================
 ' Enum Declarations

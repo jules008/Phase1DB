@@ -15,19 +15,27 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 10 Oct 16
+' Date - 20 Dec 18
 '===============================================================
 Option Explicit
 Private Const StrMODULE As String = "FrmGrade"
 Dim DailyLog As ClsDailyLog
 
+' ===============================================================
+' ShowForm
+' Shows Grade Form
+' ---------------------------------------------------------------
 Public Function ShowForm(LocalDailyLog As ClsDailyLog) As Boolean
     Const StrPROCEDURE As String = "ShowForm()"
-    
+
     On Error GoTo ErrorHandler
+
+    If LocalDailyLog Is Nothing Then Err.Raise HANDLED_ERROR, , "No Daily Log available"
     
-    ResetForm
+    If Not ResetForm Then Err.Raise HANDLED_ERROR
+    
     If Not LocalDailyLog Is Nothing Then
         Set DailyLog = LocalDailyLog
     End If
@@ -35,12 +43,13 @@ Public Function ShowForm(LocalDailyLog As ClsDailyLog) As Boolean
     If Not PopulateForm Then Err.Raise HANDLED_ERROR
     
     Show
+    
     ShowForm = True
 
 Exit Function
 
 ErrorExit:
-    FormTerminate
+
     ShowForm = False
 
 Exit Function
@@ -53,39 +62,44 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
-Public Function PopulateForm() As Boolean
+
+' ===============================================================
+' PopulateForm
+' Populates the grade form
+' ---------------------------------------------------------------
+Private Function PopulateForm() As Boolean
     Const StrPROCEDURE As String = "PopulateForm()"
 
     On Error GoTo ErrorHandler
-    
+
     TxtGrade = DailyLog.OverallGrade
-    Select Case TxtGrade
     
+    Select Case TxtGrade
         Case Is < 2
-            Me.TxtGrade.ForeColor = DarkGreen
+            Me.TxtGrade.ForeColor = COLOUR_5
             Me.TxtGradeDesc.Caption = "A very high standard has been achieved or demonstrated"
-            Me.TxtGradeDesc.ForeColor = DarkGreen
-            ImgGrade.BackColor = MedGreen
+            Me.TxtGradeDesc.ForeColor = COLOUR_5
+            ImgGrade.BackColor = COLOUR_8
             Me.TxtDPDesc.Caption = "A Development Plan is not required"
             Me.BtnNo.Visible = False
             Me.BtnYes.Enabled = True
             Me.BtnYes.Caption = "OK"
             
         Case 2
-            Me.TxtGrade.ForeColor = DarkGreen
+            Me.TxtGrade.ForeColor = COLOUR_7
             Me.TxtGradeDesc.Caption = "The candidate has achieved the required standard"
-            Me.TxtGradeDesc.ForeColor = DarkGreen
-            ImgGrade.BackColor = MedGreen
+            Me.TxtGradeDesc.ForeColor = COLOUR_7
+            ImgGrade.BackColor = COLOUR_9
             Me.TxtDPDesc.Caption = "A Development Plan is not required"
             Me.BtnNo.Visible = False
             Me.BtnYes.Enabled = True
             Me.BtnYes.Caption = "OK"
         
         Case 3
-            Me.TxtGrade.ForeColor = DarkAmber
+            Me.TxtGrade.ForeColor = COLOUR_7
             Me.TxtGradeDesc.Caption = "The candidate has under achieved in one specific area, advice or development required"
-            ImgGrade.BackColor = LightAmber
-            Me.TxtGradeDesc.ForeColor = DarkAmber
+            ImgGrade.BackColor = COLOUR_7
+            Me.TxtGradeDesc.ForeColor = COLOUR_9
             Me.TxtDPDesc.Caption = "Does the candidate's performance require a Development Plan"
             Me.BtnNo.Visible = True
             Me.BtnNo.Enabled = True
@@ -93,10 +107,10 @@ Public Function PopulateForm() As Boolean
             Me.BtnYes.Caption = "Yes"
             
         Case 4
-            Me.TxtGrade.ForeColor = DarkRed
+            Me.TxtGrade.ForeColor = COLOUR_4
             Me.TxtGradeDesc.Caption = "The candidate has under achieved in more than one area, further development is required"
-            ImgGrade.BackColor = LightRed
-            Me.TxtGradeDesc.ForeColor = DarkRed
+            ImgGrade.BackColor = COLOUR_4
+            Me.TxtGradeDesc.ForeColor = COLOUR_6
             Me.TxtDPDesc.Caption = "Development Plan(s) are required, do you want to raise one now?"
             Me.BtnNo.Visible = True
             Me.BtnNo.Enabled = True
@@ -104,25 +118,23 @@ Public Function PopulateForm() As Boolean
             Me.BtnYes.Caption = "Yes"
             
         Case 5
-            Me.TxtGrade.ForeColor = DarkRed
+            Me.TxtGrade.ForeColor = COLOUR_4
             Me.TxtGradeDesc.Caption = "The candidate has under achieved in all areas, further development is required"
-            ImgGrade.BackColor = LightRed
-            Me.TxtGradeDesc.ForeColor = DarkRed
+            ImgGrade.BackColor = COLOUR_4
+            Me.TxtGradeDesc.ForeColor = COLOUR_6
             Me.TxtDPDesc.Caption = "Development Plan(s) are required, do you want to raise one now?"
             Me.BtnNo.Visible = True
             Me.BtnNo.Enabled = True
             Me.BtnYes.Enabled = True
             Me.BtnYes.Caption = "Yes"
-            
-            
     End Select
-
+    
     PopulateForm = True
 
 Exit Function
 
 ErrorExit:
-    FormTerminate
+    
     PopulateForm = False
 
 Exit Function
@@ -135,31 +147,61 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
-Public Sub ResetForm()
-    On Error Resume Next
-    
+
+' ===============================================================
+' ResetForm
+' Resets form
+' ---------------------------------------------------------------
+Private Function ResetForm() As Boolean
+    Const StrPROCEDURE As String = "ResetForm()"
+
+    On Error GoTo ErrorHandler
+
     Me.TxtDPDesc = ""
     Me.TxtGrade = ""
     Me.TxtGradeDesc = ""
-    
-End Sub
+
+    ResetForm = True
+
+Exit Function
+
+ErrorExit:
+
+    ResetForm = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
 
 Private Sub BtnNo_Click()
     On Error Resume Next
-    
-    Me.Hide
+    Unload Me
 End Sub
 
+' ===============================================================
+' BtnYes_Click
+' Event process for Yes Button
+' ---------------------------------------------------------------
 Private Sub BtnYes_Click()
-    Const StrPROCEDURE As String = "BtnYes_Click()"
-    
     Dim Candidate As ClsCandidate
     Dim DevelopmentPlan As ClsDevelopmentPlan
     Dim DevArea As ClsDevelopmentArea
-    Dim i As Integer
-    
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "BtnYes_Click()"
     On Error GoTo ErrorHandler
 
+Restart:
+
+    If Course Is Nothing Then Err.Raise HANDLED_ERROR
+    
     If DailyLog.OverallGrade > 2 Then
         Set DevelopmentPlan = New ClsDevelopmentPlan
         Set Candidate = DailyLog.Parent
@@ -173,65 +215,60 @@ Private Sub BtnYes_Click()
             If DailyLog.Score1 > 2 Then
                 Set DevArea = New ClsDevelopmentArea
                 
+                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
+                
                 With DevArea
                     .DevArea = "Attitude"
                     .Module = DailyLog.Module
                     .CurrPerfLvl = DailyLog.Comments1
                     .ReviewStatus = "Draft"
-                End With
+                     .UpdateDB
+               End With
                 
-                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
-                DevArea.NewDB
-                DevArea.UpdateDB
-                Set DevArea = Nothing
             End If
             
             If DailyLog.Score2 > 2 Then
                 Set DevArea = New ClsDevelopmentArea
+                
+                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
                 
                 With DevArea
                     .DevArea = "Practical Ability"
                     .Module = DailyLog.Module
                     .CurrPerfLvl = DailyLog.Comments2
                     .ReviewStatus = "Draft"
+                    .UpdateDB
                 End With
                 
-                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
-                DevArea.NewDB
-                DevArea.UpdateDB
-                Set DevArea = Nothing
             End If
             
             If DailyLog.Score3 > 2 Then
                 Set DevArea = New ClsDevelopmentArea
+                
+                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
                 
                 With DevArea
                     .DevArea = "Knowledge"
                     .Module = DailyLog.Module
                     .CurrPerfLvl = DailyLog.Comments3
                     .ReviewStatus = "Draft"
+                    .UpdateDB
                 End With
-                
-                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
-                DevArea.NewDB
-                DevArea.UpdateDB
-                Set DevArea = Nothing
             End If
             
             If DailyLog.Score4 > 2 Then
                 Set DevArea = New ClsDevelopmentArea
+                
+                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
                 
                 With DevArea
                     .DevArea = "Safety"
                     .Module = DailyLog.Module
                     .CurrPerfLvl = DailyLog.Comments4
                     .ReviewStatus = "Draft"
+                    .UpdateDB
                 End With
                 
-                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
-                DevArea.NewDB
-                DevArea.UpdateDB
-                Set DevArea = Nothing
             End If
         End With
         DevelopmentPlan.UpdateDB
@@ -240,15 +277,17 @@ Private Sub BtnYes_Click()
     
     End If
     Me.Hide
+
+GracefulExit:
+
     Set Candidate = Nothing
     Set DevelopmentPlan = Nothing
     Set DevArea = Nothing
+    
 Exit Sub
 
 ErrorExit:
-    
-    Me.Hide
-    FormTerminate
+
     Set Candidate = Nothing
     Set DevelopmentPlan = Nothing
     Set DevArea = Nothing
@@ -256,6 +295,12 @@ ErrorExit:
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume

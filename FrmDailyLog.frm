@@ -428,19 +428,19 @@ ErrorHandler:
 End Sub
 
 Private Sub BtnGuidanced1_Click()
-    FrmGuidance1.Show
+    FrmGuidance_1_.Show
 End Sub
 
 Private Sub BtnGuidanced2_Click()
-    FrmGuidance2.Show
+    FrmGuidance_2_.Show
 End Sub
 
 Private Sub BtnGuidanced3_Click()
-    FrmGuidance3.Show
+    FrmGuidance_3_.Show
 End Sub
 
 Private Sub BtnGuidanced4_Click()
-  FrmGuidance4.Show
+  FrmGuidance_4_.Show
 End Sub
 
 ' ===============================================================
