@@ -18,7 +18,7 @@ Attribute VB_Exposed = False
 ' v0,0 - Initial version
 ' v1,0 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 15 Dec 18
+' Date - 21 Dec 18
 '===============================================================
 Option Explicit
 Private Const StrMODULE As String = "FrmCourse"
@@ -345,12 +345,14 @@ Public Sub FormInitialise()
 
     CmoCourseDirector.Clear
     
-    With RstUsers
-        Do
-            Me.CmoCourseDirector.AddItem !UserName
-            .MoveNext
-        Loop While Not .EOF
-    End With
+    If Not RstUsers Is Nothing Then
+        With RstUsers
+            Do While Not .EOF
+                Me.CmoCourseDirector.AddItem !UserName
+                .MoveNext
+            Loop
+        End With
+    End If
     
     'get Status list
     CmoStatus.Clear

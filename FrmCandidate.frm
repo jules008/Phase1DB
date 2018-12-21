@@ -18,7 +18,7 @@ Attribute VB_Exposed = False
 ' v0,0 - Initial version
 ' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 19 Dec 18
+' Date - 21 Dec 18
 '===============================================================
 Option Explicit
 
@@ -350,7 +350,10 @@ Restart:
             .Status = CmoStatus
             .UpdateDB
         End With
+        Course.Candidates.AddItem Candidate
 
+        If Not ShtCourse.PopulateSheet Then Err.Raise HANDLED_ERROR
+        
         Me.Hide
     End If
 

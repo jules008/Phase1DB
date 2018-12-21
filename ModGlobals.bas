@@ -16,7 +16,7 @@ Option Explicit
 ' ---------------------------------------------------------------
 Public Const PROJECT_FILE_NAME As String = "Phase 1 Candidate Database v2"
 Public Const APP_NAME As String = "Phase 1 Database"
-Public Const EXPORT_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Phase 1 DB\Library\"
+Public Const EXPORT_FILE_PATH As String = "E:\Development Areas\Phase 1DB\Library\"
 Public Const LIBRARY_FILE_PATH As String = "\\lincsfire.lincolnshire.gov.uk\folderredir$\Documents\julian.turner\Documents\RDS Project\Phase 1 DB\Library\"
 Public Const DB_FILE_NAME As String = "Phase 1 Live DB v1,34"
 Public Const INI_FILE_PATH As String = "\System Files\"
