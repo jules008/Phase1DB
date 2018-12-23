@@ -11,7 +11,7 @@ Attribute VB_Exposed = True
 ' v0,0 - Initial version
 ' v1,0 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 19 Dec 18
+' Date - 23 Dec 18
 '===============================================================
 Option Explicit
 
@@ -41,9 +41,9 @@ Public Function PopulateSheet() As Boolean
     If Course Is Nothing Then Err.Raise HANDLED_ERROR, , "No Course Selected"
     
     Unprotect
+    
     With Course.Candidates
-        For i = 1 To .Count
-            Set Candidate = .FindItem(i)
+        For Each Candidate In Course.Candidates
             TargetRange.Offset(i - 1, 0) = Candidate.CrewNo
             TargetRange.Offset(i - 1, 1) = Candidate.Name
             
@@ -53,7 +53,6 @@ Public Function PopulateSheet() As Boolean
                     TargetRange.Offset(i - 1, DailyLog.Module.DayNo + 1) = DailyLog.OverallGrade
                 Next
             End With
-            
         Next
     End With
      
@@ -582,5 +581,6 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
 
 

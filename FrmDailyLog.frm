@@ -18,21 +18,9 @@ Attribute VB_Exposed = False
 ' v0,0 - Initial version
 ' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 20 Dec 18
+' Date - 23 Dec 18
 '===============================================================
 ' Methods
-'---------------------------------------------------------------
-' ShowForm
-' PopulateForm
-' BtnCancel_Click
-' BtnDelete_Click
-' BtnOk_Click
-' UserForm_Activate
-' ValidateData
-' ResetForm
-' UpdateClass
-' UserForm_Initialize
-' UserForm_Terminate
 '===============================================================
 Option Explicit
 Private Const StrMODULE As String = "FrmDailyLog"
@@ -427,18 +415,34 @@ ErrorHandler:
     End If
 End Sub
 
+' ===============================================================
+' BtnGuidanced1_Click
+' Grade guidance
+' ---------------------------------------------------------------
 Private Sub BtnGuidanced1_Click()
     FrmGuidance_1_.Show
 End Sub
 
+' ===============================================================
+' BtnGuidanced2_Click
+' Grade guidance
+' ---------------------------------------------------------------
 Private Sub BtnGuidanced2_Click()
     FrmGuidance_2_.Show
 End Sub
 
+' ===============================================================
+' BtnGuidanced3_Click
+' Grade guidance
+' ---------------------------------------------------------------
 Private Sub BtnGuidanced3_Click()
     FrmGuidance_3_.Show
 End Sub
 
+' ===============================================================
+' BtnGuidanced4_Click
+' Grade guidance
+' ---------------------------------------------------------------
 Private Sub BtnGuidanced4_Click()
   FrmGuidance_4_.Show
 End Sub
@@ -554,23 +558,35 @@ ErrorHandler:
     End If
 End Sub
 
+' ===============================================================
+' UserForm_Activate
+' Form activate event
+' ---------------------------------------------------------------
 Private Sub UserForm_Activate()
     On Error Resume Next
     FormActivate
 End Sub
 
+' ===============================================================
+' UserForm_Initialize
+' Form initialise event
+' ---------------------------------------------------------------
 Private Sub UserForm_Initialize()
     On Error Resume Next
     FormInitialise
 End Sub
 
+' ===============================================================
+' UserForm_Terminate
+' Form terminate event
+' ---------------------------------------------------------------
 Private Sub UserForm_Terminate()
     FormTerminate
 End Sub
 
 ' ===============================================================
 ' FormActivate
-' Event process for form activation
+' Form activate processing
 ' ---------------------------------------------------------------
 Private Sub FormActivate()
     Dim ErrNo As Integer
