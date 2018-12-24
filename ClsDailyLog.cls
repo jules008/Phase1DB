@@ -11,7 +11,7 @@ Attribute VB_Exposed = False
 ' v0,0 - Initial version
 ' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 20 Dec 18
+' Date - 23 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -279,7 +279,9 @@ Public Sub UpdateDB()
             .Edit
         End If
         
+        !CrewNo = Parent.CrewNo
         !assessdate = pDLDate
+        !DayNo = pModule.DayNo
         !Assessor = pAssessor
         !Score_1 = pScore1
         !Score_2 = pScore2
