@@ -41,11 +41,12 @@ Public Function PopulateSheet() As Boolean
     If Course Is Nothing Then Err.Raise HANDLED_ERROR, , "No Course Selected"
     
     Unprotect
+    
+    i = 0
     With Course.Candidates
-        For i = 1 To .Count
-            Set Candidate = .FindItem(i)
-            TargetRange.Offset(i - 1, 0) = Candidate.CrewNo
-            TargetRange.Offset(i - 1, 1) = Candidate.Name
+        For Each Candidate In Course.Candidates
+            TargetRange.Offset(i, 0) = Candidate.CrewNo
+            TargetRange.Offset(i, 1) = Candidate.Name
             
             With Candidate.Dailylogs
                 For x = 1 To .Count
@@ -53,7 +54,7 @@ Public Function PopulateSheet() As Boolean
                     TargetRange.Offset(i - 1, DailyLog.Module.DayNo + 1) = DailyLog.OverallGrade
                 Next
             End With
-            
+            i = i + 1
         Next
     End With
      
@@ -62,7 +63,7 @@ Public Function PopulateSheet() As Boolean
     Me.Protect
     Set Candidate = Nothing
     Set DailyLog = Nothing
-
+    Set TargetRange = Nothing
     PopulateSheet = True
 
 Exit Function
@@ -73,7 +74,8 @@ ErrorExit:
     Me.Protect
     Set Candidate = Nothing
     Set DailyLog = Nothing
-    
+    Set TargetRange = Nothing
+   
     PopulateSheet = False
 
 Exit Function
@@ -582,5 +584,6 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
 
 
