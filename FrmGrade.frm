@@ -17,7 +17,7 @@ Attribute VB_Exposed = False
 ' v0,0 - Initial version
 ' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 20 Dec 18
+' Date - 23 Dec 18
 '===============================================================
 Option Explicit
 Private Const StrMODULE As String = "FrmGrade"
@@ -180,6 +180,10 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' BtnNo_Click
+' Event process for No Button
+' ---------------------------------------------------------------
 Private Sub BtnNo_Click()
     On Error Resume Next
     Unload Me
@@ -207,10 +211,10 @@ Restart:
         Set Candidate = DailyLog.Parent
         
         Candidate.DevelopmentPlans.AddItem DevelopmentPlan
-        DevelopmentPlan.NewDB
         
         With DevelopmentPlan
             .DPDate = Now
+            .UpdateDB
             
             If DailyLog.Score1 > 2 Then
                 Set DevArea = New ClsDevelopmentArea
@@ -309,11 +313,19 @@ ErrorHandler:
     End If
 End Sub
 
+' ===============================================================
+' UserForm_Terminate
+' Form terminate event
+' ---------------------------------------------------------------
 Private Sub UserForm_Terminate()
     On Error Resume Next
     FormTerminate
 End Sub
 
+' ===============================================================
+' FormTerminate
+' Form terminate processing
+' ---------------------------------------------------------------
 Public Sub FormTerminate()
     On Error Resume Next
 
