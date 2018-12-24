@@ -11,7 +11,7 @@ Attribute VB_Exposed = True
 ' v0,0 - Initial version
 ' v1,0 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 23 Dec 18
+' Date - 19 Dec 18
 '===============================================================
 Option Explicit
 
@@ -42,10 +42,11 @@ Public Function PopulateSheet() As Boolean
     
     Unprotect
     
+    i = 0
     With Course.Candidates
         For Each Candidate In Course.Candidates
-            TargetRange.Offset(i - 1, 0) = Candidate.CrewNo
-            TargetRange.Offset(i - 1, 1) = Candidate.Name
+            TargetRange.Offset(i, 0) = Candidate.CrewNo
+            TargetRange.Offset(i, 1) = Candidate.Name
             
             With Candidate.Dailylogs
                 For x = 1 To .Count
@@ -53,6 +54,7 @@ Public Function PopulateSheet() As Boolean
                     TargetRange.Offset(i - 1, DailyLog.Module.DayNo + 1) = DailyLog.OverallGrade
                 Next
             End With
+            i = i + 1
         Next
     End With
      
@@ -61,7 +63,7 @@ Public Function PopulateSheet() As Boolean
     Me.Protect
     Set Candidate = Nothing
     Set DailyLog = Nothing
-
+    Set TargetRange = Nothing
     PopulateSheet = True
 
 Exit Function
@@ -72,7 +74,8 @@ ErrorExit:
     Me.Protect
     Set Candidate = Nothing
     Set DailyLog = Nothing
-    
+    Set TargetRange = Nothing
+   
     PopulateSheet = False
 
 Exit Function

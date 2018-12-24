@@ -8,24 +8,24 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
+' Class ClsCandidates
 ' v0,0 - Initial version
 ' v0,1 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 19 Dec 18
+' Date - 24 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
 ' FindItem - finds item from index
 ' AddItem - Add item to collection
-' removeItem - Delete item from collection
-' Count - returns number of items in collection
-' GetCollection - Find all items
-' DeleteCollection - deletes all items
+' RemoveItem - Deletes item from collection
+' ItemCount - Returns number of items in collection
+' GetCollection - Gets all items in collection
+' DeleteCollection - Deletes all items in collection
 ' CleanUp - deletes unfinished items
-' GetParentFromPtr - Private routine to copy memory address of parent class
 '===============================================================
-Option Explicit
 
+Option Explicit
 Private pCandidates As Collection
 Private pParent As Long
 
@@ -40,87 +40,80 @@ Friend Function SetParent(ByVal Ptr As Long) As Boolean
     pParent = Ptr
 End Function
 
+Public Function NewEnum() As IUnknown
+Attribute NewEnum.VB_UserMemId = -4
+    Set NewEnum = pCandidates.[_newenum]
+End Function
 
-'===============================================================
-'Method FindItem
-'finds item in collection
+' ===============================================================
+' Method FindItem
+' Finds Item from index
 '---------------------------------------------------------------
 Public Function FindItem(CrewNo As Variant) As ClsCandidate
+Attribute FindItem.VB_UserMemId = 0
     On Error Resume Next
     Set FindItem = pCandidates.Item(CrewNo)
 End Function
 
-'===============================================================
-'Method AddItem
-'Add item to collection
+' ===============================================================
+' Method AddItem
+' Add item to Collection
 '---------------------------------------------------------------
-Public Sub AddItem(Candidate As ClsCandidate)
-    On Error Resume Next
 
-    Candidate.SetParent ObjPtr(Me.Parent)
+Public Sub AddItem(Candidate As ClsCandidate)
+    Candidate.SetParent ObjPtr(Me)
     pCandidates.Add Candidate, Key:=CStr(Candidate.CrewNo)
 End Sub
 
-'===============================================================
-'Method removeItem
-'deletes item from index
+' ===============================================================
+' Method RemoveItem
+' Deletes item from collection
 '---------------------------------------------------------------
 Public Sub RemoveItem(CrewNo As Variant)
-    On Error Resume Next
     pCandidates.Remove CrewNo
 End Sub
 
-'===============================================================
-'Method count
-'returns number items in collection
+' ===============================================================
+' Method ItemCount
+' Returns number of items in collection
 '---------------------------------------------------------------
 Public Function Count() As Integer
     Count = pCandidates.Count
 End Function
 
-'===============================================================
-'Method GetCollection
-'Find all items from courseno
+' ===============================================================
+' Method GetCollection
+' Gets all items in collection
 '---------------------------------------------------------------
 Public Sub GetCollection()
+    Dim RstCandidate As Recordset
     Dim Candidate As ClsCandidate
-    Dim RstCandidates As Recordset
     Dim i As Integer
-    
-    Set RstCandidates = ModDatabase.SQLQuery("SELECT CrewNo FROM candidate WHERE courseno = 'WT2018'")
-    
-    With RstCandidates
-        If .RecordCount > 0 Then
-            .MoveLast
-            .MoveFirst
-            For i = 1 To .RecordCount
-                Set Candidate = New ClsCandidate
-                Candidate.CrewNo = !CrewNo
-                AddItem Candidate
-                Candidate.LoadDB
-                .MoveNext
-            Next
-        End If
+
+    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM Candidate WHERE Deleted IS NULL")
+    With RstCandidate
+        .MoveLast
+        .MoveFirst
+        For i = 1 To .recordcount
+            Set Candidate = New ClsCandidate
+            Candidate.CrewNo = !CrewNo
+            Candidate.LoadDB
+            Me.AddItem Candidate
+            .Movenext
+        Next
     End With
-    Set Candidate = Nothing
-    Set RstCandidates = Nothing
 End Sub
 
-'===============================================================
-'Method DeleteCollection
-'deletes all Training sessions in collection
+' ===============================================================
+' Method DeleteCollection
+' Deletes all items in collection
 '---------------------------------------------------------------
 Public Sub DeleteCollection()
     Dim Candidate As ClsCandidate
-    Dim i As Integer
-    
-    For i = pCandidates.Count To 1 Step -1
-        Set Candidate = pCandidates.Item(i)
+    For Each Candidate In pCandidates
+        pCandidates.Remove CStr(Candidate.CrewNo)
         Candidate.DeleteDB
-        pCandidates.Remove (i)
     Next
-    
-    Set Candidate = Nothing
 End Sub
 
 
@@ -145,28 +138,27 @@ Public Sub CleanUp()
     End With
 End Sub
 
-'===============================================================
-'Method GetParentFromPtr
+' ===============================================================
+' Method GetParentFromPtr
 ' Private routine to copy memory address of parent class
-'---------------------------------------------------------------
-Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsDailyLog
-    Dim tmp As ClsDailyLog
-    
+' ---------------------------------------------------------------
+Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsCourse
+    Dim tmp As ClsCourse
+
     CopyMemory tmp, Ptr, 4
     Set GetParentFromPtr = tmp
     CopyMemory tmp, 0&, 4
 End Function
 
-'===============================================================
+' ===============================================================
 Private Sub Class_Initialize()
     Set pCandidates = New Collection
 End Sub
 
+'---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pCandidates = Nothing
+
 End Sub
-'===============================================================
 
-
-
-
+'---------------------------------------------------------------
