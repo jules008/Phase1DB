@@ -29,6 +29,10 @@ Option Explicit
 Private pCandidates As Collection
 Private pParent As Long
 
+Public Function NewEnum() As IUnknown
+Attribute NewEnum.VB_UserMemId = -4
+    Set NewEnum = pCandidates.[_NewEnum]
+End Function
 '---------------------------------------------------------------
 Public Property Get Parent() As ClsCourse
     If pParent <> 0 Then
@@ -166,6 +170,7 @@ Private Sub Class_Terminate()
     Set pCandidates = Nothing
 End Sub
 '===============================================================
+
 
 
 
