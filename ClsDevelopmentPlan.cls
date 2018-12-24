@@ -10,8 +10,9 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
 ' v0,1 - Bug Fix - Check if DP worksheet is already open
+' v0,2 - WT2018 Version
 '---------------------------------------------------------------
-' Date - 09/01/17
+' Date - 23 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -230,7 +231,7 @@ End Function
 'Method UpdateDB
 'Update DP to database
 '---------------------------------------------------------------
-Public Function UpdateDB() As Boolean
+Public Sub UpdateDB()
     Dim RstDevelopmentPlan As Recordset
     
     Set RstDevelopmentPlan = ModDatabase.SQLQuery("SELECT * FROM DevelopmentPlan WHERE dpno = " & pDPNo & _
@@ -238,23 +239,24 @@ Public Function UpdateDB() As Boolean
     
     With RstDevelopmentPlan
         If .RecordCount = 0 Then
-            UpdateDB = False
+            .AddNew
+            pDPNo = !DPNo
         Else
             .Edit
-            !CrewNo = Parent.CrewNo
-            If pLocalDPNo <> "" Then !LocalDPNo = pLocalDPNo
-            !DPDate = pDPDate
-            !Issuer = pIssuer
-            !Status = pStatus
-            !OutcomeIfNotMet = pOutcomeIfNotMet
-            If pReviewDate <> 0 Then !ReviewDate = pReviewDate
-            If pFollowOnDP <> 0 Then !FollowOnDP = pFollowOnDP
-            .Update
-            UpdateDB = True
         End If
+        
+        !CrewNo = Parent.CrewNo
+        If pLocalDPNo <> "" Then !LocalDPNo = pLocalDPNo
+        !DPDate = pDPDate
+        !Issuer = pIssuer
+        !Status = pStatus
+        !OutcomeIfNotMet = pOutcomeIfNotMet
+        If pReviewDate <> 0 Then !ReviewDate = pReviewDate
+        If pFollowOnDP <> 0 Then !FollowOnDP = pFollowOnDP
+        .Update
     End With
     Set RstDevelopmentPlan = Nothing
-End Function
+End Sub
 
 '===============================================================
 'Method DeleteDB
