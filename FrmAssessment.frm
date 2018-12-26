@@ -16,8 +16,9 @@ Attribute VB_Exposed = False
 
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT course changes
 '---------------------------------------------------------------
-' Date - 04 Nov 16
+' Date - 26 Dec 18
 '===============================================================
 Option Explicit
 
@@ -210,15 +211,15 @@ Private Sub CmoModule_Change()
             TxtScore4.Visible = False
         Case 1
             Lbl1.Visible = True
-            Lbl1.Caption = "Practical"
-            Lbl2.Visible = False
-            Lbl2.Caption = ""
+            Lbl1.Caption = "Written"
+            Lbl2.Visible = True
+            Lbl2.Caption = "Practical"
             Lbl3.Visible = False
             Lbl3.Caption = ""
             Lbl4.Visible = False
             Lbl4.Caption = ""
             TxtScore1.Visible = True
-            TxtScore2.Visible = False
+            TxtScore2.Visible = True
             TxtScore3.Visible = False
             TxtScore4.Visible = False
         Case 2
@@ -239,19 +240,6 @@ Private Sub CmoModule_Change()
             Lbl1.Caption = "Written"
             Lbl2.Visible = True
             Lbl2.Caption = "Practical"
-            Lbl3.Visible = False
-            Lbl3.Caption = ""
-            Lbl4.Visible = False
-            Lbl4.Caption = ""
-            TxtScore1.Visible = True
-            TxtScore2.Visible = True
-            TxtScore3.Visible = False
-            TxtScore4.Visible = False
-        Case 4
-            Lbl1.Visible = True
-            Lbl1.Caption = "Written"
-            Lbl2.Visible = True
-            Lbl2.Caption = "Practical"
             Lbl3.Visible = True
             Lbl3.Caption = "BA Board"
             Lbl4.Visible = True
@@ -260,6 +248,19 @@ Private Sub CmoModule_Change()
             TxtScore2.Visible = True
             TxtScore3.Visible = True
             TxtScore4.Visible = True
+         Case 4
+            Lbl1.Visible = True
+            Lbl1.Caption = "Written"
+            Lbl2.Visible = True
+            Lbl2.Caption = "Practical"
+            Lbl3.Visible = False
+            Lbl3.Caption = ""
+            Lbl4.Visible = False
+            Lbl4.Caption = ""
+            TxtScore1.Visible = True
+            TxtScore2.Visible = True
+            TxtScore3.Visible = False
+            TxtScore4.Visible = False
          Case 5
             Lbl1.Visible = True
             Lbl1.Caption = "Written"
@@ -277,27 +278,40 @@ Private Sub CmoModule_Change()
             Lbl1.Visible = True
             Lbl1.Caption = "Written"
             Lbl2.Visible = True
-            Lbl2.Caption = "Oral"
-            Lbl3.Visible = True
-            Lbl3.Caption = "Knots"
-            Lbl4.Visible = True
-            Lbl4.Caption = "Practical"
-            TxtScore1.Visible = True
-            TxtScore2.Visible = True
-            TxtScore3.Visible = True
-            TxtScore4.Visible = True
-        Case 7
-            Lbl1.Visible = True
-            Lbl1.Caption = "Written"
-            Lbl2.Visible = False
-            Lbl2.Caption = ""
+            Lbl2.Caption = "Practical"
             Lbl3.Visible = False
             Lbl3.Caption = ""
             Lbl4.Visible = False
             Lbl4.Caption = ""
             TxtScore1.Visible = True
-            TxtScore2.Visible = False
+            TxtScore2.Visible = True
             TxtScore3.Visible = False
+            TxtScore4.Visible = False
+         Case 7
+            Lbl1.Visible = True
+            Lbl1.Caption = "Written"
+            Lbl2.Visible = True
+            Lbl2.Caption = "Practical"
+            Lbl3.Visible = False
+            Lbl3.Caption = ""
+            Lbl4.Visible = False
+            Lbl4.Caption = ""
+            TxtScore1.Visible = True
+            TxtScore2.Visible = True
+            TxtScore3.Visible = False
+            TxtScore4.Visible = False
+        Case 8
+            Lbl1.Visible = True
+            Lbl1.Caption = "Written"
+            Lbl2.Visible = True
+            Lbl2.Caption = "Oral"
+            Lbl3.Visible = True
+            Lbl3.Caption = "Practical"
+            Lbl4.Visible = False
+            Lbl4.Caption = ""
+            TxtScore1.Visible = True
+            TxtScore2.Visible = True
+            TxtScore3.Visible = True
             TxtScore4.Visible = False
     End Select
 Exit Sub

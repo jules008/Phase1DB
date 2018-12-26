@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - Check for zero before dividing average 
 '---------------------------------------------------------------
-' Date - 07 Nov 16
+' Date - 26 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -44,7 +45,7 @@ Public Property Get AverageScore() As Single
                 End If
             End With
         Next
-        pAverageScore = TotalScore / AssCount
+        If AssCount > 0 Then pAverageScore = TotalScore / AssCount Else pAverageScore = 0
     Else
         pAverageScore = 0
     End If

@@ -3,8 +3,9 @@ Attribute VB_Name = "ModProjectInOut"
 ' Module ModProjectInOut
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.0.1 - Remove '/' from save
 '---------------------------------------------------------------
-' Date - 19 Apr 18
+' Date - 26 Dec 18
 '===============================================================
 
 Option Explicit
@@ -55,7 +56,7 @@ Public Sub ExportModules()
     ExportDBTables
     
     Application.DisplayAlerts = False
-    ThisWorkbook.SaveAs EXPORT_FILE_PATH & "\" & PROJECT_FILE_NAME, 51
+    ThisWorkbook.SaveAs EXPORT_FILE_PATH & PROJECT_FILE_NAME, 51
     Application.DisplayAlerts = True
     
     MsgBox "Export is ready", vbInformation, APP_NAME

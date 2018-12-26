@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - Check for supervisor before importing
 '---------------------------------------------------------------
-' Date - 24 Aug 16
+' Date - 26 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -69,12 +70,14 @@ Public Property Get WCS() As Supervisor
     
     Set RngTarget = RngLookUp.Find(pStationNo)
     
-    With pWCS
-        .UserName = RngTarget.Offset(0, 1)
-        .Role = "WCS"
-    End With
+    If Not RngTarget Is Nothing Then
+        With pWCS
+            .UserName = RngTarget.Offset(0, 1)
+            .Role = "WCS"
+        End With
+        WCS = pWCS
+    End If
     
-    WCS = pWCS
 End Property
 
 '-----------------------------------------------------------------
@@ -86,12 +89,14 @@ Public Property Get DC() As Supervisor
     
     Set RngTarget = RngLookUp.Find(pDivision)
     
-    With pDC
-        .UserName = RngTarget.Offset(0, 1)
-        .Role = "DC"
-    End With
+    If Not RngTarget Is Nothing Then
+        With pDC
+            .UserName = RngTarget.Offset(0, 1)
+            .Role = "DC"
+        End With
+        DC = pDC
+    End If
     
-    DC = pDC
 End Property
 
 '-----------------------------------------------------------------
@@ -103,12 +108,13 @@ Public Property Get DDC1() As Supervisor
     
     Set RngTarget = RngLookUp.Find(pDivision)
     
-    With pDDC1
-        .UserName = RngTarget.Offset(0, 2)
-        .Role = "DDC1"
-    End With
-    
-    DDC1 = pDDC1
+    If Not RngTarget Is Nothing Then
+        With pDDC1
+            .UserName = RngTarget.Offset(0, 2)
+            .Role = "DDC1"
+        End With
+        DDC1 = pDDC1
+    End If
 End Property
 
 '-----------------------------------------------------------------
@@ -120,12 +126,14 @@ Public Property Get DDC2() As Supervisor
     
     Set RngTarget = RngLookUp.Find(pDivision)
     
-    With pDDC2
-        .UserName = RngTarget.Offset(0, 3)
-        .Role = "DDC2"
-    End With
+    If Not RngTarget Is Nothing Then
+        With pDDC2
+            .UserName = RngTarget.Offset(0, 3)
+            .Role = "DDC2"
+        End With
+        DDC2 = pDDC2
+    End If
     
-    DDC2 = pDDC2
 End Property
 
 '-----------------------------------------------------------------
