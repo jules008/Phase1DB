@@ -16,40 +16,32 @@ Attribute VB_Exposed = False
 
 '===============================================================
 ' v0,0 - Initial version
+' v1,0 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 26 Sep 16
+' Date - 29 Dec 18
 '===============================================================
 Option Explicit
 Private Const StrMODULE As String = "FrmCourse"
-Private Course As ClsCourse
 Private FormChanged As Boolean
 
-Public Function ShowForm(Optional LocalCourse As ClsCourse) As Boolean
+' ===============================================================
+' ShowForm
+' Shows Course form
+' ---------------------------------------------------------------
+Public Function ShowForm() As Boolean
     Const StrPROCEDURE As String = "ShowForm()"
-    
+
     On Error GoTo ErrorHandler
     
-    ResetForm
-    
-    If LocalCourse Is Nothing Then
-        Set Course = New ClsCourse
-        TxtCourseNo.Enabled = True
-    Else
-        Set Course = LocalCourse
-        TxtCourseNo.Enabled = False
-    End If
-    
-    If Not PopulateForm Then Err.Raise HANDLED_ERROR
     FormChanged = False
     Show
-    
+
     ShowForm = True
 
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
+
     ShowForm = False
 
 Exit Function
@@ -63,18 +55,45 @@ ErrorHandler:
     End If
 End Function
 
-Private Sub ResetForm()
+' ===============================================================
+' ResetForm
+' Resets form and clears fields
+' ---------------------------------------------------------------
+Private Function ResetForm() As Boolean
+    Const StrPROCEDURE As String = "ResetForm()"
 
-    On Error Resume Next
-    
+    On Error GoTo ErrorHandler
+
     FormChanged = False
     Me.CmoCourseDirector.Value = ""
     Me.CmoStatus.Value = ""
     Me.TxtCourseNo = ""
     Me.TxtPassOutDate = ""
     Me.TxtStrtDate = ""
-End Sub
 
+    ResetForm = True
+
+Exit Function
+
+ErrorExit:
+
+    ResetForm = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' PopulateForm
+' Polulates course form with values
+' ---------------------------------------------------------------
 Private Function PopulateForm() As Boolean
 
     Const StrPROCEDURE As String = "PopulateForm()"
@@ -93,8 +112,7 @@ Exit Function
 
 ErrorExit:
     PopulateForm = False
-    FormTerminate
-    Terminate
+
 Exit Function
 
 ErrorHandler:
@@ -106,10 +124,21 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' BtnClose_Click
+' Close event of form
+' ---------------------------------------------------------------
 Private Sub BtnClose_Click()
+    Dim ErrNo As Integer
     Dim Response As Integer
     
-    On Error Resume Next
+    Const StrPROCEDURE As String = "BtnClose_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+    
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
     
     If FormChanged = True Then
         Response = MsgBox("The form has been changed, would you like to save these changes?", vbYesNo)
@@ -117,10 +146,13 @@ Private Sub BtnClose_Click()
         If Response = 6 Then BtnUpdate_Click
         FormChanged = False
     End If
-    FormTerminate
-    Me.Hide
+
 End Sub
 
+' ===============================================================
+' BtnDelete_Click
+' Deletes Course
+' ---------------------------------------------------------------
 Private Sub BtnDelete_Click()
     
     Const StrPROCEDURE As String = "BtnDelete_Click()"
@@ -129,6 +161,10 @@ Private Sub BtnDelete_Click()
     
     On Error GoTo ErrorHandler
     
+ Restart:
+    
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+
     Response = MsgBox("Are you sure you want to delete the course?", vbYesNo)
     
     If Response = 6 Then
@@ -138,13 +174,20 @@ Private Sub BtnDelete_Click()
         FormChanged = False
     End If
 
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
+
 Exit Sub
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -153,6 +196,10 @@ ErrorHandler:
     End If
 End Sub
 
+' ===============================================================
+' BtnNew_Click
+' Creates a new course
+' ---------------------------------------------------------------
 Private Sub BtnNew_Click()
     
     On Error Resume Next
@@ -163,12 +210,21 @@ Private Sub BtnNew_Click()
     
 End Sub
 
+' ===============================================================
+' BtnUpdate_Click
+' Updates any changes to the course
+' ---------------------------------------------------------------
 Private Sub BtnUpdate_Click()
+    Dim ErrNo As Integer
 
     Const StrPROCEDURE As String = "BtnUpdate_Click()"
-    
+
     On Error GoTo ErrorHandler
-    
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+
     If ValidateData Then
         With Course
             .CourseDirector = CmoCourseDirector
@@ -183,20 +239,26 @@ Private Sub BtnUpdate_Click()
                 ModGlobals.Courses.AddItem Course
                 ShtCourse.CmoCourseNo = TxtCourseNo
             End If
-            FormTerminate
-            Hide
+            
+            unload me
         End With
     End If
+    
+GracefulExit:
+
 Exit Sub
     
 ErrorExit:
-    FormTerminate
-    Terminate
-    Hide
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -205,31 +267,61 @@ ErrorHandler:
     End If
 End Sub
 
+' ===============================================================
+' CmoCourseDirector_Change
+' Detects changes to the form
+' ---------------------------------------------------------------
 Private Sub CmoCourseDirector_Change()
     FormChanged = True
 End Sub
 
+' ===============================================================
+' CmoStatus_Change
+' Detects changes to the form
+' ---------------------------------------------------------------
 Private Sub CmoStatus_Change()
     FormChanged = True
 End Sub
 
+' ===============================================================
+' TxtCourseNo_Change
+' Detects changes to the form
+' ---------------------------------------------------------------
 Private Sub TxtCourseNo_Change()
     FormChanged = True
 End Sub
 
+' ===============================================================
+' TxtPassOutDate_Change
+' Detects changes to the form
+' ---------------------------------------------------------------
 Private Sub TxtPassOutDate_Change()
     FormChanged = True
 End Sub
 
+' ===============================================================
+' TxtStrtDate_Change
+' Detects changes to the form
+' ---------------------------------------------------------------
 Private Sub TxtStrtDate_Change()
     FormChanged = True
 End Sub
 
+' ===============================================================
+' UserForm_Initialize
+' Trigger Initialise form function
+' ---------------------------------------------------------------
 Private Sub UserForm_Initialize()
     On Error Resume Next
+    
     FormInitialise
+    
 End Sub
 
+' ===============================================================
+' CmoCourseDirector_Change
+' Detects changes to the form
+' ---------------------------------------------------------------
 Private Function ValidateData() As Boolean
     
     On Error Resume Next
@@ -273,6 +365,10 @@ Private Function ValidateData() As Boolean
     ValidateData = True
 End Function
 
+' ===============================================================
+' FormInitialise
+' Initialise form
+' ---------------------------------------------------------------
 Public Sub FormInitialise()
     
     Const StrPROCEDURE As String = "FormInitialise()"
@@ -284,15 +380,16 @@ Public Sub FormInitialise()
     
     Set RstUsers = GetAccessList
 
-    'get Course director list
     CmoCourseDirector.Clear
     
-    With RstUsers
-        Do
-        Me.CmoCourseDirector.AddItem !UserName
-        .MoveNext
-        Loop While Not .EOF
-    End With
+    If Not RstUsers Is Nothing Then
+        With RstUsers
+            Do While Not .EOF
+                Me.CmoCourseDirector.AddItem !UserName
+                .MoveNext
+            Loop
+        End With
+    End If
     
     'get Status list
     CmoStatus.Clear
@@ -300,12 +397,12 @@ Public Sub FormInitialise()
     For Each cell In ShtLists.Range("CourseStatus")
         Me.CmoStatus.AddItem cell
     Next
+        
     Set RstUsers = Nothing
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
+    
     Set RstUsers = Nothing
 
 Exit Sub
@@ -319,11 +416,19 @@ ErrorHandler:
     End If
 End Sub
 
+' ===============================================================
+' FormTerminate
+' Terminates form
+' ---------------------------------------------------------------
 Public Sub FormTerminate()
     On Error Resume Next
     Set Course = Nothing
 End Sub
 
+' ===============================================================
+' UserForm_Terminate
+' Terminates form
+' ---------------------------------------------------------------
 Private Sub UserForm_Terminate()
     On Error Resume Next
     FormTerminate
