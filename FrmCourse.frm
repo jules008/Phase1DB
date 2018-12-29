@@ -28,11 +28,22 @@ Private FormChanged As Boolean
 ' ShowForm
 ' Shows Course form
 ' ---------------------------------------------------------------
-Public Function ShowForm() As Boolean
+Public Function ShowForm(Optional LocalCourse As ClsCourse) As Boolean
     Const StrPROCEDURE As String = "ShowForm()"
 
     On Error GoTo ErrorHandler
+
+    If Not ResetForm Then Err.Raise HANDLED_ERROR
+           
+    If LocalCourse Is Nothing Then
+        Set Course = New ClsCourse
+        TxtCourseNo.Enabled = True
+    Else
+        Set Course = LocalCourse
+        TxtCourseNo.Enabled = False
+    End If
     
+    If Not PopulateForm Then Err.Raise HANDLED_ERROR
     FormChanged = False
     Show
 
