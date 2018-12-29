@@ -16,8 +16,9 @@ Attribute VB_Exposed = False
 
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - Changes to guidance forms
 '---------------------------------------------------------------
-' Date - 17 Aug 16
+' Date - 29 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -381,19 +382,19 @@ ErrorHandler:
 End Sub
 
 Private Sub BtnGuidanced1_Click()
-    FrmGuidance1.Show
+    FrmGuidance_1_.Show
 End Sub
 
 Private Sub BtnGuidanced2_Click()
-    FrmGuidance2.Show
+    FrmGuidance_2_.Show
 End Sub
 
 Private Sub BtnGuidanced3_Click()
-    FrmGuidance3.Show
+    FrmGuidance_3_.Show
 End Sub
 
 Private Sub BtnGuidanced4_Click()
-  FrmGuidance4.Show
+  FrmGuidance_4_.Show
 End Sub
 
 Private Sub BtnSpellChk_Click()

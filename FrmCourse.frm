@@ -22,6 +22,7 @@ Attribute VB_Exposed = False
 '===============================================================
 Option Explicit
 Private Const StrMODULE As String = "FrmCourse"
+Private Course As ClsCourse
 Private FormChanged As Boolean
 
 ' ===============================================================
@@ -157,6 +158,29 @@ Restart:
         If Response = 6 Then BtnUpdate_Click
         FormChanged = False
     End If
+    
+    
+GracefulExit:
+
+Exit Sub
+
+ErrorExit:
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
 
 End Sub
 
@@ -165,6 +189,7 @@ End Sub
 ' Deletes Course
 ' ---------------------------------------------------------------
 Private Sub BtnDelete_Click()
+    Dim ErrNo As Integer
     
     Const StrPROCEDURE As String = "BtnDelete_Click()"
     
@@ -172,7 +197,7 @@ Private Sub BtnDelete_Click()
     
     On Error GoTo ErrorHandler
     
- Restart:
+Restart:
     
     If Course Is Nothing Then Err.Raise SYSTEM_RESTART
 
