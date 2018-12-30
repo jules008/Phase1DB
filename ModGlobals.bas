@@ -3,8 +3,9 @@ Attribute VB_Name = "ModGlobals"
 ' Module ModGlobals
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1,0 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 23 Apr 18
+' Date - 30 Dec 18
 '===============================================================
 Private Const StrMODULE As String = "ModGlobals"
 
@@ -72,13 +73,15 @@ Public MailSystem As ClsMailSystem
 ' ===============================================================
 ' Colours
 ' ---------------------------------------------------------------
-Public Const MedGreen As Long = 12379352
-Public Const LightGreen As Long = 14610923
-Public Const DarkGreen As Long = 2646607
-Public Const DarkAmber As Long = 26012
-Public Const LightAmber As Long = 10284031
-Public Const DarkRed As Long = 393372
-Public Const LightRed As Long = 13551615
+Public Const Colour_1 = 16761994
+Public Const Colour_2 = 12235622
+Public Const Colour_3 = 16777215
+Public Const COLOUR_4 = 10596591
+Public Const Colour_5 = 9305182
+Public Const Colour_6 = 11047061
+Public Const Colour_7 = 8188159
+Public Const Colour_8 = 9617978
+Public Const COLOUR_9 = 4626167
 
 ' ===============================================================
 ' Enum Declarations
@@ -87,6 +90,12 @@ Enum Role
     Admin = 1
     Trainer = 2
     WCS
+End Enum
+
+Enum EnumFormValidation
+    FormOK = 2
+    ValidationError = 1
+    FunctionalError = 0
 End Enum
 
 ' ===============================================================
