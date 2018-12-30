@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
-' v0,1 - Check for zero before dividing average 
+' v0,1 - Check for zero before dividing average
 '---------------------------------------------------------------
 ' Date - 26 Dec 18
 '===============================================================

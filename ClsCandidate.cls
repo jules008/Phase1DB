@@ -10,8 +10,9 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
 ' v0,1 - Check for supervisor before importing
+' v0,2 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 26 Dec 18
+' Date - 30 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -250,26 +251,24 @@ End Sub
 '---------------------------------------------------------------
 Public Function UpdateDB() As Boolean
     Dim RstCandidate As Recordset
-    Dim StrCrewNo As String
     
-    StrCrewNo = "'" & pCrewNo & "'"
-        
-    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
+    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = '" & pCrewNo & "'")
 
     With RstCandidate
         If .RecordCount = 0 Then
-            UpdateDB = False
+            .AddNew
         Else
             .Edit
-            !CrewNo = pCrewNo
-            !CourseNo = Parent.CourseNo
-            !Division = pDivision
-            !Name = pName
-            !StationNo = pStationNo
-            !Status = pStatus
-            .Update
-            UpdateDB = True
         End If
+        
+        !CrewNo = pCrewNo
+        !CourseNo = Parent.CourseNo
+        !Division = pDivision
+        !Name = pName
+        !StationNo = pStationNo
+        !Status = pStatus
+        .Update
+        UpdateDB = True
     End With
     
     Set RstCandidate = Nothing
@@ -281,11 +280,8 @@ End Function
 '---------------------------------------------------------------
 Public Sub DeleteDB()
     Dim RstCandidate As Recordset
-    Dim StrCrewNo As String
     
-    StrCrewNo = "'" & pCrewNo & "'"
-    
-    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = " & StrCrewNo & " AND deleted IS NULL")
+    Set RstCandidate = ModDatabase.SQLQuery("SELECT * FROM candidate WHERE crewno = '" & pCrewNo & "'")
 
     With RstCandidate
         If .RecordCount <> 0 Then
