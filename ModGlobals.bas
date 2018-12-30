@@ -73,13 +73,13 @@ Public MailSystem As ClsMailSystem
 ' ===============================================================
 ' Colours
 ' ---------------------------------------------------------------
-Public Const Colour_1 = 16761994
-Public Const Colour_2 = 12235622
-Public Const Colour_3 = 16777215
+Public Const COLOUR_1 = 12379352
+Public Const COLOUR_2 = 14610923
+Public Const COLOUR_3 = 2646607
 Public Const COLOUR_4 = 10596591
 Public Const Colour_5 = 9305182
-Public Const Colour_6 = 11047061
-Public Const Colour_7 = 8188159
+Public Const COLOUR_6 = 393372
+Public Const COLOUR_7 = 13551615
 Public Const Colour_8 = 9617978
 Public Const COLOUR_9 = 4626167
 

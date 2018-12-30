@@ -62,30 +62,30 @@ Public Function PopulateForm() As Boolean
     Select Case TxtGrade
     
         Case Is < 2
-            Me.TxtGrade.ForeColor = DarkGreen
+            Me.TxtGrade.ForeColor = COLOUR_3
             Me.TxtGradeDesc.Caption = "A very high standard has been achieved or demonstrated"
-            Me.TxtGradeDesc.ForeColor = DarkGreen
-            ImgGrade.BackColor = MedGreen
+            Me.TxtGradeDesc.ForeColor = COLOUR_3
+            ImgGrade.BackColor = COLOUR_1
             Me.TxtDPDesc.Caption = "A Development Plan is not required"
             Me.BtnNo.Visible = False
             Me.BtnYes.Enabled = True
             Me.BtnYes.Caption = "OK"
             
         Case 2
-            Me.TxtGrade.ForeColor = DarkGreen
+            Me.TxtGrade.ForeColor = COLOUR_3
             Me.TxtGradeDesc.Caption = "The candidate has achieved the required standard"
-            Me.TxtGradeDesc.ForeColor = DarkGreen
-            ImgGrade.BackColor = MedGreen
+            Me.TxtGradeDesc.ForeColor = COLOUR_3
+            ImgGrade.BackColor = COLOUR_1
             Me.TxtDPDesc.Caption = "A Development Plan is not required"
             Me.BtnNo.Visible = False
             Me.BtnYes.Enabled = True
             Me.BtnYes.Caption = "OK"
         
         Case 3
-            Me.TxtGrade.ForeColor = DarkAmber
+            Me.TxtGrade.ForeColor = COLOUR_4
             Me.TxtGradeDesc.Caption = "The candidate has under achieved in one specific area, advice or development required"
-            ImgGrade.BackColor = LightAmber
-            Me.TxtGradeDesc.ForeColor = DarkAmber
+            ImgGrade.BackColor = COLOUR_2
+            Me.TxtGradeDesc.ForeColor = COLOUR_4
             Me.TxtDPDesc.Caption = "Does the candidate's performance require a Development Plan"
             Me.BtnNo.Visible = True
             Me.BtnNo.Enabled = True
@@ -93,10 +93,10 @@ Public Function PopulateForm() As Boolean
             Me.BtnYes.Caption = "Yes"
             
         Case 4
-            Me.TxtGrade.ForeColor = DarkRed
+            Me.TxtGrade.ForeColor = COLOUR_6
             Me.TxtGradeDesc.Caption = "The candidate has under achieved in more than one area, further development is required"
-            ImgGrade.BackColor = LightRed
-            Me.TxtGradeDesc.ForeColor = DarkRed
+            ImgGrade.BackColor = COLOUR_7
+            Me.TxtGradeDesc.ForeColor = COLOUR_6
             Me.TxtDPDesc.Caption = "Development Plan(s) are required, do you want to raise one now?"
             Me.BtnNo.Visible = True
             Me.BtnNo.Enabled = True
@@ -104,10 +104,10 @@ Public Function PopulateForm() As Boolean
             Me.BtnYes.Caption = "Yes"
             
         Case 5
-            Me.TxtGrade.ForeColor = DarkRed
+            Me.TxtGrade.ForeColor = COLOUR_6
             Me.TxtGradeDesc.Caption = "The candidate has under achieved in all areas, further development is required"
-            ImgGrade.BackColor = LightRed
-            Me.TxtGradeDesc.ForeColor = DarkRed
+            ImgGrade.BackColor = COLOUR_7
+            Me.TxtGradeDesc.ForeColor = COLOUR_6
             Me.TxtDPDesc.Caption = "Development Plan(s) are required, do you want to raise one now?"
             Me.BtnNo.Visible = True
             Me.BtnNo.Enabled = True

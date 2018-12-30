@@ -308,7 +308,7 @@ Private Sub BtnDelete_Click()
 
 Restart:
 
-    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
 
     
     Response = MsgBox("Are you sure you want to delete the Daily Log?", vbYesNo)
@@ -362,7 +362,7 @@ Private Sub BtnUpdate_Click()
 
 Restart:
 
-    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
 
     
     If ValidateData = FunctionalError Then Err.Raise HANDLED_ERROR
@@ -485,7 +485,7 @@ Private Sub BtnXtraTrng_Click()
 
 Restart:
 
-    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
 
 
     If Not FrmExtraTraining.ShowForm(DailyLog) Then Err.Raise HANDLED_ERROR
@@ -526,7 +526,7 @@ Private Sub CmdClose_Click()
 
 Restart:
     
-    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
 
     Dim Response As Integer
     
@@ -603,7 +603,7 @@ Private Sub FormActivate()
 
 Restart:
 
-    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
     
     Set RstUsers = GetAccessList
     
@@ -660,7 +660,7 @@ Private Sub FormInitialise()
 
 Restart:
 
-    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
     
     Set Candidate = New ClsCandidate
     Set DailyLog = New ClsDailyLog

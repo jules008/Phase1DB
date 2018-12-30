@@ -1,5 +1,5 @@
-CrewNo,  dbText
 DPNo,  dbLong
+CrewNo,  dbText
 LocalDPNo,  dbDouble
 DPDate,  dbDate
 Issuer,  dbText
