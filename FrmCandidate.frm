@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmCandidate 
    Caption         =   "Candidate"
-   ClientHeight    =   10515
+   ClientHeight    =   4890
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   11670
+   ClientWidth     =   11565
    OleObjectBlob   =   "FrmCandidate.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -16,8 +16,9 @@ Attribute VB_Exposed = False
 
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 24 Aug 16
+' Date - 30 Dec 18
 '===============================================================
 Option Explicit
 
@@ -27,13 +28,17 @@ Private Course As ClsCourse
 Private Candidate As ClsCandidate
 Private FormChanged As Boolean
 
+' ===============================================================
+' ShowForm
+' Shows Candidate form and passes Candidate object if available
+' ---------------------------------------------------------------
 Public Function ShowForm(Optional ExistCandidate As ClsCandidate) As Boolean
     
     Const StrPROCEDURE As String = "ShowForm()"
-    
+
     On Error GoTo ErrorHandler
-    
-    ResetForm
+
+    If Not ResetForm Then Err.Raise HANDLED_ERROR
     
     If ExistCandidate Is Nothing Then
         Set Candidate = New ClsCandidate
@@ -53,8 +58,7 @@ Public Function ShowForm(Optional ExistCandidate As ClsCandidate) As Boolean
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
+    
     ShowForm = False
 
 Exit Function
@@ -68,44 +72,49 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' BtnClose_Click
+' Event for Close Button press
+' ---------------------------------------------------------------
 Private Sub BtnClose_Click()
-    On Error Resume Next
-    
+    Dim ErrNo As Integer
     Dim Response As Integer
-    
+
+    Const StrPROCEDURE As String = "BtnClose_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
+
     If FormChanged = True Then
         Response = MsgBox("The form has been changed, would you like to save these changes?", vbYesNo)
         
         If Response = 6 Then BtnUpdate_Click
         FormChanged = False
     End If
-    Course.Candidates.CleanUp
-    FormTerminate
-    Me.Hide
-End Sub
-
-Private Sub BtnEmailWCS_Click()
-    Const StrPROCEDURE As String = "BtnEmailWCS_Click()"
-
-    On Error GoTo ErrorHandler
     
-    With MailSystem
-        .MailItem.To = TxtWCS
-        .MailItem.Subject = TxtCrewNo & " " & TxtName
-        .ReturnMail.CrewNo = TxtCrewNo
-        .DisplayEmail
-        
-    End With
+    Course.Candidates.CleanUp
+    
+    Unload Me
+
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
 
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -113,26 +122,43 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
+
+' ===============================================================
+' BtnNew_Click
+' Event process for New Candidate
+' ---------------------------------------------------------------
 Private Sub BtnNew_Click()
-    
+    Dim ErrNo As Integer
+
     Const StrPROCEDURE As String = "BtnNew_Click()"
 
     On Error GoTo ErrorHandler
+
+Restart:
+
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
+
+    If Not ResetForm Then Err.Raise HANDLED_ERROR
     
-    ResetForm
     Set Candidate = New ClsCandidate
     Course.Candidates.AddItem Candidate
     TxtCrewNo.Enabled = True
-      
+
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -141,27 +167,23 @@ ErrorHandler:
     End If
 End Sub
 
+' ===============================================================
+' PopulateForm
+' Populates form with candidate details
+' ---------------------------------------------------------------
 Private Function PopulateForm() As Boolean
     
     Const StrPROCEDURE As String = "PopulateForm()"
-    
-    Dim LocCourse As ClsCourse
-    Dim cell As Range
-    Dim i As Integer
-    
+
     On Error GoTo ErrorHandler
-    
+
     With Candidate
-        TxtCourseNo = .Parent.CourseNo
+        CmoCourseNo = .Parent.CourseNo
         TxtCrewNo = .CrewNo
-        TxtDivision = .Division
+        CmoDivision = .Division
         TxtName = .Name
-        TxtStationNo = .StationNo
-        TxtStatus = .Status
-        TxtWCS = .WCS.UserName
-        TxtDC = .DC.UserName
-        TxtDDC1 = .DDC1.UserName
-        TxtDDC2 = .DDC2.UserName
+        CmoStationNo = .StationNo
+        CmoStatus = .Status
     End With
     
     With Candidate.DevelopmentPlans
@@ -177,28 +199,13 @@ Private Function PopulateForm() As Boolean
         TxtETTaken = .ETTaken
         TxtETTotal = .ETOffered
     End With
-    
-    With LstHeadings
-        .Clear
-        .AddItem
-        .List(0, 0) = "From"
-        .List(0, 1) = "To"
-        .List(0, 2) = "Subject"
-        .List(0, 3) = "Date"
-    End With
-    
+       
     PopulateForm = True
-    
-    Set LocCourse = Nothing
     
 Exit Function
 
 ErrorExit:
-    
-    FormTerminate
-    Terminate
-    Set LocCourse = Nothing
-    
+
     PopulateForm = False
 
 Exit Function
@@ -212,9 +219,15 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' ValidateData
+' Validate input data before updating
+' ---------------------------------------------------------------
 Private Function ValidateData() As Boolean
-    On Error Resume Next
-    
+    Const StrPROCEDURE As String = "ValidateData()"
+
+    On Error GoTo ErrorHandler
+
     If Me.TxtName = "" Then
         MsgBox "Please enter a candidate name"
         ValidateData = False
@@ -239,73 +252,37 @@ Private Function ValidateData() As Boolean
         Exit Function
     End If
     
-    If Me.TxtDivision = "" Then
+    If Me.CmoDivision = "" Then
         MsgBox "Please enter the Division"
         ValidateData = False
         Exit Function
     End If
 
-    If Me.TxtStationNo = "" Then
+    If Me.CmoStationNo = "" Then
         MsgBox "Please enter a Station"
         ValidateData = False
         Exit Function
     End If
 
-    If Me.TxtCourseNo = "" Then
+    If Me.CmoCourseNo = "" Then
         MsgBox "Please enter a Course"
         ValidateData = False
         Exit Function
     End If
 
-    If Me.TxtStatus = "" Then
+    If Me.CmoStatus = "" Then
         MsgBox "Please enter a Status"
         ValidateData = False
         Exit Function
     End If
-    
+
     ValidateData = True
-End Function
-
-Private Sub ResetForm()
-
-    On Error Resume Next
-    
-    FormChanged = False
-    
-    Me.TxtCourseNo = ""
-    Me.TxtCrewNo = ""
-    Me.TxtDivision = ""
-    Me.TxtName = ""
-    Me.TxtStationNo = ""
-    Me.TxtStatus = ""
-    Me.TxtCourseNo.Value = ""
-    Me.TxtDivision.Value = ""
-    Me.TxtStationNo.Value = ""
-    Me.TxtStatus.Value = ""
-
-End Sub
-
-Private Function UpdateClass() As Boolean
-    Const StrPROCEDURE As String = "UpdateClass()"
-    
-    On Error GoTo ErrorHandler
-    
-    With Candidate
-        .CrewNo = TxtCrewNo
-        .Division = TxtDivision
-        .Name = TxtName
-        .StationNo = TxtStationNo
-        .Status = TxtStatus
-    End With
-
-    UpdateClass = True
 
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
-    UpdateClass = False
+
+    ValidateData = False
 
 Exit Function
 
@@ -318,81 +295,87 @@ ErrorHandler:
     End If
 End Function
 
-Private Sub BtnUpdate_Click()
-    Const StrPROCEDURE As String = "BtnOk_Click()"
-    
-    Dim Success As Boolean
-    
-    On Error GoTo ErrorHandler
-    
-    If ValidateData Then
-        If Not UpdateClass Then Err.Raise HANDLED_ERROR
-        
-        With Candidate
-            Success = .UpdateDB
-            
-            If Success = False Then
-                .NewDB
-                .UpdateDB
-            End If
-        End With
-        Me.Hide
-    End If
-Exit Sub
-    
-ErrorExit:
-    FormTerminate
-    Terminate
-    Me.Hide
+' ===============================================================
+' ResetForm
+' Resets candidate form
+' ---------------------------------------------------------------
+Private Function ResetForm() As Boolean
+    Const StrPROCEDURE As String = "ResetForm()"
 
-Exit Sub
+    On Error GoTo ErrorHandler
+
+    TxtCrewNo = ""
+    TxtName = ""
+    CmoStatus = ""
+    CmoStatus.Value = ""
+
+    ResetForm = True
+
+Exit Function
+
+ErrorExit:
+
+    ResetForm = False
+
+Exit Function
 
 ErrorHandler:
-    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
         Stop
         Resume
     Else
         Resume ErrorExit
     End If
+End Function
 
-End Sub
+' ===============================================================
+' BtnUpdate_Click
+' Event for pressing update button
+' ---------------------------------------------------------------
+Private Sub BtnUpdate_Click()
+    Dim ErrNo As Integer
+    Dim Success As Boolean
+    
+    Const StrPROCEDURE As String = "BtnUpdate_Click()"
 
-Private Sub TxtCourseNo_AfterUpdate()
-    
-    Const StrPROCEDURE As String = "TxtCourseNo_AfterUpdate()"
-    
-    Dim NewCourse As ClsCourse
-    
     On Error GoTo ErrorHandler
+
+Restart:
+
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
+
+    If ValidateData Then
     
-    FormChanged = True
-    If Course.CourseNo = "" Then
-        Set Course = Courses.FindItem(TxtCourseNo)
-        Candidate.CrewNo = TxtCrewNo
+        With Candidate
+            .CrewNo = TxtCrewNo
+            .Division = CmoDivision
+            .Name = TxtName
+            .StationNo = CmoStationNo
+            .Status = CmoStatus
+            .UpdateDB
+        End With
         Course.Candidates.AddItem Candidate
-    Else
-    
-        If TxtCourseNo.Value <> Course.CourseNo Then
-            Set NewCourse = Courses.FindItem(TxtCourseNo.Value)
-            
-            Course.Candidates.RemoveItem Candidate.CrewNo
-            
-            NewCourse.Candidates.AddItem Candidate
-            
-            Set NewCourse = Nothing
-        End If
+
+        If Not ShtCourse.PopulateSheet Then Err.Raise HANDLED_ERROR
+        
+        Me.Hide
     End If
-    Set NewCourse = Nothing
+
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
-    Set NewCourse = Nothing
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -405,7 +388,7 @@ Private Sub TxtCrewNo_Change()
     FormChanged = True
 End Sub
 
-Private Sub TxtDivision_Change()
+Private Sub CmoDivision_Change()
     FormChanged = True
 End Sub
 
@@ -413,11 +396,11 @@ Private Sub TxtName_Change()
     FormChanged = True
 End Sub
 
-Private Sub TxtStationNo_Change()
+Private Sub CmoStationNo_Change()
     FormChanged = True
 End Sub
 
-Private Sub TxtStatus_Change()
+Private Sub CmoStatus_Change()
     FormChanged = True
 End Sub
 
@@ -426,32 +409,46 @@ Private Sub UserForm_Initialize()
     FormInitialise
 End Sub
 
+' ===============================================================
+' BtnDelete_Click
+' Event for delete button
+' ---------------------------------------------------------------
 Private Sub BtnDelete_Click()
-    
-    Const StrPROCEDURE As String = "BtnDelete_Click()"
-    
+    Dim ErrNo As Integer
     Dim Response As Integer
-    
+
+    Const StrPROCEDURE As String = "BtnDelete_Click()"
     On Error GoTo ErrorHandler
+
+Restart:
     
-    Response = MsgBox("Are you sure you want to mark the candidate as deleted?", vbYesNo)
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
+
+    Response = MsgBox("Are you sure you want to delete the candidate?", vbYesNo)
     
     If Response = 6 Then
         Candidate.Parent.Candidates.RemoveItem (Candidate.CrewNo)
         Candidate.DeleteDB
         Set Candidate = Nothing
     End If
-    ResetForm
-    FormChanged = False
+    
+    If Not ResetForm Then Err.Raise HANDLED_ERROR
+    
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
-    Hide
+
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -465,36 +462,40 @@ Private Sub UserForm_Terminate()
     FormTerminate
 End Sub
 
-Public Function FormInitialise() As Boolean
+' ===============================================================
+' FormInitialise
+' Initialises candidate form
+' ---------------------------------------------------------------
+Private Function FormInitialise() As Boolean
+    Dim cell As Range
+    
     Const StrPROCEDURE As String = "FormInitialise()"
     
-    Dim cell As Range
-    Dim i As Integer
-    
     On Error GoTo ErrorHandler
-    
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
-    
-    For Each cell In ShtLists.Range("F1:F38")
-        Me.TxtStationNo.AddItem cell
-    Next
-
-    For Each cell In ShtLists.Range("A1:A3")
-        Me.TxtDivision.AddItem cell
-    Next
 
     For Each cell In ShtLists.Range("Status")
-        Me.TxtStatus.AddItem cell
+        Me.CmoStatus.AddItem cell
     Next
     
-    TxtCourseNo.Clear
-    With Courses
-        For i = 1 To .Count
-            Set Course = Courses.FindItem(i)
-            TxtCourseNo.AddItem Course.CourseNo
-        Next
+    With CmoDivision
+        .Clear
+        .AddItem "Not Applicable"
+        .Value = "Not Applicable"
+        .Enabled = False
+    End With
+
+    With CmoStationNo
+        .Clear
+        .AddItem "Not Applicable"
+        .Value = "Not Applicable"
+        .Enabled = False
+    End With
+
+    With CmoCourseNo
+        .Clear
+        .AddItem "WT2018"
+        .Value = "WT2018"
+        .Enabled = False
     End With
 
     FormInitialise = True
@@ -502,8 +503,7 @@ Public Function FormInitialise() As Boolean
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
+
     FormInitialise = False
 
 Exit Function
@@ -517,8 +517,10 @@ ErrorHandler:
     End If
 
 End Function
+
 Public Sub FormTerminate()
     On Error Resume Next
-    Set Course = Nothing
     Set Candidate = Nothing
+    Unload Me
+    
 End Sub

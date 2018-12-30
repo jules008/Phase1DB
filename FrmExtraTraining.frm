@@ -17,8 +17,9 @@ Attribute VB_Exposed = False
 
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 14 Sep 16
+' Date - 30 Dec 18
 '===============================================================
 Option Explicit
 
@@ -28,13 +29,18 @@ Private Candidate As ClsCandidate
 Private DailyLog As ClsDailyLog
 Private ActiveSession As ClsXTrainingSession
 
+' ===============================================================
+' ShowForm
+' Shows Extra Training Form
+' ---------------------------------------------------------------
 Public Function ShowForm(Optional ExistDailyLog As ClsDailyLog) As Boolean
     
-   Const StrPROCEDURE As String = "ShowForm()"
-   
-   On Error GoTo ErrorHandler
-   
-    ResetForm
+    Const StrPROCEDURE As String = "ShowForm()"
+
+    On Error GoTo ErrorHandler
+
+    If Not ResetForm Then Err.Raise HANDLED_ERROR
+    
     If ExistDailyLog Is Nothing Then
         Set DailyLog = New ClsDailyLog
         Show
@@ -51,8 +57,7 @@ Public Function ShowForm(Optional ExistDailyLog As ClsDailyLog) As Boolean
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
+
     ShowForm = False
 
 Exit Function
@@ -66,35 +71,51 @@ ErrorHandler:
     End If
 End Function
 
+' ===============================================================
+' BtnClose_Click
+' Closes form
+' ---------------------------------------------------------------
 Private Sub BtnClose_Click()
     On Error Resume Next
-    
-    FormTerminate
-    Me.Hide
+    Unload Me
 End Sub
 
+' ===============================================================
+' BtnDelete_Click
+' Event process for the Delete button
+' ---------------------------------------------------------------
 Private Sub BtnDelete_Click()
+    Dim ErrNo As Integer
+
     Const StrPROCEDURE As String = "BtnDelete_Click()"
-    
+
     On Error GoTo ErrorHandler
-    
-    If Not SetActiveSession Then Err.Raise HANDLED_ERROR
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
     
     DailyLog.XtrainingSessions.RemoveItem (CStr(ActiveSession.ExtraTrainingNo))
     ActiveSession.DeleteDB
     LstTrainingList.ListIndex = -1
     
     If Not PopulateForm Then Err.Raise HANDLED_ERROR
-    
+
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -103,14 +124,22 @@ ErrorHandler:
     End If
 End Sub
 
-
+' ===============================================================
+' BtnNew_Click
+' Event process for New Button
+' ---------------------------------------------------------------
 Private Sub BtnNew_Click()
-    Const StrPROCEDURE As String = "BtnNew_Click()"
-    
-    On Error GoTo ErrorHandler
-    
     Dim NewSession As ClsXTrainingSession
     Dim ExtraTrainingNo As Integer
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "BtnNew_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
     
     Set NewSession = New ClsXTrainingSession
     
@@ -122,17 +151,24 @@ Private Sub BtnNew_Click()
     With LstTrainingList
         .Selected(.ListCount - 1) = True
     End With
+
+GracefulExit:
+    
     Set NewSession = Nothing
 Exit Sub
 
 ErrorExit:
     Set NewSession = Nothing
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -140,54 +176,121 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
+
+' ===============================================================
+' BtnSpellChk_Click
+' Event process for spell checker
+' ---------------------------------------------------------------
 Private Sub BtnSpellChk_Click()
-    On Error Resume Next
-    
-    'to be added to selection button
     Dim Cntrls As Collection
     Dim i As Integer
     Dim Cntrl As Control
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "BtnSpellChk_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
     
     Set Cntrls = New Collection
     
     For i = 0 To Me.Controls.Count - 1
         Cntrls.Add Controls(i)
     Next
+    
     ModLibrary.SpellCheck Cntrls
+    
     Set Cntrls = Nothing
+
+GracefulExit:
+
+Exit Sub
+
+ErrorExit:
+
+    Set Cntrls = Nothing
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
 End Sub
+
+' ===============================================================
+' BtnUpdate_Click
+' Event Process for Update button
+' ---------------------------------------------------------------
 Private Sub BtnUpdate_Click()
+    Dim ErrNo As Integer
+
     Const StrPROCEDURE As String = "BtnUpdate_Click()"
 
     On Error GoTo ErrorHandler
+
+Restart:
+
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
     
-    If ValidateData = True Then
-        With ActiveSession
-            If TxtTrainingDate <> "" Then .TrainingDate = TxtTrainingDate
-            .TrainingDetails = TxtTrainingDetails
-            .TrainingResults = TxtTrainingResults
-            If OptTrngAccpted.Value = True Then
-                .TrainingTaken = True
-            Else
-                .TrainingTaken = False
-            End If
+    Select Case ValidateData
+        
+        Case Is = ForkOK
+            With ActiveSession
             
-            ActiveSession.UpdateDB
-            MsgBox "Training Session Updated"
+                If TxtTrainingDate <> "" Then .TrainingDate = TxtTrainingDate
+                
+                .TrainingDetails = TxtTrainingDetails
+                .TrainingResults = TxtTrainingResults
+                
+                If OptTrngAccpted.Value = True Then
+                    .TrainingTaken = True
+                Else
+                    .TrainingTaken = False
+                End If
+                
+                ActiveSession.UpdateDB
+                MsgBox "Training Session Updated"
+                
+                If Not PopulateForm Then Err.Raise HANDLED_ERROR
+                
+            End With
+        
+        Case Is = FunctionalError
+            Err.Raise HANDLED_ERROR, , "Functional Error in Validation"
+        
+        Case Is = ValidationError
+            GoTo GracefulExit
             
-            If Not PopulateForm Then Err.Raise HANDLED_ERROR
-            
-        End With
-    End If
+    End Select
+
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -195,23 +298,39 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
+
+' ===============================================================
+' LstTrainingList_Click
+' Event Process for Training List Click
+' ---------------------------------------------------------------
 Private Sub LstTrainingList_Click()
+    Dim ErrNo As Integer
+
     Const StrPROCEDURE As String = "LstTrainingList_Click()"
-    
+
     On Error GoTo ErrorHandler
+
+Restart:
     
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
     If Not SetActiveSession Then Err.Raise HANDLED_ERROR
     If Not PopulateTrainingDetails Then Err.Raise HANDLED_ERROR
-    
+
+GracefulExit:
+
 Exit Sub
 
 ErrorExit:
-    FormTerminate
-    Terminate
 
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -219,28 +338,44 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
+
+' ===============================================================
+' UserForm_Initialize
+' Form Start up process
+' ---------------------------------------------------------------
 Private Sub UserForm_Initialize()
     On Error Resume Next
     
     Set Candidate = New ClsCandidate
 End Sub
 
+' ===============================================================
+' UserForm_Terminate
+' Form Close down process
+' ---------------------------------------------------------------
 Private Sub UserForm_Terminate()
     On Error Resume Next
-    FormTerminate
+    
+    DailyLog.XtrainingSessions.CleanUp
+    Set Candidate = Nothing
+    Set DailyLog = Nothing
+    Set ActiveSession = Nothing
 End Sub
 
+' ===============================================================
+' PopulateForm
+' Polulates data in the form
+' ---------------------------------------------------------------
 Private Function PopulateForm() As Boolean
-    Const StrPROCEDURE As String = "PopulateForm()"
-    
     Dim i As Integer
     Dim ListIndex As Integer
     Dim TrainingDate As String
     Dim TrainingTaken As String
     Dim TrainingSession As ClsXTrainingSession
     
+    Const StrPROCEDURE As String = "PopulateForm()"
     On Error GoTo ErrorHandler
-    
+
     Set TrainingSession = New ClsXTrainingSession
     
     'candidate details
@@ -270,7 +405,7 @@ Private Function PopulateForm() As Boolean
         .Clear
         If DailyLog.XtrainingSessions.Count = 0 Then
         
-            DisableEntryForm
+            If Not DisableEntryForm Then Err.Raise HANDLED_ERROR
         Else
             
             For i = 1 To DailyLog.XtrainingSessions.Count
@@ -302,8 +437,7 @@ Private Function PopulateForm() As Boolean
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
+
     Set TrainingSession = Nothing
     PopulateForm = False
 
@@ -317,20 +451,29 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
+' ===============================================================
+' PopulateTrainingDetails
+' Populates training details on form
+' ---------------------------------------------------------------
 Private Function PopulateTrainingDetails() As Boolean
     Const StrPROCEDURE As String = "PopulateTrainingDetails()"
 
     On Error GoTo ErrorHandler
-    
+
     With ActiveSession
+    
         If .TrainingDate <> 0 Then TxtTrainingDate = Format(.TrainingDate, "dd/mm/yy")
+        
         TxtTrainingDetails = .TrainingDetails
         TxtTrainingResults = .TrainingResults
+        
         If .TrainingTaken = True Then
             OptTrngAccpted.Value = True
         Else
             OptTrngRejected.Value = True
         End If
+    
     End With
     
     If Not ActiveSession Is Nothing Then
@@ -338,15 +481,13 @@ Private Function PopulateTrainingDetails() As Boolean
     Else
         DisableEntryForm
     End If
-    
-    PopulateTrainingDetails = True
 
+    PopulateTrainingDetails = True
 
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
+
     PopulateTrainingDetails = False
 
 Exit Function
@@ -360,31 +501,57 @@ ErrorHandler:
     End If
 End Function
 
-Private Function ValidateData() As Boolean
-    On Error Resume Next
-    
+' ===============================================================
+' ValidateData
+' Validates form data before updating DB
+' ---------------------------------------------------------------
+Private Function ValidateData() As EnumFormValidation
+    Const StrPROCEDURE As String = "ValidateData()"
+
+    On Error GoTo ErrorHandler
+
     If Me.TxtTrainingDetails = "" Then
         MsgBox "Please enter details of the training offered"
-        ValidateData = False
+        ValidateData = ValidationError
         Exit Function
     End If
     
     If TxtTrainingDate <> "" And Not IsDate(Me.TxtTrainingDate) Then
         MsgBox "Please enter a valid date"
-        ValidateData = False
+        ValidateData = ValidationError
         Exit Function
     End If
-        
-    ValidateData = True
+
+    ValidateData = FormOK
+
+Exit Function
+
+ErrorExit:
+
+    ValidateData = FunctionalError
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
 End Function
 
+' ===============================================================
+' SetActiveSession
+' Sets the active x training session when it is selected
+' ---------------------------------------------------------------
 Private Function SetActiveSession() As Boolean
-    Const StrPROCEDURE As String = "SetActiveSession()"
-    
-    On Error GoTo ErrorHandler
-    
     Dim ListSel As Integer
     Dim Index As Integer
+    
+    Const StrPROCEDURE As String = "SetActiveSession()"
+
+    On Error GoTo ErrorHandler
     
     If ActiveSession Is Nothing Then Set ActiveSession = New ClsXTrainingSession
     
@@ -399,8 +566,7 @@ Private Function SetActiveSession() As Boolean
 Exit Function
 
 ErrorExit:
-    FormTerminate
-    Terminate
+
     SetActiveSession = False
 
 Exit Function
@@ -414,9 +580,15 @@ ErrorHandler:
     End If
 End Function
 
-Private Sub ResetForm()
-    On Error Resume Next
-    
+' ===============================================================
+' ResetForm
+' Resets form
+' ---------------------------------------------------------------
+Private Function ResetForm() As Boolean
+    Const StrPROCEDURE As String = "ResetForm()"
+
+    On Error GoTo ErrorHandler
+
     TxtCourseNo = ""
     TxtCrewNo = ""
     TxtDayNo = ""
@@ -426,48 +598,85 @@ Private Sub ResetForm()
     TxtTrainingDate = ""
     TxtTrainingDetails = ""
 
-End Sub
+    ResetForm = True
 
+Exit Function
 
-Public Sub FormTerminate()
-    On Error Resume Next
+ErrorExit:
+
+    ResetForm = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' DisableEntryForm
+' disables the form to prevent input
+' ---------------------------------------------------------------
+Private Function DisableEntryForm() As Boolean
+    Const StrPROCEDURE As String = "DisableEntryForm()"
+
+    On Error GoTo ErrorHandler
+
+    With TxtTrainingDetails
+        .Enabled = False
+        .Value = ""
+        .BackColor = RGB(211, 213, 212)
+    End With
     
-    DailyLog.XtrainingSessions.CleanUp
-    Set Candidate = Nothing
-    Set DailyLog = Nothing
-    Set ActiveSession = Nothing
-End Sub
-
-Public Sub DisableEntryForm()
-    On Error Resume Next
-            With TxtTrainingDetails
-                .Enabled = False
-                .Value = ""
-                .BackColor = RGB(211, 213, 212)
-            End With
-            
-            With TxtTrainingDate
-                .Enabled = False
-                .Value = ""
-                .BackColor = RGB(211, 213, 212)
-            End With
-            
-            With TxtTrainingResults
-                .Enabled = False
-                .Value = ""
-                .BackColor = RGB(211, 213, 212)
-            End With
-            
-            OptTrngAccpted.Enabled = False
-            OptTrngRejected.Enabled = False
-            BtnDelete.Enabled = False
-            BtnUpdate.Enabled = False
-
-End Sub
-
-Public Sub EnableFormEntry()
-    On Error Resume Next
+    With TxtTrainingDate
+        .Enabled = False
+        .Value = ""
+        .BackColor = RGB(211, 213, 212)
+    End With
     
+    With TxtTrainingResults
+        .Enabled = False
+        .Value = ""
+        .BackColor = RGB(211, 213, 212)
+    End With
+    
+    OptTrngAccpted.Enabled = False
+    OptTrngRejected.Enabled = False
+    BtnDelete.Enabled = False
+    BtnUpdate.Enabled = False
+    
+    DisableEntryForm = True
+
+Exit Function
+
+ErrorExit:
+
+    DisableEntryForm = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
+
+' ===============================================================
+' EnableFormEntry
+' Enables form to allow data entry
+' ---------------------------------------------------------------
+Private Function EnableFormEntry() As Boolean
+    Const StrPROCEDURE As String = "EnableFormEntry()"
+
+    On Error GoTo ErrorHandler
+
     With TxtTrainingDetails
         .Enabled = True
         .BackColor = RGB(255, 255, 255)
@@ -488,4 +697,21 @@ Public Sub EnableFormEntry()
     BtnDelete.Enabled = True
     BtnUpdate.Enabled = True
 
-End Sub
+    EnableFormEntry = True
+
+Exit Function
+
+ErrorExit:
+    
+    EnableFormEntry = False
+
+Exit Function
+
+ErrorHandler:
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
+    End If
+End Function
