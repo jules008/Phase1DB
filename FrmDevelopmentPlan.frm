@@ -16,8 +16,9 @@ Attribute VB_Exposed = False
 
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 22 Sep 16
+' Date - 30 Dec 18
 '===============================================================
 Option Explicit
 Private Const StrMODULE As String = "FrmDevelopmentPlan"
@@ -263,10 +264,7 @@ Private Sub UpdateDevelopmentPlan()
                     If Not CreateFollowOnDP Then Err.Raise HANDLED_ERROR
                 End If
             End If
-            If Not .UpdateDB Then
-                .NewDB
-                .UpdateDB
-            End If
+            .UpdateDB
         End With
         FormTerminate
         Hide

@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 16 Sep 16
+' Date - 30 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -252,43 +253,40 @@ End Sub
 'Method UpdateDB
 'Update Class to DB
 '---------------------------------------------------------------
-Public Function UpdateDB() As Boolean
+Public Sub UpdateDB()
     Dim RstDevArea As Recordset
     Dim DPNo As Integer
-    Dim StrDevArea As String
     
     DPNo = Parent.DPNo
-    StrDevArea = "'" & pDevArea & "'"
     
     Set RstDevArea = ModDatabase.SQLQuery("SELECT * FROM DPDevItems WHERE  DPNo = " & DPNo & _
-                                        " AND DevArea = " & StrDevArea & _
-                                        " AND deleted IS NULL")
+                                        " AND DevArea = '" & pDevArea & "'")
         
     With RstDevArea
         If .RecordCount = 0 Then
-            UpdateDB = False
+            .AddNew
         Else
             .Edit
-            !DevArea = pDevArea
-            !Reference = pReference
-            !CurrPerfLvl = pCurrPerfLvl
-            !ImproveLvl = pImproveLvl
-            !Support = pSupport
-            !Assessor = pAssessor
-            !ReviewStatus = pReviewStatus
-            !DayNo = pModule.DayNo
-            !StandardMet = pStandardMet
-            !RevDate = pRevDate
-            !RevComments = pRevComments
-            .Update
-            UpdateDB = True
-            
         End If
+        
+        !DevArea = pDevArea
+        !Reference = pReference
+        !CurrPerfLvl = pCurrPerfLvl
+        !ImproveLvl = pImproveLvl
+        !Support = pSupport
+        !Assessor = pAssessor
+        !ReviewStatus = pReviewStatus
+        !DayNo = pModule.DayNo
+        !StandardMet = pStandardMet
+        !RevDate = pRevDate
+        !RevComments = pRevComments
+        .Update
+            
     End With
     
     Set RstDevArea = Nothing
             
-End Function
+End Sub
 
 '===============================================================
 'Method DeleteDB

@@ -151,14 +151,8 @@ Private Sub BtnClose_Click()
 Restart:
     
     If Course Is Nothing Then Err.Raise SYSTEM_RESTART
-    
-    If FormChanged = True Then
-        Response = MsgBox("The form has been changed, would you like to save these changes?", vbYesNo)
-        
-        If Response = 6 Then BtnUpdate_Click
-        FormChanged = False
-    End If
-    
+      
+    unload Me
     
 GracefulExit:
 

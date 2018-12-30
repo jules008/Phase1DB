@@ -17,8 +17,9 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
 ' v0,1 - Date Picker removal
+' v0,2 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 03 Jan 18
+' Date - 30 Dec 18
 '===============================================================
 Option Explicit
 Private Const StrMODULE As String = "FrmDPDevArea"
@@ -100,11 +101,7 @@ Private Sub BtnUpdate_Click()
             If TxtReviewDate <> "" Then .RevDate = TxtReviewDate
             .StandardMet = ChkAchieved
             .Support = TxtSupport
-        
-            If Not .UpdateDB Then
-                .NewDB
-                .UpdateDB
-            End If
+            .UpdateDB
         End With
         FormTerminate
         Hide

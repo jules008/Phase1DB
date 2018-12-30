@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 27 Sep 16
+' Date - 30 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -87,12 +88,9 @@ End Property
 'load course from database
 '---------------------------------------------------------------
 Public Sub LoadDB()
-    Dim StrCourseNo As String
     Dim RstCourse As Recordset
     
-    StrCourseNo = "'" & pCourseNo & "'"
-    
-    Set RstCourse = ModDatabase.SQLQuery("SELECT * FROM course WHERE courseno = " & StrCourseNo & " AND deleted IS NULL")
+    Set RstCourse = ModDatabase.SQLQuery("SELECT * FROM course WHERE courseno = '" & pCourseNo & "'")
     
     With RstCourse
         If .RecordCount > 0 Then

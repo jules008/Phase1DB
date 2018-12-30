@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 24 Aug 16
+' Date - 30 Dec 18
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -200,13 +201,12 @@ End Function
 '---------------------------------------------------------------
 Public Sub LoadDB()
     Dim RstDailyLog As Recordset
-    Dim StrCrewNo As String
     Dim DayNo As Integer
     
-    StrCrewNo = "'" & Parent.CrewNo & "'"
     DayNo = pModule.DayNo
     
-    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
+    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = '" & Parent.CrewNo & "'" _
+                                        & " AND DayNo = " & DayNo)
 
     With RstDailyLog
         If .RecordCount > 0 Then
@@ -239,13 +239,12 @@ End Sub
 '---------------------------------------------------------------
 Public Sub NewDB()
     Dim RstDailyLog As Recordset
-    Dim StrCrewNo As String
     Dim DayNo As Integer
         
-    StrCrewNo = "'" & Parent.CrewNo & "'"
     DayNo = pModule.DayNo
     
-    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
+    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = '" & Parent.CrewNo & "'" _
+                                        & " AND DayNo = " & DayNo)
         
     With RstDailyLog
         If .RecordCount <> 0 Then
@@ -265,42 +264,42 @@ End Sub
 'Method UpdateDB
 'Update Class to DB
 '---------------------------------------------------------------
-Public Function UpdateDB() As Boolean
+Public Sub UpdateDB()
     Dim RstDailyLog As Recordset
-    Dim StrCrewNo As String
     Dim DayNo As Integer
         
-    StrCrewNo = "'" & Parent.CrewNo & "'"
     DayNo = pModule.DayNo
     
-    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = " & StrCrewNo & " AND DayNo = " & DayNo & " AND deleted IS NULL")
-
+    Set RstDailyLog = ModDatabase.SQLQuery("SELECT * FROM dailylog WHERE  CrewNo = '" & Parent.CrewNo & "'" _
+                                            & " AND DayNo = " & DayNo)
     With RstDailyLog
         If .RecordCount = 0 Then
-            UpdateDB = False
+            .AddNew
         Else
             .Edit
-            !assessdate = pDLDate
-            !Assessor = pAssessor
-            !Score_1 = pScore1
-            !Score_2 = pScore2
-            !Score_3 = pScore3
-            !Score_4 = pScore4
-            !comments_1 = pComments1
-            !comments_2 = pComments2
-            !comments_3 = pComments3
-            !comments_4 = pComments4
-            !comments_misc = pCommentsMisc
-            !OverallGrade = pOverallGrade
-            !DevPlanNo = pDPNo
-            .Update
-            UpdateDB = True
         End If
+        
+        !CrewNo = Parent.CrewNo
+        !assessdate = pDLDate
+        !DayNo = pModule.DayNo
+        !Assessor = pAssessor
+        !Score_1 = pScore1
+        !Score_2 = pScore2
+        !Score_3 = pScore3
+        !Score_4 = pScore4
+        !comments_1 = pComments1
+        !comments_2 = pComments2
+        !comments_3 = pComments3
+        !comments_4 = pComments4
+        !comments_misc = pCommentsMisc
+        !OverallGrade = pOverallGrade
+        !DevPlanNo = pDPNo
+        .Update
     End With
     
     Set RstDailyLog = Nothing
             
-End Function
+End Sub
 
 '===============================================================
 'Method DeleteDB
