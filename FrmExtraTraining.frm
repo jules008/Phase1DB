@@ -93,7 +93,7 @@ Private Sub BtnDelete_Click()
 
 Restart:
 
-    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
     
     DailyLog.XtrainingSessions.RemoveItem (CStr(ActiveSession.ExtraTrainingNo))
     ActiveSession.DeleteDB
@@ -139,7 +139,7 @@ Private Sub BtnNew_Click()
 
 Restart:
 
-    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
     
     Set NewSession = New ClsXTrainingSession
     
@@ -193,7 +193,7 @@ Private Sub BtnSpellChk_Click()
 
 Restart:
 
-    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
     
     Set Cntrls = New Collection
     
@@ -243,11 +243,11 @@ Private Sub BtnUpdate_Click()
 
 Restart:
 
-    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
     
     Select Case ValidateData
         
-        Case Is = ForkOK
+        Case Is = FormOK
             With ActiveSession
             
                 If TxtTrainingDate <> "" Then .TrainingDate = TxtTrainingDate

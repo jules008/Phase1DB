@@ -11,8 +11,9 @@ Attribute VB_Exposed = True
 ' Class ThisWorkbook
 '===============================================================
 ' v1.0.0 - Initial Version
+' v0,1 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 20 Apr 18
+' Date - 30 Dec 18
 '===============================================================
 
 Option Explicit
@@ -54,6 +55,7 @@ Private Function CloseDown() As Boolean
 
     On Error GoTo ErrorHandler
 
+    Application.DisplayFullScreen = False
     If Not ModCloseDown.Terminate Then Err.Raise HANDLED_ERROR
 
     CloseDown = True
@@ -84,6 +86,8 @@ Private Sub Workbook_Open()
     Const StrPROCEDURE As String = "Workbook_Open()"
 
     On Error GoTo ErrorHandler
+    
+    Application.DisplayFullScreen = True
     
     If Not ModStartUp.Initialise Then Err.Raise HANDLED_ERROR
 Exit Sub

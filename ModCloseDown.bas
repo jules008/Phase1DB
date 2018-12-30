@@ -3,8 +3,9 @@ Attribute VB_Name = "ModCloseDown"
 ' Module ModCloseDown
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.1.0 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 19 Apr 18
+' Date - 30 Dec 18
 '===============================================================
 
 Option Explicit
@@ -21,6 +22,8 @@ Public Function Terminate() As Boolean
     On Error GoTo ErrorHandler
 
     ModDatabase.DBTerminate
+    
+    Application.DisplayFullScreen = False
     
     Terminate = True
 

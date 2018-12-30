@@ -3,8 +3,9 @@ Attribute VB_Name = "ModErrorHandling"
 ' Module ModErrorHandling
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.0.1 - Change to Dev Mode
 '---------------------------------------------------------------
-' Date - 20 Apr 18
+' Date - 30 Dec 18
 '===============================================================
 
 Option Explicit
@@ -62,7 +63,7 @@ Public Function CentralErrorHandler( _
         ErrMsg = vbNullString
     End If
     
-    CentralErrorHandler = DEBUG_MODE
+    CentralErrorHandler = DEV_MODE
     
     ModLibrary.PerfSettingsOff
 End Function

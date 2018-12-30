@@ -3,8 +3,9 @@ Attribute VB_Name = "ModStartUp"
 ' Module ModStartUp
 '===============================================================
 ' v1.0.0 - Initial Version
+' v1.1.0 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 19 Apr 18
+' Date - 30 Dec 18
 '===============================================================
 
 Option Explicit
@@ -19,9 +20,12 @@ Public Function Initialise() As Boolean
     Const StrPROCEDURE As String = "Initialise()"
 
     On Error GoTo ErrorHandler
-
-    Terminate
     
+    Application.ScreenUpdating = False
+    If Not Terminate Then Err.Raise HANDLED_ERROR
+    Application.DisplayFullScreen = True
+    Application.ScreenUpdating = True
+
     SYS_PATH = ThisWorkbook.Path & INI_FILE_PATH
 
     Application.StatusBar = "Reading INI File....."
@@ -40,12 +44,12 @@ Public Function Initialise() As Boolean
     
     Set Modules = New ClsModules
     Set Courses = New ClsCourses
+  
+    If Not ShtCourse.SetActiveCourse Then Err.Raise HANDLED_ERROR
     
     'Show any messages
     If Not MessageCheck Then Err.Raise HANDLED_ERROR
     
-
-
     Initialise = True
 
 Exit Function

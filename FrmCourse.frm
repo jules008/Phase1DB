@@ -270,6 +270,8 @@ Restart:
                 ShtCourse.CmoCourseNo = TxtCourseNo
             End If
             
+            If Not ShtCourse.RefreshCourses Then Err.Raise HANDLED_ERROR
+            
             unload me
         End With
     End If
