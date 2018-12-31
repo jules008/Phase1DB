@@ -188,7 +188,8 @@ Public Function PopulateSheet() As Boolean
         Set DailyLog = Nothing
     End If
     
-    Application.ScreenUpdating = False
+    Application.ScreenUpdating = True
+    Protect
 
     PopulateSheet = True
 
@@ -216,20 +217,41 @@ ErrorHandler:
 End Function
 
 ' ===============================================================
-' CmoCourseNo_GotFocus
-' Event processing when Course dropdown has focus
+' CmoCourseNo_Click
+' Event process for clicking Course no
 ' ---------------------------------------------------------------
-Private Sub CmoCourseNo_GotFocus()
-    Const StrPROCEDURE As String = "CmoCourseNo_GotFocus()"
-    
-'    On Error GoTo ErrorHandler
-    
-    If Courses Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
+Private Sub CmoCourseNo_Click()
+    Dim ErrNo As Integer
+
+    Const StrPROCEDURE As String = "CmoCourseNo_Click()"
+
+    On Error GoTo ErrorHandler
+
+Restart:
+
+    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
+
+GracefulExit:
+
+
+Exit Sub
+
+ErrorExit:
+
+Exit Sub
+
+ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
     End If
-    
-    If CmoCourseNo.ListCount = 0 Then
-        If Not RefreshCourses Then Err.Raise HANDLED_ERROR
+
+    If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
+        Stop
+        Resume
+    Else
+        Resume ErrorExit
     End If
 End Sub
 
@@ -545,7 +567,7 @@ Public Function GetDayNo() As String
     On Error Resume Next
         
     DayNo = Cells(3, ActiveCell.Column).Value
-    If DayNo <> "" Then
+    If DayNo <> "" And IsNumeric(DayNo) Then
         GetDayNo = DayNo
     Else
         MsgBox "Module not selected"
@@ -789,6 +811,7 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
 
 
 

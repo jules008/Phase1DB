@@ -87,7 +87,7 @@ Public Sub GetCollection()
     Dim RstCandidates As Recordset
     Dim i As Integer
     
-    Set RstCandidates = ModDatabase.SQLQuery("SELECT CrewNo FROM candidate WHERE courseno = 'WT2018'")
+    Set RstCandidates = ModDatabase.SQLQuery("SELECT CrewNo FROM candidate WHERE courseno = '" & Parent.CourseNo & "'")
     
     With RstCandidates
         If .RecordCount > 0 Then
