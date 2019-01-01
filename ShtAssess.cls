@@ -9,8 +9,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 03 Nov 16
+' Date - 01 Jan 19
 '===============================================================
 Option Explicit
 
@@ -183,16 +184,16 @@ Public Function PopulateSheet() As Boolean
                         TargetRange2.Value = Assessment.Score
                     Next
                 End With
-                TargetRange.Offset(i - 1, 87) = Candidate.Assessments.AverageScore
-                TargetRange.Offset(i - 1, 88) = Candidate.DevelopmentPlans.Count
+                TargetRange.Offset(i - 1, 102) = Candidate.Assessments.AverageScore
+                TargetRange.Offset(i - 1, 103) = Candidate.DevelopmentPlans.Count
                 Me.Protect
            Next
         End With
     
         'sort by average score
-        With Range("B7:CL35")
+        With Range("B7:DA35")
             Me.Unprotect
-            .Sort key1:=.Range("Cj9"), order1:=xlDescending
+            .Sort key1:=.Range("CY7"), order1:=xlDescending
             Me.Protect
         End With
     End If
@@ -278,7 +279,7 @@ Public Function GetAssessmentRange(CrewNo As String, DayNo As Integer, AssessTyp
     Dim RngTypeLookUp As Range
     
     Set RngCrewNoLookUp = Range("B7:B35")
-    Set RngDayNoLookUp = Range("D3:CJ3")
+    Set RngDayNoLookUp = Range("D3:CK3")
 
     'get rowno from crewno
     Set RngTarget = RngCrewNoLookUp.Find(CrewNo)
@@ -286,8 +287,12 @@ Public Function GetAssessmentRange(CrewNo As String, DayNo As Integer, AssessTyp
     
     'get colno from dayno
     Set RngTarget = RngDayNoLookUp.Find(DayNo)
+    
+    If RngTarget Is Nothing Then Err.Raise HANDLED_ERROR, , "Day No not found"
+    
     RngTarget.Select
     Debug.Print RngTarget.Address
+    
     
     ColNo = RngTarget.Column
     ColNoOffset = ColNo + RngTarget.MergeArea.Cells.Count - 1
@@ -341,3 +346,4 @@ End Function
 Private Sub Worksheet_Deactivate()
     Set Course = Nothing
 End Sub
+
