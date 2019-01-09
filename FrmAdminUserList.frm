@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmAdminUserList 
    Caption         =   "Action Plan"
-   ClientHeight    =   6990
+   ClientHeight    =   7485
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   5280
@@ -16,8 +16,9 @@ Attribute VB_Exposed = False
 
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 09 Nov 16
+' Date - 09 Jan 19
 '===============================================================
 Option Explicit
 
@@ -138,6 +139,7 @@ Private Sub BtnUpdate_Click()
         .Rank = Trim(TxtRank)
         .Role = ""
         .Surname = Trim(TxtSurname)
+        .UserName = Trim(TxtUserName)
 
     End With
     
@@ -204,6 +206,15 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Sub
+
+Private Sub TxtForeName_Change()
+    TxtUserName = TxtForeName & " " & TxtSurname
+End Sub
+
+Private Sub TxtSurname_Change()
+    TxtUserName = TxtForeName & " " & TxtSurname
+End Sub
+
 Private Sub UserForm_Initialize()
     On Error Resume Next
     With LstHeadings
@@ -264,6 +275,7 @@ Public Function RefreshUserList() As Boolean
     
     LstAccessList.Clear
     
+    i = 0
     If Not RstUserList Is Nothing Then
         With RstUserList
             Do While Not .EOF

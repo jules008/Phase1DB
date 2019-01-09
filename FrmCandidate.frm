@@ -42,7 +42,7 @@ Public Function ShowForm(Optional ExistCandidate As ClsCandidate) As Boolean
     
     If ExistCandidate Is Nothing Then
         Set Candidate = New ClsCandidate
-        Set Course = New ClsCourse
+        Set Course = Courses.FindItem(ShtCourse.CmoCourseNo)
         TxtCrewNo.Enabled = True
     Else
         Set Candidate = ExistCandidate
@@ -88,12 +88,6 @@ Restart:
 
     If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
 
-    If FormChanged = True Then
-        Response = MsgBox("The form has been changed, would you like to save these changes?", vbYesNo)
-        
-        If Response = 6 Then BtnUpdate_Click
-        FormChanged = False
-    End If
     
     Course.Candidates.CleanUp
     
@@ -346,6 +340,8 @@ Restart:
 
     If ValidateData Then
     
+        Course.Candidates.AddItem Candidate
+        
         With Candidate
             .CrewNo = TxtCrewNo
             .Division = CmoDivision
@@ -354,7 +350,6 @@ Restart:
             .Status = CmoStatus
             .UpdateDB
         End With
-        Course.Candidates.AddItem Candidate
 
         If Not ShtCourse.PopulateSheet Then Err.Raise HANDLED_ERROR
         
@@ -493,8 +488,8 @@ Private Function FormInitialise() As Boolean
 
     With CmoCourseNo
         .Clear
-        .AddItem "WT2018"
-        .Value = "WT2018"
+        .AddItem ShtCourse.CmoCourseNo
+        .Value = ShtCourse.CmoCourseNo
         .Enabled = False
     End With
 

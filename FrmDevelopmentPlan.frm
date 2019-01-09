@@ -78,12 +78,6 @@ Private Sub BtnClose_Click()
     
     On Error GoTo ErrorHandler
     
-    If FormChanged = True Then
-        Response = MsgBox("The form has been changed, would you like to save these changes?", vbYesNo)
-        
-        If Response = 6 Then BtnUpdate_Click
-        FormChanged = False
-    End If
     If Not Candidate Is Nothing Then Candidate.DevelopmentPlans.CleanUp
     
     FormTerminate

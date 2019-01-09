@@ -92,9 +92,7 @@ Public Function WorksheetActivate()
     If Courses Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
     End If
-    
-    If Not RefreshCourses Then Err.Raise HANDLED_ERROR
-    
+        
     If Courses.Count <> 0 Then
         If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
         

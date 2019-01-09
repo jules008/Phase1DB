@@ -528,15 +528,7 @@ Restart:
     
     If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
 
-    Dim Response As Integer
-    
-    If FormChanged = True Then
-        Response = MsgBox("The form has been changed, would you like to save these changes?", vbYesNo)
-        
-        If Response = 6 Then BtnUpdate_Click
-        FormChanged = False
-    End If
-    
+   
     Candidate.Dailylogs.CleanUp
 
     Unload Me

@@ -44,7 +44,9 @@ Public Function Initialise() As Boolean
     
     Set Modules = New ClsModules
     Set Courses = New ClsCourses
-  
+
+    If Not ShtCourse.RefreshCourses Then Err.Raise HANDLED_ERROR
+
     If Not ShtCourse.SetActiveCourse Then Err.Raise HANDLED_ERROR
     
     'Show any messages

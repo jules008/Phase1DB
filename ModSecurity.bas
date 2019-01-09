@@ -199,12 +199,11 @@ End Function
 ' GetAccessList
 ' Returns access list for course
 ' ---------------------------------------------------------------
-Public Function GetAccessList() As Recordset
+Public Function GetAccessList(Optional CourseNo As String) As Recordset
     Const StrPROCEDURE As String = "GetAccessList()"
     
     Dim StrUserName As String
     Dim StrCourseNo As String
-    Dim CourseNo As String
     Dim RstUserList As Recordset
     Dim RstCourseUserLst As Recordset
 
@@ -291,6 +290,7 @@ Public Function AddUpdateUser(User As Supervisor, Optional CourseNo As String) A
             !Admin = User.Admin
             !Forename = User.Forename
             !Surname = User.Surname
+            !UserName = User.UserName
             !AccessLvl = User.AccessLvl
             !Role = User.Role
             !email = User.email

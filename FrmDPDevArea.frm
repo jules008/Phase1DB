@@ -149,14 +149,6 @@ End Sub
 Private Sub CmdClose_Click()
     On Error Resume Next
     
-    Dim Response As Integer
-    
-    If FormChanged = True Then
-        Response = MsgBox("The form has been changed, would you like to save these changes?", vbYesNo)
-        
-        If Response = 6 Then BtnUpdate_Click
-        FormChanged = False
-    End If
     FormTerminate
     If Me.Visible = True Then Me.Hide
 End Sub
