@@ -18,7 +18,7 @@ Attribute VB_Exposed = False
 ' v0,0 - Initial version
 ' v0,1 - WT2019 Version
 '---------------------------------------------------------------
-' Date - 30 Dec 18
+' Date - 09 Jan 19
 '===============================================================
 Option Explicit
 
@@ -135,7 +135,6 @@ Restart:
     If Not ResetForm Then Err.Raise HANDLED_ERROR
     
     Set Candidate = New ClsCandidate
-    Course.Candidates.AddItem Candidate
     TxtCrewNo.Enabled = True
 
 GracefulExit:
@@ -340,17 +339,17 @@ Restart:
 
     If ValidateData Then
     
-        Course.Candidates.AddItem Candidate
-        
         With Candidate
             .CrewNo = TxtCrewNo
             .Division = CmoDivision
             .Name = TxtName
             .StationNo = CmoStationNo
             .Status = CmoStatus
-            .UpdateDB
         End With
-
+        
+        Course.Candidates.AddItem Candidate
+        Candidate.UpdateDB
+            
         If Not ShtCourse.PopulateSheet Then Err.Raise HANDLED_ERROR
         
         Me.Hide
