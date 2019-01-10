@@ -231,7 +231,7 @@ Public Sub ClearSheet()
     
     On Error Resume Next
     Me.Unprotect
-    Range("B7:CL35").ClearContents
+    Range("B7:DA35").ClearContents
     Me.Protect
 End Sub
 
@@ -279,7 +279,7 @@ Public Function GetAssessmentRange(CrewNo As String, DayNo As Integer, AssessTyp
     Dim RngTypeLookUp As Range
     
     Set RngCrewNoLookUp = Range("B7:B35")
-    Set RngDayNoLookUp = Range("D3:CK3")
+    Set RngDayNoLookUp = Range("D3:CY3")
 
     'get rowno from crewno
     Set RngTarget = RngCrewNoLookUp.Find(CrewNo)

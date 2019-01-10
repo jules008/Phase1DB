@@ -269,6 +269,7 @@ Public Sub UpdateDB()
             .Edit
         End If
         
+        !DPNo = DPNo
         !DevArea = pDevArea
         !Reference = pReference
         !CurrPerfLvl = pCurrPerfLvl

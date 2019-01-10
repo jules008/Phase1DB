@@ -221,59 +221,68 @@ Restart:
             If DailyLog.Score1 > 2 Then
                 Set DevArea = New ClsDevelopmentArea
                 
-                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
-                
                 With DevArea
                     .DevArea = "Attitude"
                     .Module = DailyLog.Module
                     .CurrPerfLvl = DailyLog.Comments1
                     .ReviewStatus = "Draft"
-                     .UpdateDB
-               End With
+                End With
+                
+                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
+                DevArea.UpdateDB
+                                
+                Set DevArea = Nothing
                 
             End If
             
             If DailyLog.Score2 > 2 Then
                 Set DevArea = New ClsDevelopmentArea
                 
-                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
-                
                 With DevArea
                     .DevArea = "Practical Ability"
                     .Module = DailyLog.Module
                     .CurrPerfLvl = DailyLog.Comments2
                     .ReviewStatus = "Draft"
-                    .UpdateDB
                 End With
+                
+                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
+                DevArea.UpdateDB
+                                
+                Set DevArea = Nothing
                 
             End If
             
             If DailyLog.Score3 > 2 Then
                 Set DevArea = New ClsDevelopmentArea
                 
-                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
-                
                 With DevArea
                     .DevArea = "Knowledge"
                     .Module = DailyLog.Module
                     .CurrPerfLvl = DailyLog.Comments3
                     .ReviewStatus = "Draft"
-                    .UpdateDB
                 End With
+                
+                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
+                DevArea.UpdateDB
+                                
+                Set DevArea = Nothing
+                
             End If
             
             If DailyLog.Score4 > 2 Then
                 Set DevArea = New ClsDevelopmentArea
-                
-                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
                 
                 With DevArea
                     .DevArea = "Safety"
                     .Module = DailyLog.Module
                     .CurrPerfLvl = DailyLog.Comments4
                     .ReviewStatus = "Draft"
-                    .UpdateDB
                 End With
+                
+                DevelopmentPlan.DevelopmentAreas.AddItem DevArea
+                DevArea.UpdateDB
+                  
+                Set DevArea = Nothing
                 
             End If
         End With

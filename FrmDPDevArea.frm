@@ -314,12 +314,7 @@ Private Function ValidateData() As Boolean
         Exit Function
     End If
 
-    If Not IsDate(Me.TxtReviewDate) Then
-        MsgBox "Please enter a valid date"
-        ValidateData = False
-        Exit Function
-    End If
-    
+   
     If Me.TxtRef = "" Then
         MsgBox "Please enter a reference.  If this is not applicable, enter 'None'"
         ValidateData = False
