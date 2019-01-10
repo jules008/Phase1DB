@@ -31,7 +31,7 @@ Private Sub CmoCourseNo_Change()
     
     On Error GoTo ErrorHandler
     
-    If Courses Is Nothing Then
+    If Course Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
     End If
     
@@ -89,7 +89,7 @@ Public Function WorksheetActivate()
        
     On Error GoTo ErrorHandler
         
-    If Courses Is Nothing Then
+    If Course Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
     End If
         
@@ -227,7 +227,7 @@ Private Sub CmoCourseNo_Click()
 
 Restart:
 
-    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
 
 GracefulExit:
 
@@ -350,7 +350,7 @@ Private Sub ShowCourseFrm()
 
 Restart:
 
-    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
        
     If Not FrmCourse.ShowForm(Course) Then Err.Raise HANDLED_ERROR
 
@@ -391,7 +391,7 @@ Private Sub ShowCandidateFrm()
 
 Restart:
 
-    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
 
     Set Candidate = New ClsCandidate
     
@@ -448,7 +448,7 @@ Private Sub ShowDailyLogFrm()
 
 Restart:
     
-    If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
 
     CrewNo = GetCrewNo
     DayNo = GetDayNo
@@ -499,28 +499,28 @@ ErrorHandler:
 End Sub
 
 Public Sub ShowDevelopmentPlanFrm()
-
-    Const StrPROCEDURE As String = "ShowDevelopmentPlanFrm()"
-    
+    Dim ErrNo As Integer
     Dim CrewNo As String
     Dim Candidate As ClsCandidate
     Dim DevelopmentPlan As ClsDevelopmentPlan
+
+    Const StrPROCEDURE As String = "ShowDevelopmentPlanFrm()"
     
     On Error GoTo ErrorHandler
     
     CrewNo = CStr(Format(GetCrewNo, "0000"))
     
-    If Course Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-        If Not SetActiveCourse Then Err.Raise HANDLED_ERROR
-    End If
+Restart:
+    
+    If Course Is Nothing Then Err.Raise SYSTEM_RESTART
     
     If CrewNo <> "" Then
         Set Candidate = Course.Candidates.FindItem(CrewNo)
     
         If Not FrmDevelopmentPlanList.ShowForm(Candidate) Then Err.Raise HANDLED_ERROR
     End If
-
+    
+GracefulExit:
     Set Candidate = Nothing
     Set DevelopmentPlan = Nothing
 Exit Sub
@@ -532,6 +532,12 @@ ErrorExit:
 Exit Sub
 
 ErrorHandler:
+    If Err.Number >= 1000 And Err.Number <= 1500 Then
+        ErrNo = Err.Number
+        CustomErrorHandler (Err.Number)
+        If ErrNo = SYSTEM_RESTART Then Resume Restart Else Resume GracefulExit
+    End If
+
     If CentralErrorHandler(StrMODULE, StrPROCEDURE, , True) Then
         Stop
         Resume
@@ -582,7 +588,7 @@ Public Function SetActiveCourse() As Boolean
     
     On Error GoTo ErrorHandler
 
-    If Courses Is Nothing Then
+    If Course Is Nothing Then
         If Not Initialise Then Err.Raise HANDLED_ERROR
     End If
 
