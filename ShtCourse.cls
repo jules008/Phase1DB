@@ -588,10 +588,6 @@ Public Function SetActiveCourse() As Boolean
     
     On Error GoTo ErrorHandler
 
-    If Course Is Nothing Then
-        If Not Initialise Then Err.Raise HANDLED_ERROR
-    End If
-
     If Courses.Count <> 0 Then
         If CmoCourseNo <> "" Then
             Set Course = Courses.FindItem(CmoCourseNo.Value)
@@ -815,6 +811,7 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
 
 
 
