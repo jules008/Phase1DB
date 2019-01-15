@@ -10,8 +10,9 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v0,0 - Initial version
 ' v0,1 - WT2019 Version
+' v0,1 - Expanded search range for dayno
 '---------------------------------------------------------------
-' Date - 01 Jan 19
+' Date - 15 Jan 19
 '===============================================================
 Option Explicit
 
@@ -279,7 +280,7 @@ Public Function GetAssessmentRange(CrewNo As String, DayNo As Integer, AssessTyp
     Dim RngTypeLookUp As Range
     
     Set RngCrewNoLookUp = Range("B7:B35")
-    Set RngDayNoLookUp = Range("D3:CY3")
+    Set RngDayNoLookUp = Range("C3:CY3")
 
     'get rowno from crewno
     Set RngTarget = RngCrewNoLookUp.Find(CrewNo)
@@ -346,4 +347,5 @@ End Function
 Private Sub Worksheet_Deactivate()
     Set Course = Nothing
 End Sub
+
 

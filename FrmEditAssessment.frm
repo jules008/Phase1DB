@@ -18,8 +18,9 @@ Attribute VB_Exposed = False
 ' v0,0 - Initial version
 ' v0,1 - Added Validation to BtnUpdate
 ' v0,2 - Checked for "" before updating scores
+' v0,3 - Updated exam types
 '---------------------------------------------------------------
-' Date - 10 Jan 17
+' Date - 15 Jan 17
 '===============================================================
 Option Explicit
 
@@ -202,6 +203,7 @@ Private Sub CmoModule_Change()
                 Case 0
                     .AddItem "Written"
                 Case 1
+                    .AddItem "Written"
                     .AddItem "Practical"
                 Case 2
                     .AddItem "Written"
@@ -209,22 +211,24 @@ Private Sub CmoModule_Change()
                 Case 3
                     .AddItem "Written"
                     .AddItem "Practical"
+                    .AddItem "BA Board"
+                    .AddItem "FB Oral"
                 Case 4
                     .AddItem "Written"
                     .AddItem "Practical"
-                    .AddItem "BA Board"
-                    .AddItem "FB Oral"
                 Case 5
                     .AddItem "Written"
                     .AddItem "Practical"
                 Case 6
                     .AddItem "Written"
-                    .AddItem "Oral"
-                    .AddItem "Knots"
                     .AddItem "Practical"
                 Case 7
                     .AddItem "Written"
-                    
+                    .AddItem "Practical"
+                Case 8
+                    .AddItem "Written"
+                    .AddItem "Oral"
+                    .AddItem "Practical"
             End Select
         End With
     End If
