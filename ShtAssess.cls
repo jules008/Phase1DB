@@ -181,7 +181,6 @@ Public Function PopulateSheet() As Boolean
                         
                         If TargetRange2 Is Nothing Then Err.Raise HANDLED_ERROR
                         
-                        TargetRange2.Select
                         TargetRange2.Value = Assessment.Score
                     Next
                 End With
@@ -291,9 +290,7 @@ Public Function GetAssessmentRange(CrewNo As String, DayNo As Integer, AssessTyp
     
     If RngTarget Is Nothing Then Err.Raise HANDLED_ERROR, , "Day No not found"
     
-    RngTarget.Select
     Debug.Print RngTarget.Address
-    
     
     ColNo = RngTarget.Column
     ColNoOffset = ColNo + RngTarget.MergeArea.Cells.Count - 1
@@ -303,7 +300,6 @@ Public Function GetAssessmentRange(CrewNo As String, DayNo As Integer, AssessTyp
     
     Set RngTarget = Nothing
     
-    RngTypeLookUp.Select
     Set RngTarget = RngTypeLookUp.Find(What:=AssessType, _
                             LookIn:=xlValues, _
                             LookAt:=xlPart, _
@@ -312,7 +308,6 @@ Public Function GetAssessmentRange(CrewNo As String, DayNo As Integer, AssessTyp
                             MatchCase:=False)
     
     ColNo = RngTarget.Column
-    RngTarget.Select
     
     'offset pointer by number of attempts
     ColNo = ColNo + Attempt - 1
@@ -347,5 +342,6 @@ End Function
 Private Sub Worksheet_Deactivate()
     Set Course = Nothing
 End Sub
+
 
 

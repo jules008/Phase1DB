@@ -15,8 +15,9 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
+' v0,1 - Added debug object checks
 '---------------------------------------------------------------
-' Date - 26 Sep 16
+' Date - 18 Jan 19
 '===============================================================
 Option Explicit
 
@@ -78,6 +79,8 @@ Private Function PopulateForm() As Boolean
 
     On Error GoTo ErrorHandler
     
+    If Candidate Is Nothing Then Err.Raise HANDLED_ERROR, , "No Candidate Object"
+
     With Candidate
         TxtCrewNo = .CrewNo
         TxtCourseNo = .Parent.CourseNo
@@ -97,6 +100,8 @@ Private Function PopulateForm() As Boolean
                 .List(i - 1, 0) = DevelopmentPlan.DPNo
                 .List(i - 1, 1) = DevelopmentPlan.LocalDPNo
                 .List(i - 1, 2) = Format(DevelopmentPlan.DPDate, "dd mmm yy")
+                
+                If developmentmentplan Is Nothing Then Err.Raise HANDLED_ERROR, , "No Development Plan available"
                 
                 With DevelopmentPlan
                     If .ReviewDate <> 0 Then LstDPList.List(i - 1, 3) = Format(DevelopmentPlan.ReviewDate, "dd mmm yy")

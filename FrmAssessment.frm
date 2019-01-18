@@ -17,8 +17,9 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
 ' v0,1 - WT course changes
+' v0,2 - Populateform before cleanup
 '---------------------------------------------------------------
-' Date - 26 Dec 18
+' Date - 18 Jan 19
 '===============================================================
 Option Explicit
 
@@ -169,8 +170,9 @@ Private Sub BtnClose_Click()
 
     On Error Resume Next
     
+    If Not ShtAssess.PopulateSheet Then Err.Raise HANDLED_ERROR
     CleanUp
-    Me.Hide
+    Unload Me
 End Sub
 
 Private Sub CmoModule_Change()

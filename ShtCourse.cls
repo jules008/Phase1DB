@@ -10,8 +10,9 @@ Attribute VB_Exposed = True
 '===============================================================
 ' v0,0 - Initial version
 ' v1,0 - WT2019 Version
+' v1,1 - Debug Object Checks added
 '---------------------------------------------------------------
-' Date - 30 Dec 18
+' Date - 18 Jan 19
 '===============================================================
 Option Explicit
 
@@ -452,17 +453,26 @@ Restart:
 
     CrewNo = GetCrewNo
     DayNo = GetDayNo
-       
+
     If CrewNo <> "" And DayNo <> "" Then
+        
         Set Candidate = Course.Candidates.FindItem(CrewNo)
+        
+        If Candidate Is Nothing Then Err.Raise HANDLED_ERROR, , "No Candidate Object - 1"
+        
         Set DailyLog = Candidate.Dailylogs.FindItem(DayNo)
         
         If DailyLog Is Nothing Then
             Set DailyLog = New ClsDailyLog
             DailyLog.Module.DayNo = DayNo
             DailyLog.Module.LoadDB
+            
+            If Candidate Is Nothing Then Err.Raise HANDLED_ERROR, , "No Candidate Object - 2"
+            
             Candidate.Dailylogs.AddItem DailyLog
         End If
+        
+        If DailyLog Is Nothing Then Err.Raise HANDLED_ERROR, , "No Daily Log Object"
         
         If Not FrmDailyLog.ShowForm(LocalDailyLog:=DailyLog) Then Err.Raise HANDLED_ERROR
         
@@ -516,7 +526,9 @@ Restart:
     
     If CrewNo <> "" Then
         Set Candidate = Course.Candidates.FindItem(CrewNo)
-    
+        
+        If Candidate Is Nothing Then Err.Raise HANDLED_ERROR, , "No Candidate Object"
+
         If Not FrmDevelopmentPlanList.ShowForm(Candidate) Then Err.Raise HANDLED_ERROR
     End If
     
@@ -811,6 +823,7 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
 
 
 

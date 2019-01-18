@@ -18,8 +18,9 @@ Attribute VB_Exposed = False
 ' v0,0 - Initial version
 ' v0,1 - Changes to guidance forms
 ' v0,2 - WT2019 Version
+' v0,3 - Check for numeric chars before score calc
 '---------------------------------------------------------------
-' Date - 30 Dec 18
+' Date - 18 Jan 19
 '===============================================================
 ' Methods
 '===============================================================
@@ -364,32 +365,34 @@ Restart:
 
     If Courses Is Nothing Then Err.Raise SYSTEM_RESTART
 
-    
     If ValidateData = FunctionalError Then Err.Raise HANDLED_ERROR
     
     If ValidateData = FormOK Then
         
-        TxtOverallGrade = CalcGrade(Cmo1, Cmo2, Cmo3, Cmo4)
+        If IsNumeric(Cmo1) And IsNumeric(Cmo2) And IsNumeric(Cmo3) And IsNumeric(Cmo4) Then
         
-        If TxtOverallGrade = 99 Then Err.Raise HANDLED_ERROR
+            TxtOverallGrade = CalcGrade(Cmo1, Cmo2, Cmo3, Cmo4)
+            If TxtOverallGrade = 99 Then Err.Raise HANDLED_ERROR
+            
+            With DailyLog
+                .DLDate = TxtAssessDate
+                .Assessor = CmoAssessors
+                .Score1 = Me.Cmo1
+                .Score2 = Me.Cmo2
+                .Score3 = Me.Cmo3
+                .Score4 = Me.Cmo4
+                .Comments1 = Me.TxtComments1
+                .Comments2 = Me.TxtComments2
+                .Comments3 = Me.TxtComments3
+                .Comments4 = Me.TxtComments4
+                .CommentsMisc = Me.TxtMiscComments
+                .OverallGrade = TxtOverallGrade
+                .UpdateDB
+            End With
+            
+            Selection = CInt(TxtOverallGrade)
         
-        With DailyLog
-            .DLDate = TxtAssessDate
-            .Assessor = CmoAssessors
-            .Score1 = Me.Cmo1
-            .Score2 = Me.Cmo2
-            .Score3 = Me.Cmo3
-            .Score4 = Me.Cmo4
-            .Comments1 = Me.TxtComments1
-            .Comments2 = Me.TxtComments2
-            .Comments3 = Me.TxtComments3
-            .Comments4 = Me.TxtComments4
-            .CommentsMisc = Me.TxtMiscComments
-            .OverallGrade = TxtOverallGrade
-            .UpdateDB
-        End With
-        
-        Selection = CInt(TxtOverallGrade)
+        End If
         
         Hide
         

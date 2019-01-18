@@ -4,8 +4,9 @@ Attribute VB_Name = "ModLibrary"
 '===============================================================
 ' v1.0.0 - Initial Version
 ' v1.1.0 - Added ColourConvert
+' v1.1.1 - Updated ColourConvert
 '---------------------------------------------------------------
-' Date - 08 Feb 17
+' Date - 18 Jan 19
 '===============================================================
 
 Option Explicit
@@ -159,9 +160,9 @@ End Sub
 ' Converts RGB colour to long
 ' ---------------------------------------------------------------
 
-Public Sub ColourConvert()
+Public Sub ColourConvert(R As Integer, G As Integer, B As Integer)
      Dim Colour1 As Long
-     Colour1 = RGB(237, 12, 63)
+     Colour1 = RGB(R, G, B)
      
      Debug.Print Colour1
 

@@ -10,8 +10,9 @@ Attribute VB_Exposed = False
 '===============================================================
 ' v0,0 - Initial version
 ' v0,1 - Check for zero before dividing average
+' v0,2 - Improved clean up routine
 '---------------------------------------------------------------
-' Date - 26 Dec 18
+' Date - 18 Jan 19
 '===============================================================
 ' Methods
 '---------------------------------------------------------------
@@ -166,6 +167,7 @@ Public Sub CleanUp()
         If .RecordCount > 0 Then
             Do While Not .EOF
                 If IsNull(!CrewNo) Then .Delete
+                If !Score = 0 Then .Delete
                 .MoveNext
             Loop
         End If

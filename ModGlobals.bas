@@ -4,8 +4,9 @@ Attribute VB_Name = "ModGlobals"
 '===============================================================
 ' v1.0.0 - Initial Version
 ' v1,0 - WT2019 Version
+' v1,1 - Updated colours
 '---------------------------------------------------------------
-' Date - 30 Dec 18
+' Date - 18 Jan 19
 '===============================================================
 Private Const StrMODULE As String = "ModGlobals"
 
@@ -74,9 +75,9 @@ Public MailSystem As ClsMailSystem
 ' Colours
 ' ---------------------------------------------------------------
 Public Const COLOUR_1 = 12379352
-Public Const COLOUR_2 = 14610923
+Public Const COLOUR_2 = 6737151
 Public Const COLOUR_3 = 2646607
-Public Const COLOUR_4 = 10596591
+Public Const COLOUR_4 = 4626167
 Public Const Colour_5 = 9305182
 Public Const COLOUR_6 = 393372
 Public Const COLOUR_7 = 13551615
