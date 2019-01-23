@@ -39,7 +39,7 @@ End Function
 'Add Item to collection
 '---------------------------------------------------------------
 Public Sub AddItem(Module As ClsModule)
-    pModules.Add Module, Key:=CStr(Module.ModuleNo)
+    pModules.Add Module, Key:=CStr(Module.DayNo)
 End Sub
 
 '===============================================================

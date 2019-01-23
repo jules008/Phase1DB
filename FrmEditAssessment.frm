@@ -203,16 +203,18 @@ Private Sub CmoModule_Change()
                 Case 0
                     .AddItem "Written"
                 Case 1
-                    .AddItem "Written"
-                    .AddItem "Practical"
+                    .AddItem "BCS Written"
+                    .AddItem "BCS Practical"
+                    .AddItem "Pump Written"
+                    .AddItem "Pump Practical"
                 Case 2
-                    .AddItem "Written"
-                    .AddItem "Practical"
-                Case 3
                     .AddItem "Written"
                     .AddItem "Practical"
                     .AddItem "BA Board"
                     .AddItem "FB Oral"
+                Case 3
+                    .AddItem "Written"
+                    .AddItem "Practical"
                 Case 4
                     .AddItem "Written"
                     .AddItem "Practical"
@@ -223,9 +225,6 @@ Private Sub CmoModule_Change()
                     .AddItem "Written"
                     .AddItem "Practical"
                 Case 7
-                    .AddItem "Written"
-                    .AddItem "Practical"
-                Case 8
                     .AddItem "Written"
                     .AddItem "Oral"
                     .AddItem "Practical"

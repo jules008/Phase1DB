@@ -1,7 +1,7 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} FrmAssessment 
    Caption         =   "Add Assessment"
-   ClientHeight    =   4065
+   ClientHeight    =   4245
    ClientLeft      =   45
    ClientTop       =   375
    ClientWidth     =   5910
@@ -13,6 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
+
 
 '===============================================================
 ' v0,0 - Initial version
@@ -213,31 +214,18 @@ Private Sub CmoModule_Change()
             TxtScore4.Visible = False
         Case 1
             Lbl1.Visible = True
-            Lbl1.Caption = "Written"
+            Lbl1.Caption = "BCS Written"
             Lbl2.Visible = True
-            Lbl2.Caption = "Practical"
-            Lbl3.Visible = False
-            Lbl3.Caption = ""
-            Lbl4.Visible = False
-            Lbl4.Caption = ""
+            Lbl2.Caption = "BCS Practical"
+            Lbl3.Visible = True
+            Lbl3.Caption = "Pump Written"
+            Lbl4.Visible = True
+            Lbl4.Caption = "Pump Practical"
             TxtScore1.Visible = True
             TxtScore2.Visible = True
-            TxtScore3.Visible = False
-            TxtScore4.Visible = False
+            TxtScore3.Visible = True
+            TxtScore4.Visible = True
         Case 2
-            Lbl1.Visible = True
-            Lbl1.Caption = "Written"
-            Lbl2.Visible = True
-            Lbl2.Caption = "Practical"
-            Lbl3.Visible = False
-            Lbl3.Caption = ""
-            Lbl4.Visible = False
-            Lbl4.Caption = ""
-            TxtScore1.Visible = True
-            TxtScore2.Visible = True
-            TxtScore3.Visible = False
-            TxtScore4.Visible = False
-        Case 3
             Lbl1.Visible = True
             Lbl1.Caption = "Written"
             Lbl2.Visible = True
@@ -250,6 +238,19 @@ Private Sub CmoModule_Change()
             TxtScore2.Visible = True
             TxtScore3.Visible = True
             TxtScore4.Visible = True
+         Case 3
+            Lbl1.Visible = True
+            Lbl1.Caption = "Written"
+            Lbl2.Visible = True
+            Lbl2.Caption = "Practical"
+            Lbl3.Visible = False
+            Lbl3.Caption = ""
+            Lbl4.Visible = False
+            Lbl4.Caption = ""
+            TxtScore1.Visible = True
+            TxtScore2.Visible = True
+            TxtScore3.Visible = False
+            TxtScore4.Visible = False
          Case 4
             Lbl1.Visible = True
             Lbl1.Caption = "Written"
@@ -289,20 +290,7 @@ Private Sub CmoModule_Change()
             TxtScore2.Visible = True
             TxtScore3.Visible = False
             TxtScore4.Visible = False
-         Case 7
-            Lbl1.Visible = True
-            Lbl1.Caption = "Written"
-            Lbl2.Visible = True
-            Lbl2.Caption = "Practical"
-            Lbl3.Visible = False
-            Lbl3.Caption = ""
-            Lbl4.Visible = False
-            Lbl4.Caption = ""
-            TxtScore1.Visible = True
-            TxtScore2.Visible = True
-            TxtScore3.Visible = False
-            TxtScore4.Visible = False
-        Case 8
+        Case 7
             Lbl1.Visible = True
             Lbl1.Caption = "Written"
             Lbl2.Visible = True
