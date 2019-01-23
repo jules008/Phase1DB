@@ -75,7 +75,7 @@ End Property
 Public Sub LoadDB()
     Dim RstModule As Recordset
     
-    Set RstModule = ModDatabase.SQLQuery("SELECT * FROM module WHERE dayno = " & pDayNo & " AND deleted IS NULL")
+    Set RstModule = ModDatabase.SQLQuery("SELECT * FROM module WHERE dayno = " & pDayNo)
     
     With RstModule
         If .RecordCount > 0 Then
