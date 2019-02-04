@@ -231,9 +231,7 @@ Public Sub UpdateDBScript()
         .Fields(0) = "V1.1.0"
         .Update
     End With
-    
-    UpdateSysMsg
-    
+        
     MsgBox "Database successfully updated", vbOKOnly + vbInformation
     
     Set RstTable = Nothing
