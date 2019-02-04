@@ -214,60 +214,19 @@ Public Sub UpdateDBScript()
     Set RstTable = SQLQuery("TblDBVersion")
     
     'check preceding DB Version
-    If RstTable.Fields(0) <> "v1,393" Then
-        MsgBox "Database needs to be upgraded to v1,393 to continue", vbOKOnly + vbCritical
+    If RstTable.Fields(0) <> "V1.0.0" Then
+        MsgBox "Database needs to be upgraded to V1.0.0 to continue", vbOKOnly + vbCritical
         Exit Sub
     End If
-    
-    MsgBox "Import tables TblVehicle and TblVehicleType"
-    
-    'Table changes
-    
-    ' delete old vehicle table and add new
-    DB.Execute "SELECT * INTO TblVehicleOLD FROM TblVehicle"
-    DB.Execute "DROP TABLE TblVehicle"
-    DB.Execute "SELECT * INTO TblVehicle FROM TblVehicleNEW"
-    DB.Execute "DROP TABLE TblVehicleNEW"
-    
-    ' delete old vehicleType table and add new
-    DB.Execute "SELECT * INTO TblVehicleTypeOLD FROM TblVehicleType"
-    DB.Execute "DROP TABLE TblVehicleType"
-    DB.Execute "SELECT * INTO TblVehicleType FROM TblVehicleTypeNEW"
-    DB.Execute "DROP TABLE TblVehicleTypeNEW"
-    
-    'clear new issue flag
-    
-    DB.Execute "SELECT * INTO TblAssetOLD FROM TblAsset"
-    Set RstTable = SQLQuery("TblAsset")
-    
-    i = 1
-    With RstTable
-        Do While Not .EOF
-            Debug.Print !AssetNo
-            Binary = !AllowedOrderReasons
-            
-            If Len(Binary) <> 13 Then
-                Binary = Left(Binary, 13)
-                Debug.Print "Length corrected on Asset " & !AssetNo
-            End If
-            
-            Binary = Left(Binary, 12) & "0"
-            
-            .Edit
-            !AllowedOrderReasons = Binary
-            .Update
-            .MoveNext
-            i = i + 1
-        Loop
-    
-    End With
+       
+    DB.Execute "DELETE FROM Assessment WHERE Score = 0"
     
     'update DB Version
     Set RstTable = SQLQuery("TblDBVersion")
     
     With RstTable
         .Edit
-        .Fields(0) = "v1,394"
+        .Fields(0) = "V1.1.0"
         .Update
     End With
     
