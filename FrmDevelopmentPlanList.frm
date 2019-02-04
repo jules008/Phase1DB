@@ -101,7 +101,7 @@ Private Function PopulateForm() As Boolean
                 .List(i - 1, 1) = DevelopmentPlan.LocalDPNo
                 .List(i - 1, 2) = Format(DevelopmentPlan.DPDate, "dd mmm yy")
                 
-                If developmentmentplan Is Nothing Then Err.Raise HANDLED_ERROR, , "No Development Plan available"
+                If DevelopmentPlan Is Nothing Then Err.Raise HANDLED_ERROR, , "No Development Plan available"
                 
                 With DevelopmentPlan
                     If .ReviewDate <> 0 Then LstDPList.List(i - 1, 3) = Format(DevelopmentPlan.ReviewDate, "dd mmm yy")
