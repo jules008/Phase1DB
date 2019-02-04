@@ -221,6 +221,8 @@ Public Sub UpdateDBScript()
        
     DB.Execute "DELETE FROM Assessment WHERE Score = 0"
     
+    MsgBox "Change ExtraTrainingNo to Autonumber"
+    
     'update DB Version
     Set RstTable = SQLQuery("TblDBVersion")
     
