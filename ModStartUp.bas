@@ -4,8 +4,9 @@ Attribute VB_Name = "ModStartUp"
 '===============================================================
 ' v1.0.0 - Initial Version
 ' v1.1.0 - WT2019 Version
+' v1.1.1 - Change ReadINI to Public
 '---------------------------------------------------------------
-' Date - 30 Dec 18
+' Date - 15 Feb 19
 '===============================================================
 
 Option Explicit
@@ -137,7 +138,7 @@ End Function
 ' ReadINIFile
 ' Gets start up variables from ini file
 ' ---------------------------------------------------------------
-Private Function ReadINIFile() As Boolean
+Public Function ReadINIFile() As Boolean
     Dim DebugMode As String
     Dim EnablePrint As String
     Dim DBPath As String

@@ -209,26 +209,42 @@ Public Sub UpdateDBScript()
     
     Dim Fld As DAO.Field
     
+    ModStartUp.ReadINIFile
     DBConnect
-        
+    
     Set RstTable = SQLQuery("TblDBVersion")
     
     'check preceding DB Version
-    If RstTable.Fields(0) <> "V1.0.0" Then
-        MsgBox "Database needs to be upgraded to V1.0.0 to continue", vbOKOnly + vbCritical
+    If RstTable.Fields(0) <> "V1.1.0" Then
+        MsgBox "Database needs to be upgraded to V1.1.0 to continue", vbOKOnly + vbCritical
         Exit Sub
     End If
-       
-    DB.Execute "DELETE FROM Assessment WHERE Score = 0"
     
-    MsgBox "Change ExtraTrainingNo to Autonumber"
+    DB.Execute " SELECT * INTO ModuleBAK FROM module"
     
+    DB.Execute "UPDATE Module SET Module = 'EDBA' WHERE DayNo = 22"
+    DB.Execute "UPDATE Module SET Module = 'BA consolidation' WHERE DayNo = 23"
+    DB.Execute "UPDATE Module SET Module = 'PPV' WHERE DayNo = 24"
+    DB.Execute "UPDATE Module SET Module = 'BA Assessments' WHERE DayNo = 25"
+    
+    DB.Execute "UPDATE Module SET Module = 'Consolidation BCS' WHERE DayNo = 31"
+    DB.Execute "UPDATE Module SET Module = 'Consolidation BCS' WHERE DayNo = 32"
+    
+    DB.Execute "UPDATE Module SET Module = 'CFS/CFP/Cobra' WHERE DayNo = 43"
+    DB.Execute "UPDATE Module SET Module = 'CFS/CFP/Cobra' WHERE DayNo = 44"
+    DB.Execute "UPDATE Module SET Module = 'Phase 2/ Safeguarding/ MDT' WHERE DayNo = 45"
+    
+    DB.Execute "UPDATE Module SET Module = 'Final Assessments' WHERE DayNo = 47"
+    DB.Execute "UPDATE Module SET Module = 'Final Assessments and Debriefs' WHERE DayNo = 48"
+    DB.Execute "UPDATE Module SET Module = 'Course Review' WHERE DayNo = 49"
+    DB.Execute "UPDATE Module SET Module = 'WT Pass out' WHERE DayNo = 50"
+        
     'update DB Version
     Set RstTable = SQLQuery("TblDBVersion")
     
     With RstTable
         .Edit
-        .Fields(0) = "V1.1.0"
+        .Fields(0) = "V1.1.1"
         .Update
     End With
         
@@ -252,36 +268,25 @@ Public Sub UpdateDBScriptUndo()
         
     Dim Fld As DAO.Field
         
+    ModStartUp.ReadINIFile
     DBConnect
     
     Set RstTable = SQLQuery("TblDBVersion")
 
-    If RstTable.Fields(0) <> "v1,394" Then
-        MsgBox "Database needs to be upgraded to v1,394 to continue", vbOKOnly + vbCritical
+    If RstTable.Fields(0) <> "V1.1.1" Then
+        MsgBox "Database needs to be upgraded to V1.1.1 to continue", vbOKOnly + vbCritical
         Exit Sub
     End If
-       
-    'Undo Vehicle update
-    DB.Execute "SELECT * INTO TblVehicleNEW FROM TblVehicle"
-    DB.Execute "DROP TABLE TblVehicle"
-    DB.Execute "SELECT * INTO TblVehicle FROM TblVehicleOLD"
-    DB.Execute "DROP TABLE TblVehicleOLD"
-    
-    DB.Execute "SELECT * INTO TblVehicleTypeNEW FROM TblVehicleType"
-    DB.Execute "DROP TABLE TblVehicleType"
-    DB.Execute "SELECT * INTO TblVehicleType FROM TblVehicleTypeOLD"
-    DB.Execute "DROP TABLE TblVehicleTypeOLD"
-     
-    Set RstTable = SQLQuery("TblDBVersion")
 
-    'undo new issue update
-    DB.Execute "DROP TABLE TblAsset"
-    DB.Execute "SELECT * INTO TblAsset FROM TblAssetOLD"
-    DB.Execute "DROP TABLE TblAssetOLD"
+    DB.Execute "DROP TABLE Module"
+    DB.Execute "SELECT * INTO Module FROM moduleBAK"
+    DB.Execute "DROP TABLE ModuleBAK"
+    
+    Set RstTable = SQLQuery("TblDBVersion")
     
     With RstTable
         .Edit
-        .Fields(0) = "v1,393"
+        .Fields(0) = "V1.1.0"
         .Update
     End With
     

@@ -11,8 +11,9 @@ Attribute VB_Exposed = True
 ' v0,0 - Initial version
 ' v1,0 - WT2019 Version
 ' v1,1 - Debug Object Checks added
+' v1,1 - Update headings
 '---------------------------------------------------------------
-' Date - 18 Jan 19
+' Date - 15 Feb 19
 '===============================================================
 Option Explicit
 
@@ -182,6 +183,9 @@ Public Function PopulateSheet() As Boolean
                 
             Next
         End With
+        
+        If Not GetModules Then Err.Raise HANDLED_ERROR
+        
         Me.Protect
         Set Candidate = Nothing
         Set DailyLog = Nothing
@@ -312,8 +316,6 @@ Public Function RefreshCourses() As Boolean
         
             Set LocCourse = Courses.FindItem(i)
             .AddItem LocCourse.CourseNo
-            
-            Debug.Print LocCourse.CourseNo & " - " & [CourseNo]
             
         Next
             
@@ -823,6 +825,7 @@ ErrorHandler:
         Resume ErrorExit
     End If
 End Function
+
 
 
 

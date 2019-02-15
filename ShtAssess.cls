@@ -290,8 +290,6 @@ Public Function GetAssessmentRange(CrewNo As String, DayNo As Integer, AssessTyp
     
     If RngTarget Is Nothing Then Err.Raise HANDLED_ERROR, , "Day No not found"
     
-    Debug.Print RngTarget.Address
-    
     ColNo = RngTarget.Column
     ColNoOffset = ColNo + RngTarget.MergeArea.Cells.Count - 1
     
@@ -342,6 +340,7 @@ End Function
 Private Sub Worksheet_Deactivate()
     Set Course = Nothing
 End Sub
+
 
 
 
