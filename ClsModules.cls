@@ -25,20 +25,29 @@ Option Explicit
 
 Private pModules As Collection
 
-'===============================================================
-'Method FindItem
-'finds Item from index
 '---------------------------------------------------------------
+Public Function NewEnum() As IUnknown
+Attribute NewEnum.VB_UserMemId = -4
+    Set NewEnum = pModules.[_newenum]
+End Function
+
+' ===============================================================
+' Method FindItem
+' Finds Item from index
+'---------------------------------------------------------------
+
 Public Function FindItem(ModuleNo As Variant) As ClsModule
+Attribute FindItem.VB_UserMemId = 0
     On Error Resume Next
     Set FindItem = pModules.Item(ModuleNo)
 End Function
 
 '===============================================================
 'Method AddItem
-'Add Item to collection
+' Add item to Collection
 '---------------------------------------------------------------
 Public Sub AddItem(Module As ClsModule)
+    Module.SetParent ObjPtr(Me)
     pModules.Add Module, Key:=CStr(Module.DayNo)
 End Sub
 
@@ -92,6 +101,7 @@ Private Sub Class_Initialize()
     GetCollection
 End Sub
 
+'---------------------------------------------------------------
 Private Sub Class_Terminate()
     Set pModules = Nothing
 End Sub
