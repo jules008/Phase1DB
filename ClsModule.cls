@@ -22,6 +22,7 @@ Private pDayNo As Integer
 Private pModuleNo As String
 Private pModule As String
 Private pAssessment As Boolean
+Private pParent As Long
 
 '---------------------------------------------------------------
 Public Property Get ModuleID() As Integer
@@ -67,6 +68,29 @@ End Property
 Public Property Let Assessment(ByVal vNewValue As Boolean)
     pAssessment = vNewValue
 End Property
+
+'---------------------------------------------------------------
+Public Property Get Parent() As ClsModules
+    If pParent <> 0 Then
+        Set Parent = GetParentFromPtr(pParent)
+    End If
+End Property
+
+Friend Function SetParent(ByVal Ptr As Long) As Boolean
+    pParent = Ptr
+End Function
+
+' ===============================================================
+' Method GetParentFromPtr
+' Private routine to copy memory address of parent class
+' ---------------------------------------------------------------
+Private Function GetParentFromPtr(ByVal Ptr As Long) As ClsModules
+    Dim tmp As ClsModules
+
+    CopyMemory tmp, Ptr, 4
+    Set GetParentFromPtr = tmp
+    CopyMemory tmp, 0&, 4
+End Function
 
 '===============================================================
 'Method LoadDB
