@@ -28,8 +28,8 @@ Public Const SEND_ERR_MSG As Boolean = False
 Public Const TEST_PREFIX As String = "TEST - "
 Public Const FILE_ERROR_LOG As String = "Error.log"
 Public Const VERSION = "2.0.0"
-Public Const DB_VER = "V1.1.0"
-Public Const VER_DATE = "04 Feb 19"
+Public Const DB_VER = "V1.1.1"
+Public Const VER_DATE = "15 Feb 19"
 
 ' ===============================================================
 ' Error Constants
