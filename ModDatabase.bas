@@ -209,6 +209,7 @@ Public Sub UpdateDBScript()
     
     Dim Fld As DAO.Field
     
+    SYS_PATH = ThisWorkbook.Path & INI_FILE_PATH
     ModStartUp.ReadINIFile
     DBConnect
     
@@ -229,6 +230,7 @@ Public Sub UpdateDBScript()
     
     DB.Execute "UPDATE Module SET Module = 'Consolidation BCS' WHERE DayNo = 31"
     DB.Execute "UPDATE Module SET Module = 'Consolidation BCS' WHERE DayNo = 32"
+    DB.Execute "UPDATE Module SET Module = 'Tech Rope Rescue' WHERE DayNo = 33"
     
     DB.Execute "UPDATE Module SET Module = 'CFS/CFP/Cobra' WHERE DayNo = 43"
     DB.Execute "UPDATE Module SET Module = 'CFS/CFP/Cobra' WHERE DayNo = 44"
@@ -236,8 +238,8 @@ Public Sub UpdateDBScript()
     
     DB.Execute "UPDATE Module SET Module = 'Final Assessments' WHERE DayNo = 47"
     DB.Execute "UPDATE Module SET Module = 'Final Assessments and Debriefs' WHERE DayNo = 48"
-    DB.Execute "UPDATE Module SET Module = 'Course Review' WHERE DayNo = 49"
-    DB.Execute "UPDATE Module SET Module = 'WT Pass out' WHERE DayNo = 50"
+    DB.Execute "INSERT INTO Module VALUES (49, 49, 49,'Course Review', 0, NULL)"
+    DB.Execute "INSERT INTO Module VALUES (50, 50, 50,'WT Pass out', 0, NULL)"
         
     'update DB Version
     Set RstTable = SQLQuery("TblDBVersion")
@@ -268,6 +270,7 @@ Public Sub UpdateDBScriptUndo()
         
     Dim Fld As DAO.Field
         
+    SYS_PATH = ThisWorkbook.Path & INI_FILE_PATH
     ModStartUp.ReadINIFile
     DBConnect
     
